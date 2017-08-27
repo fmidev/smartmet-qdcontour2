@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: qdcontour
 Name: %{RPMNAME}
-Version: 17.2.13
+Version: 17.8.28
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Tools
@@ -16,12 +16,12 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine-devel >= 17.2.10
-BuildRequires: smartmet-library-newbase-devel >= 17.2.13
-BuildRequires: smartmet-library-tron >= 17.2.7
+BuildRequires: smartmet-library-imagine-devel >= 17.8.28
+BuildRequires: smartmet-library-newbase-devel >= 17.8.28
+BuildRequires: smartmet-library-tron >= 17.8.28
 BuildRequires: zlib-devel
-Requires: smartmet-library-imagine >= 17.2.10
-Requires: smartmet-library-newbase >= 17.2.13
+Requires: smartmet-library-imagine >= 17.8.28
+Requires: smartmet-library-newbase >= 17.8.28
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 28 2017 Mika Heiskanen <mika.heiskanen@fmi.fi> - 17.8.28-1.fmi
+- Upgrade to boost 1.65
+
 * Mon Feb 13 2017 Mika Heiskanen <mika.heiskanen@fmi.fi> - 17.2.13-1.fmi
 - Recompiled due to newbase API changes
 

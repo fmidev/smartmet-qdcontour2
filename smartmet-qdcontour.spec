@@ -21,6 +21,8 @@ BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 Requires: smartmet-library-imagine2 >= 17.2.10
 Requires: smartmet-library-newbase >= 17.2.13
+Requires: boost-iostreams
+Requires: boost-system
 Requires: freetype
 Requires: libjpeg
 Requires: libpng

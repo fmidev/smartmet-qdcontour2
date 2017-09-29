@@ -20,6 +20,8 @@ BuildRequires: smartmet-library-imagine-devel >= 17.8.28
 BuildRequires: smartmet-library-newbase-devel >= 17.8.28
 BuildRequires: smartmet-library-tron >= 17.8.28
 BuildRequires: zlib-devel
+BuildRequires: ImageMagick
+BuildRequires: bc
 Requires: smartmet-library-imagine >= 17.8.28
 Requires: smartmet-library-newbase >= 17.8.28
 Requires: freetype

@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}2
 Summary: %{BINNAME}2
 Name: %{RPMNAME}
-Version: 17.8.28
+Version: 18.4.7
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -14,13 +14,13 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 17.2.10
-BuildRequires: smartmet-library-newbase-devel >= 17.2.13
-BuildRequires: smartmet-library-tron >= 17.2.7
+BuildRequires: smartmet-library-imagine2-devel >= 18.4.7
+BuildRequires: smartmet-library-newbase-devel >= 18.4.7
+BuildRequires: smartmet-library-tron >= 17.9.20
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 17.2.10
-Requires: smartmet-library-newbase >= 17.2.13
+Requires: smartmet-library-imagine2 >= 18.4.7
+Requires: smartmet-library-newbase >= 18.4.7
 Requires: boost-iostreams
 Requires: boost-system
 Requires: freetype
@@ -41,7 +41,6 @@ rm -rf $RPM_BUILD_ROOT
  
 %build
 make %{_smp_mflags}
-make --quiet test
 
 %install
 %makeinstall
@@ -55,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr  7 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.4.7-1.fmi
+- Upgrade to boost 1.66
+
 * Mon Aug 28 2017 Mika Heiskanen <mika.heiskanen@fmi.fi> - 17.8.28-1.fmi
 - Upgrade to boost 1.65
 

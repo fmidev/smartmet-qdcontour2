@@ -55,7 +55,7 @@ void add_path(Imagine::NFmiPath &path, const Geometry *geom);
 
 void add_linearring(Imagine::NFmiPath &path, const LinearRing *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   for (unsigned long i = 0, n = geom->getNumPoints(); i < n - 1; ++i)
   {
@@ -75,7 +75,7 @@ void add_linearring(Imagine::NFmiPath &path, const LinearRing *geom)
 
 void add_linestring(Imagine::NFmiPath &path, const LineString *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   unsigned long n = geom->getNumPoints();
 
@@ -97,7 +97,7 @@ void add_linestring(Imagine::NFmiPath &path, const LineString *geom)
 
 void add_polygon(Imagine::NFmiPath &path, const Polygon *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   add_linestring(path, geom->getExteriorRing());
 
@@ -113,7 +113,7 @@ void add_polygon(Imagine::NFmiPath &path, const Polygon *geom)
 
 void add_multilinestring(Imagine::NFmiPath &path, const MultiLineString *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   for (size_t i = 0, n = geom->getNumGeometries(); i < n; ++i)
     add_linestring(path, dynamic_cast<const LineString *>(geom->getGeometryN(i)));
@@ -127,7 +127,7 @@ void add_multilinestring(Imagine::NFmiPath &path, const MultiLineString *geom)
 
 void add_multipolygon(Imagine::NFmiPath &path, const MultiPolygon *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   for (size_t i = 0, n = geom->getNumGeometries(); i < n; ++i)
     add_polygon(path, dynamic_cast<const Polygon *>(geom->getGeometryN(i)));
@@ -141,7 +141,7 @@ void add_multipolygon(Imagine::NFmiPath &path, const MultiPolygon *geom)
 
 void add_geometrycollection(Imagine::NFmiPath &path, const GeometryCollection *geom)
 {
-  if (geom == NULL || geom->isEmpty()) return;
+  if (geom == nullptr || geom->isEmpty()) return;
 
   for (size_t i = 0, n = geom->getNumGeometries(); i < n; ++i)
     add_path(path, geom->getGeometryN(i));

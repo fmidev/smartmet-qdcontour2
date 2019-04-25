@@ -57,6 +57,7 @@ LIBS = -L$(libdir) \
 	-lsmartmet-imagine \
 	-lsmartmet-tron \
 	-lgeos \
+	-lgdal \
 	-lboost_iostreams \
 	-lboost_system
 

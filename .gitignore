@@ -11,3 +11,4 @@ test/results_diff/
 *~
 .#*
 
+compile_commands.json

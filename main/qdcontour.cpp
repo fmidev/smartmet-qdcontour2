@@ -43,6 +43,7 @@ typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #include <newbase/NFmiSettings.h>  // Configuration
 #include <newbase/NFmiSmoother.h>  // for smoothing data
 #include <newbase/NFmiStringTools.h>
+
 #include <fstream>
 #include <iomanip>
 #include <list>
@@ -3656,7 +3657,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
     float dir, speed;
 
     get_speed_direction(
-        theArea, *iter, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
+        theArea, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
 
     // Ignore missing values
     if (dir == kFloatMissing || speed == kFloatMissing) continue;

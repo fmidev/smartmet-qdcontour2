@@ -8,12 +8,12 @@
 #include "LazyQueryData.h"
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiFileSystem.h>
-#include <newbase/NFmiInterpolation.h>
 #include <newbase/NFmiGrid.h>
+#include <newbase/NFmiInterpolation.h>
 #include <newbase/NFmiQueryData.h>
 #include <fstream>
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -178,7 +178,7 @@ bool LazyQueryData::IsParamUsable() const { return itsInfo->IsParamUsable(); }
  */
 // ----------------------------------------------------------------------
 
-boost::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
+std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
 {
   if (itsLocations.get() == 0)
   {
@@ -194,7 +194,7 @@ boost::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
  */
 // ----------------------------------------------------------------------
 
-boost::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
+std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
     const NFmiArea &theArea) const
 {
   ostringstream os;
@@ -215,7 +215,7 @@ boost::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
  */
 // ----------------------------------------------------------------------
 
-boost::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsXY(
+std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsXY(
     const NFmiArea &theArea) const
 {
   ostringstream os;

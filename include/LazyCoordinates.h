@@ -22,10 +22,10 @@
 #ifndef LAZYCOORDINATES_H
 #define LAZYCOORDINATES_H
 
-#include <newbase/NFmiDataMatrix.h>
-#include <newbase/NFmiPoint.h>
 #include "Globals.h"
 #include "LazyQueryData.h"
+#include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiPoint.h>
 
 class LazyCoordinates
 {

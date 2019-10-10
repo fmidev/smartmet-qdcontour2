@@ -21,9 +21,9 @@
 #ifndef LAZYQUERYDATA_H
 #define LAZYQUERYDATA_H
 
+#include <boost/shared_ptr.hpp>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiParameterName.h>
-#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <string>
 
@@ -72,9 +72,9 @@ class LazyQueryData
 
   typedef NFmiDataMatrix<NFmiPoint> Coordinates;
 
-  boost::shared_ptr<Coordinates> Locations() const;
-  boost::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
-  boost::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Coordinates> Locations() const;
+  std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
 
   bool BiLinearInterpolation(double x,
                              double y,
@@ -105,12 +105,12 @@ class LazyQueryData
 
   std::string itsInputName;
   std::string itsDataFile;
-  boost::shared_ptr<NFmiFastQueryInfo> itsInfo;
-  boost::shared_ptr<NFmiQueryData> itsData;
+  std::shared_ptr<NFmiFastQueryInfo> itsInfo;
+  std::shared_ptr<NFmiQueryData> itsData;
 
-  mutable boost::shared_ptr<Coordinates> itsLocations;
-  mutable boost::shared_ptr<Coordinates> itsLocationsWorldXY;
-  mutable boost::shared_ptr<Coordinates> itsLocationsXY;
+  mutable std::shared_ptr<Coordinates> itsLocations;
+  mutable std::shared_ptr<Coordinates> itsLocationsWorldXY;
+  mutable std::shared_ptr<Coordinates> itsLocationsXY;
   mutable std::string itsLocationsArea;
 
 };  // class LazyQueryData

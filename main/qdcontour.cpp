@@ -489,7 +489,7 @@ void do_querydata(istream &theInput)
       vector<string>::const_iterator iter;
       for (iter = qnames.begin(); iter != qnames.end(); ++iter)
       {
-        boost::shared_ptr<LazyQueryData> tmp(new LazyQueryData());
+        std::shared_ptr<LazyQueryData> tmp(new LazyQueryData());
         string filename = NFmiFileSystem::FileComplete(*iter, globals.datapath);
         globals.queryfilenames.push_back(filename);
         tmp->Read(filename);
@@ -2672,7 +2672,7 @@ void do_draw_shapes(istream &theInput)
 
   check_errors(theInput, "draw shapes");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  auto area = globals.createArea();
 
   if (globals.verbose) report_area(*area);
 
@@ -2738,7 +2738,7 @@ void do_draw_imagemap(istream &theInput)
 
   check_errors(theInput, "draw imagemap");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  auto area = globals.createArea();
 
   // Generate map from all shapes in the list
 
@@ -3542,7 +3542,7 @@ void get_speed_direction(const NFmiArea &area,
     if (globals.queryinfo->Param(toparam(globals.speedxcomponent))) globals.queryinfo->Values(dx);
     if (globals.queryinfo->Param(toparam(globals.speedycomponent))) globals.queryinfo->Values(dy);
 
-    boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> latlon = globals.queryinfo->Locations();
+    std::shared_ptr<NFmiDataMatrix<NFmiPoint>> latlon = globals.queryinfo->Locations();
 
     if (dx.NX() != 0 && dx.NY() != 0 && dy.NX() != 0 && dy.NY() != 0)
     {
@@ -3756,7 +3756,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   bool speedok = (speedvalues.NX() != 0 && speedvalues.NY() != 0);
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
+  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
       globals.queryinfo->LocationsWorldXY(theArea);
   for (float y = 0; y <= worldpts->NY() - 1; y += globals.windarrowdy)
     for (float x = 0; x <= worldpts->NX() - 1; x += globals.windarrowdx)
@@ -4684,7 +4684,7 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 
   choose_queryinfo("Pressure", 0);
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
+  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
       globals.queryinfo->LocationsWorldXY(theArea);
 
   NFmiDataMatrix<float> vals;
@@ -4807,7 +4807,7 @@ void do_draw_contours(istream &theInput)
 
   if (globals.querystreams.empty()) throw runtime_error("No query data has been read!");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  auto area = globals.createArea();
 
   // This message intentionally ignores globals.verbose
 
@@ -5014,7 +5014,7 @@ void do_draw_contours(istream &theInput)
       xr->Composite(xr2);
     }
 #else
-    boost::shared_ptr<Imagine::NFmiImage> image;
+    std::shared_ptr<Imagine::NFmiImage> image;
     if (globals.background.empty())
     {
       image.reset(new Imagine::NFmiImage(imgwidth, imgheight, erasecolor));

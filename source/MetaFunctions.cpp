@@ -49,7 +49,7 @@ NFmiDataMatrix<float> elevation_angle_values(LazyQueryData &theQI)
 {
   NFmiDataMatrix<float> values;
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> pts = theQI.Locations();
+  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> pts = theQI.Locations();
   values.Resize(pts->NX(), pts->NY(), kFloatMissing);
 
   for (unsigned int j = 0; j < pts->NY(); j++)
@@ -499,7 +499,7 @@ NFmiDataMatrix<float> thetae(LazyQueryData &theQI)
   return t2m;
 }
 
-}  // namespace anonymous
+}  // namespace
 
 namespace MetaFunctions
 {

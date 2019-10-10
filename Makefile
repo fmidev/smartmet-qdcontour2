@@ -36,7 +36,7 @@ CC = g++
 
 # Default compiler flags
 
-DEFINES = -DUNIX
+DEFINES = -DUNIX -DWGS84
 
 CFLAGS = $(DEFINES) -O2 -DNDEBUG $(MAINFLAGS)
 LDFLAGS = 

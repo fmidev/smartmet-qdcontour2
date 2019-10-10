@@ -7,19 +7,15 @@
 
 #include "ContourCalculator.h"
 #include "ContourCache.h"
-#include "LazyQueryData.h"
 #include "DataMatrixAdapter.h"
-
-#include "NFmiDataMatrix.h"
-
+#include "LazyQueryData.h"
+#include <boost/make_shared.hpp>
+#include <geos/version.h>
+#include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiGrid.h>
+#include <newbase/NFmiMetTime.h>
 #include <tron/FmiBuilder.h>
 #include <tron/Tron.h>
-
-#include "NFmiGrid.h"
-#include "NFmiMetTime.h"
-
-#include <boost/make_shared.hpp>
-
 #include <memory>
 #include <stdexcept>
 
@@ -31,10 +27,9 @@ typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::Lin
 typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation>
     MyLogLinearContourer;
 
-typedef Tron::Contourer<DataMatrixAdapter,
-                        Tron::FmiBuilder,
-                        MyTraits,
-                        Tron::NearestNeighbourInterpolation> MyNearestContourer;
+typedef Tron::
+    Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>
+        MyNearestContourer;
 
 typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation>
     MyDiscreteContourer;
@@ -196,9 +191,9 @@ class ContourCalculatorPimple
   ContourCache itsLineCache;
   bool isCacheOn;
   bool itWasCached;
-  boost::shared_ptr<DataMatrixAdapter> itsData;  // does not own!
+  std::shared_ptr<DataMatrixAdapter> itsData;  // does not own!
   bool itsHintsOK;
-  boost::shared_ptr<MyHints> itsHints;
+  std::shared_ptr<MyHints> itsHints;
 
   void require_hints();
 
@@ -304,7 +299,15 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 
   // Build the contours
 
-  boost::shared_ptr<GeometryFactory> geomFactory = boost::make_shared<GeometryFactory>();
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR < 7
+  std::shared_ptr<geos::geom::GeometryFactory> geomFactory = std::make_shared<GeometryFactory>();
+#else
+  geos::geom::GeometryFactory::Ptr geomFactory(geos::geom::GeometryFactory::create());
+#endif
+#else
+#pragma message(Cannot handle current GEOS version correctly)
+#endif
 
   Tron::FmiBuilder builder(geomFactory);
 
@@ -353,7 +356,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     }
   }
 
-  boost::shared_ptr<Geometry> geom = builder.result();
+  auto geom = builder.result();
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());
@@ -394,7 +397,15 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 
   itsPimple->require_hints();
 
-  boost::shared_ptr<GeometryFactory> geomFactory = boost::make_shared<GeometryFactory>();
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR < 7
+  std::shared_ptr<geos::geom::GeometryFactory> geomFactory = std::make_shared<GeometryFactory>();
+#else
+  geos::geom::GeometryFactory::Ptr geomFactory(geos::geom::GeometryFactory::create());
+#endif
+#else
+#pragma message(Cannot handle current GEOS version correctly)
+#endif
 
   Tron::FmiBuilder builder(geomFactory);
 
@@ -424,7 +435,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     }
   }
 
-  boost::shared_ptr<Geometry> geom = builder.result();
+  std::shared_ptr<Geometry> geom = builder.result();
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());

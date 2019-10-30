@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: qdcontour
 Name: %{RPMNAME}
-Version: 19.9.27
+Version: 19.10.31
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Tools
@@ -17,14 +17,14 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine-devel >= 19.9.27
-BuildRequires: smartmet-library-newbase-devel >= 19.9.26
+BuildRequires: smartmet-library-imagine-devel >= 19.10.31
+BuildRequires: smartmet-library-newbase-devel >= 19.10.31
 BuildRequires: smartmet-library-tron >= 19.9.26
 BuildRequires: zlib-devel
 BuildRequires: ImageMagick
 BuildRequires: bc
-Requires: smartmet-library-imagine >= 19.9.27
-Requires: smartmet-library-newbase >= 19.9.26
+Requires: smartmet-library-imagine >= 19.10.31
+Requires: smartmet-library-newbase >= 19.10.31
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 31 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.10.31-1.fmi
+- Rebuilt due to newbase API/ABI changes
+
 * Fri Sep 27 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.9.27-1.fmi
 - Repackaged due to ABI changes in SmartMet libraries
 

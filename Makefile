@@ -150,8 +150,8 @@ $(MAINPROGS): % : $(OBJFILES) $(MAINOBJFILES)
 	$(CC) $(LDFLAGS) -o $@ obj/$@.o $(OBJFILES) $(LIBS)
 
 clean:
-	rm -f $(MAINPROGS) $(OBJFILES) $(MAINOBJFILES)*~ source/*~ include/*~
-	rm -f obj/*.d
+	rm -f $(MAINPROGS) source/*~ include/*~
+	rm -rf obj
 
 format:
 	clang-format -i -style=file include/*.h source/*.cpp main/*.cpp

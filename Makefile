@@ -173,7 +173,7 @@ objdir:
 rpm: clean
 	@if [ -a $(SPEC).spec ]; \
 	then \
-	  tar -czvf $(SPEC)2.tar.gz --transform "s,^,$(SPEC)2/," * ; \
+	  tar -czvf $(SPEC)2.tar.gz --exclude test --exclude vcs --transform "s,^,$(SPEC)2/," * ; \
 	  rpmbuild -ta $(SPEC)2.tar.gz ; \
 	  rm -f $(SPEC)2.tar.gz ; \
 	else \

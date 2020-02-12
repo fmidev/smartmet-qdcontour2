@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}2
 Summary: %{BINNAME}2
 Name: %{RPMNAME}
-Version: 19.11.20
+Version: 20.2.12
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -14,13 +14,13 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 19.10.31
-BuildRequires: smartmet-library-newbase-devel >= 19.10.31
-BuildRequires: smartmet-library-tron >= 19.9.26
+BuildRequires: smartmet-library-imagine2-devel >= 20.2.12
+BuildRequires: smartmet-library-newbase-devel >= 20.2.6
+BuildRequires: smartmet-library-tron >= 20.2.12
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 19.10.31
-Requires: smartmet-library-newbase >= 19.10.31
+Requires: smartmet-library-imagine2 >= 20.2.12
+Requires: smartmet-library-newbase >= 20.2.6
 Requires: boost-iostreams
 Requires: boost-system
 Requires: freetype
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 12 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.2.12-1.fmi
+- Upgraded to GEOS 3.8 and GDAL 3.0
+
 * Wed Nov 20 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.11.20-1.fmi
 - Repackaged due to newbase API changes
 

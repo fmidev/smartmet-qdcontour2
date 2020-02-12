@@ -6,18 +6,18 @@
 // ======================================================================
 
 #include "ContourCalculator.h"
-#include "ContourCache.h"
-#include "DataMatrixAdapter.h"
-#include "LazyQueryData.h"
-#include <boost/make_shared.hpp>
 #include <geos/version.h>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiMetTime.h>
 #include <tron/FmiBuilder.h>
 #include <tron/Tron.h>
+#include <boost/make_shared.hpp>
 #include <memory>
 #include <stdexcept>
+#include "ContourCache.h"
+#include "DataMatrixAdapter.h"
+#include "LazyQueryData.h"
 
 typedef Tron::Traits<double, double, Tron::FmiMissing> MyTraits;
 
@@ -309,7 +309,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 #pragma message(Cannot handle current GEOS version correctly)
 #endif
 
-  Tron::FmiBuilder builder(geomFactory);
+  Tron::FmiBuilder builder(*geomFactory);
 
   switch (theInterpolation)
   {
@@ -407,7 +407,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 #pragma message(Cannot handle current GEOS version correctly)
 #endif
 
-  Tron::FmiBuilder builder(geomFactory);
+  Tron::FmiBuilder builder(*geomFactory);
 
   switch (theInterpolation)
   {

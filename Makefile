@@ -36,7 +36,7 @@ CC = g++
 
 # Default compiler flags
 
-DEFINES = -DUNIX
+DEFINES = -DUNIX -DUSE_UNSTABLE_GEOS_CPP_API
 
 CFLAGS = $(DEFINES) -O2 -DNDEBUG $(MAINFLAGS)
 LDFLAGS = 
@@ -49,15 +49,19 @@ CFLAGS_PROFILE = $(DEFINES) -O2 -g -pg -DNDEBUG $(MAINFLAGS)
 LDFLAGS_DEBUG =
 LDFLAGS_PROFILE =
 
-INCLUDES = -I$(includedir) \
+INCLUDES = \
+	-I$(PREFIX)/geos38/include \
+	-I$(PREFIX)/gdal30/include \
+	-I$(includedir) \
 	-I$(includedir)/smartmet
 
-LIBS = -L$(libdir) \
+LIBS = \
+	-L$(PREFIX)/geos38/lib64 -lgeos \
+	-L$(PREFIX)/gdal30/lib `pkg-config --libs gdal30` \
+	-L$(libdir) \
 	-lsmartmet-newbase \
 	-lsmartmet-imagine \
 	-lsmartmet-tron \
-	-lgeos \
-	-lgdal \
 	-lboost_iostreams \
 	-lboost_system
 

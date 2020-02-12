@@ -309,7 +309,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 #pragma message(Cannot handle current GEOS version correctly)
 #endif
 
-  Tron::FmiBuilder builder(geomFactory);
+  Tron::FmiBuilder builder(*geomFactory);
 
   switch (theInterpolation)
   {
@@ -407,7 +407,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 #pragma message(Cannot handle current GEOS version correctly)
 #endif
 
-  Tron::FmiBuilder builder(geomFactory);
+  Tron::FmiBuilder builder(*geomFactory);
 
   switch (theInterpolation)
   {

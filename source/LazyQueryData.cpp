@@ -6,6 +6,7 @@
 // ======================================================================
 
 #include "LazyQueryData.h"
+#include <newbase/NFmiCoordinateMatrix.h>
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiFileSystem.h>
 #include <newbase/NFmiGrid.h>
@@ -320,6 +321,13 @@ bool LazyQueryData::IsWorldData() const
 
   // Sufficiently accurately the entire world?
   return (std::abs(span - 360) < 0.001);
+}
+
+NFmiCoordinateMatrix LazyQueryData::CoordinateMatrix() const { return itsInfo->CoordinateMatrix(); }
+
+const NFmiSpatialReference &LazyQueryData::SpatialReference() const
+{
+  return itsInfo->SpatialReference();
 }
 
 // ======================================================================

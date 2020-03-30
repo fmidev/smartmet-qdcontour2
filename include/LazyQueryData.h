@@ -23,6 +23,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiMetTime.h>
 #include <newbase/NFmiParameterName.h>
 #include <memory>
 #include <string>
@@ -31,11 +32,10 @@ class NFmiArea;
 class NFmiFastQueryInfo;
 class NFmiGrid;
 class NFmiLevel;
-// class NFmiMetTime;
 class NFmiPoint;
 class NFmiQueryData;
-
-#include <newbase/NFmiMetTime.h>
+class NFmiCoordinateMatrix;
+class NFmiSpatialReference;
 
 class LazyQueryData
 {
@@ -75,6 +75,9 @@ class LazyQueryData
   std::shared_ptr<Coordinates> Locations() const;
   std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
   std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
+
+  NFmiCoordinateMatrix CoordinateMatrix() const;
+  const NFmiSpatialReference &SpatialReference() const;
 
   bool BiLinearInterpolation(double x,
                              double y,

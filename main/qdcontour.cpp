@@ -16,6 +16,32 @@
 #include "MeridianTools.h"
 #include "MetaFunctions.h"
 #include "TimeTools.h"
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/shared_ptr.hpp>
+#include <imagine/NFmiColorTools.h>
+#include <imagine/NFmiGeoShape.h>  // for esri data
+#include <newbase/NFmiCmdLine.h>   // command line options
+#include <newbase/NFmiCoordinateMatrix.h>
+#include <newbase/NFmiCoordinateTransformation.h>
+#include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiDataModifierClasses.h>
+#include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string
+#include <newbase/NFmiFileSystem.h>     // FileExists()
+#include <newbase/NFmiGrid.h>
+#include <newbase/NFmiInterpolation.h>  // Interpolation functions
+#include <newbase/NFmiLevel.h>
+#include <newbase/NFmiPreProcessor.h>
+#include <newbase/NFmiSettings.h>  // Configuration
+#include <newbase/NFmiSmoother.h>  // for smoothing data
+#include <newbase/NFmiStringTools.h>
+#include <fstream>
+#include <iomanip>
+#include <list>
+#include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 #ifdef IMAGINE_WITH_CAIRO
 #include "ImagineXr.h"
@@ -26,31 +52,6 @@ typedef ImagineXr ImagineXr_or_NFmiImage;
 #include <imagine/NFmiImage.h>
 typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #endif
-
-#include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <imagine/NFmiColorTools.h>
-#include <imagine/NFmiGeoShape.h>  // for esri data
-#include <newbase/NFmiCmdLine.h>   // command line options
-#include <newbase/NFmiDataMatrix.h>
-#include <newbase/NFmiDataModifierClasses.h>
-#include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string
-#include <newbase/NFmiFileSystem.h>     // FileExists()
-#include <newbase/NFmiInterpolation.h>  // Interpolation functions
-#include <newbase/NFmiLevel.h>
-#include <newbase/NFmiPreProcessor.h>
-#include <newbase/NFmiSettings.h>  // Configuration
-#include <newbase/NFmiSmoother.h>  // for smoothing data
-#include <newbase/NFmiStringTools.h>
-
-#include <fstream>
-#include <iomanip>
-#include <list>
-#include <memory>
-#include <sstream>
-#include <stdexcept>
-#include <string>
 
 using namespace std;
 using namespace boost;
@@ -3756,37 +3757,37 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   bool speedok = (speedvalues.NX() != 0 && speedvalues.NY() != 0);
 
-  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
-      globals.queryinfo->LocationsWorldXY(theArea);
-  for (float y = 0; y <= worldpts->NY() - 1; y += globals.windarrowdy)
-    for (float x = 0; x <= worldpts->NX() - 1; x += globals.windarrowdx)
+  // Data coordinates to target area worldxy coordinates
+
+  auto coordinates = globals.queryinfo->CoordinateMatrix();
+
+  NFmiCoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
+                                              theArea.SpatialReference());
+
+  if (!coordinates.Transform(transformation)) return;
+
+  // Needed for grid to latlon conversions
+  const auto *grid = globals.queryinfo->Grid();
+
+  for (float y = 0; y < coordinates.Height() - 1; y += globals.windarrowdy)
+    for (float x = 0; x < coordinates.Width() - 1; x += globals.windarrowdx)
     {
       // The start point
 
       const int i = static_cast<int>(floor(x));
       const int j = static_cast<int>(floor(y));
 
-      NFmiPoint bad(kFloatMissing, kFloatMissing);
       NFmiPoint xy = NFmiInterpolation::BiLinear(x - i,
                                                  y - j,
-                                                 worldpts->At(i, j + 1, bad),
-                                                 worldpts->At(i + 1, j + 1, bad),
-                                                 worldpts->At(i, j, bad),
-                                                 worldpts->At(i + 1, j, bad));
+                                                 coordinates(i, j + 1),
+                                                 coordinates(i + 1, j + 1),
+                                                 coordinates(i, j),
+                                                 coordinates(i + 1, j));
 
-      NFmiPoint latlon = theArea.WorldXYToLatLon(xy);
-      // latlon = MeridianTools::Relocate(latlon,theArea);
-      NFmiPoint xy0 = theArea.ToXY(latlon);
+      NFmiPoint xy0 = theArea.WorldXYToXY(xy);
 
       // Skip rendering if the start point is masked
       if (IsMasked(xy0, globals.mask)) continue;
-
-      // Skip rendering if the start point is way outside the image
-
-      const int safetymargin = 50;
-      if (xy0.X() < -safetymargin || xy0.Y() < -safetymargin ||
-          xy0.X() > img.Width() + safetymargin || xy0.Y() > img.Height() + safetymargin)
-        continue;
 
       // Render the arrow
 
@@ -3797,6 +3798,13 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
                                                   dirvalues.At(i, j, kFloatMissing),
                                                   dirvalues.At(i + 1, j, kFloatMissing),
                                                   360);
+
+      // Skip rendering if the start point is way outside the image
+
+      const int safetymargin = 50;
+      if (xy0.X() < -safetymargin || xy0.Y() < -safetymargin ||
+          xy0.X() > img.Width() + safetymargin || xy0.Y() > img.Height() + safetymargin)
+        continue;
 
       if (dir == kFloatMissing)  // ignore missing
         continue;
@@ -3812,6 +3820,8 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
         continue;
 
       // Direction calculations
+
+      const auto latlon = grid->GridToLatLon(x, y);
 
       const float north = paper_north(theArea, latlon);
 

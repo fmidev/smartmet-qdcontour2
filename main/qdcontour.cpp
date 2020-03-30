@@ -34,10 +34,13 @@ typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 // Newbase headers
 //
 #include "NFmiCmdLine.h"  // command line options
+#include "NFmiCoordinateMatrix.h"
+#include "NFmiCoordinateTransformation.h"
 #include "NFmiDataMatrix.h"
 #include "NFmiDataModifierClasses.h"
 #include "NFmiEnumConverter.h"  // FmiParameterName<-->string
 #include "NFmiFileSystem.h"     // FileExists()
+#include "NFmiGrid.h"
 #include "NFmiInterpolation.h"  // Interpolation functions
 #include "NFmiLevel.h"
 #include "NFmiPreProcessor.h"
@@ -3780,27 +3783,34 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   bool speedok = (speedvalues.NX() != 0 && speedvalues.NY() != 0);
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
-      globals.queryinfo->LocationsWorldXY(theArea);
-  for (float y = 0; y <= worldpts->NY() - 1; y += globals.windarrowdy)
-    for (float x = 0; x <= worldpts->NX() - 1; x += globals.windarrowdx)
+  // Data coordinates to target area worldxy coordinates
+
+  auto coordinates = globals.queryinfo->CoordinateMatrix();
+
+  NFmiCoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
+                                              theArea.SpatialReference());
+
+  if (!coordinates.Transform(transformation)) return;
+
+  // Needed for grid to latlon conversions
+  const auto *grid = globals.queryinfo->Grid();
+
+  for (float y = 0; y < coordinates.Height() - 1; y += globals.windarrowdy)
+    for (float x = 0; x < coordinates.Width() - 1; x += globals.windarrowdx)
     {
       // The start point
 
       const int i = static_cast<int>(floor(x));
       const int j = static_cast<int>(floor(y));
 
-      NFmiPoint bad(kFloatMissing, kFloatMissing);
       NFmiPoint xy = NFmiInterpolation::BiLinear(x - i,
                                                  y - j,
-                                                 worldpts->At(i, j + 1, bad),
-                                                 worldpts->At(i + 1, j + 1, bad),
-                                                 worldpts->At(i, j, bad),
-                                                 worldpts->At(i + 1, j, bad));
+                                                 coordinates(i, j + 1),
+                                                 coordinates(i + 1, j + 1),
+                                                 coordinates(i, j),
+                                                 coordinates(i + 1, j));
 
-      NFmiPoint latlon = theArea.WorldXYToLatLon(xy);
-      // latlon = MeridianTools::Relocate(latlon,theArea);
-      NFmiPoint xy0 = theArea.ToXY(latlon);
+      NFmiPoint xy0 = theArea.WorldXYToXY(xy);
 
       // Skip rendering if the start point is masked
       if (IsMasked(xy0, globals.mask)) continue;
@@ -3837,6 +3847,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
       // Direction calculations
 
+      const auto latlon = grid->GridToLatLon(x, y);
       const float north = paper_north(theArea, latlon);
 
       // Render the arrow

@@ -7,6 +7,7 @@
 
 #include "LazyQueryData.h"
 #include <newbase/NFmiCoordinateMatrix.h>
+#include <newbase/NFmiCoordinateTransformation.h>
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiFileSystem.h>
 #include <newbase/NFmiGrid.h>
@@ -183,9 +184,11 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
 {
   if (itsLocations.get() == 0)
   {
-    itsLocations.reset(new Coordinates);
-    itsInfo->Locations(*itsLocations);
+    itsLocations.reset(new Coordinates(itsInfo->CoordinateMatrix()));
+    NFmiCoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
+    itsLocations->Transform(transformation);
   }
+
   return itsLocations;
 }
 
@@ -204,8 +207,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
   if (itsLocationsWorldXY.get() == 0 || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
-    itsLocationsWorldXY.reset(new Coordinates);
-    itsInfo->LocationsWorldXY(*itsLocationsWorldXY, theArea);
+    itsLocationsWorldXY.reset(new Coordinates(itsInfo->LocationsWorldXY(theArea)));
   }
   return itsLocationsWorldXY;
 }
@@ -225,8 +227,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsXY(
   if (itsLocationsXY.get() == 0 || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
-    itsLocationsXY.reset(new Coordinates);
-    itsInfo->LocationsXY(*itsLocationsXY, theArea);
+    itsLocationsXY.reset(new Coordinates(itsInfo->LocationsXY(theArea)));
   }
   return itsLocationsXY;
 }
@@ -292,16 +293,16 @@ float LazyQueryData::InterpolatedValue(const NFmiPoint &theLatLonPoint)
  */
 // ----------------------------------------------------------------------
 
-void LazyQueryData::Values(NFmiDataMatrix<float> &theValues) { itsInfo->Values(theValues); }
+NFmiDataMatrix<float> LazyQueryData::Values() { return itsInfo->Values(); }
 // ----------------------------------------------------------------------
 /*!
  *
  */
 // ----------------------------------------------------------------------
 
-void LazyQueryData::Values(NFmiDataMatrix<float> &theValues, const NFmiMetTime &theTime)
+NFmiDataMatrix<float> LazyQueryData::Values(const NFmiMetTime &theTime)
 {
-  itsInfo->Values(theValues, theTime);
+  return itsInfo->Values(theTime);
 }
 
 // ----------------------------------------------------------------------

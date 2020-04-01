@@ -70,7 +70,7 @@ class LazyQueryData
 
   bool IsParamUsable() const;
 
-  typedef NFmiDataMatrix<NFmiPoint> Coordinates;
+  using Coordinates = NFmiCoordinateMatrix;
 
   std::shared_ptr<Coordinates> Locations() const;
   std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
@@ -97,8 +97,8 @@ class LazyQueryData
 
   float InterpolatedValue(const NFmiPoint &theLatLonPoint);
 
-  void Values(NFmiDataMatrix<float> &theValues);
-  void Values(NFmiDataMatrix<float> &theValues, const NFmiMetTime &theTime);
+  NFmiDataMatrix<float> Values();
+  NFmiDataMatrix<float> Values(const NFmiMetTime &theTime);
 
   bool IsWorldData() const;
 

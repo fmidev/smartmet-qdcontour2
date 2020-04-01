@@ -6,15 +6,14 @@
 // ======================================================================
 
 #include "MetaFunctions.h"
+#include <boost/shared_ptr.hpp>
 #include <newbase/NFmiArea.h>
+#include <newbase/NFmiCoordinateMatrix.h>
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiLocation.h>
 #include <newbase/NFmiMetMath.h>
 #include <newbase/NFmiMetTime.h>
 #include <newbase/NFmiPoint.h>
-
-#include <boost/shared_ptr.hpp>
-
 #include <iostream>
 #include <stdexcept>
 
@@ -49,13 +48,13 @@ NFmiDataMatrix<float> elevation_angle_values(LazyQueryData &theQI)
 {
   NFmiDataMatrix<float> values;
 
-  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> pts = theQI.Locations();
-  values.Resize(pts->NX(), pts->NY(), kFloatMissing);
+  std::shared_ptr<NFmiCoordinateMatrix> pts = theQI.Locations();
+  values.Resize(pts->Width(), pts->Height(), kFloatMissing);
 
-  for (unsigned int j = 0; j < pts->NY(); j++)
-    for (unsigned int i = 0; i < pts->NX(); i++)
+  for (unsigned int j = 0; j < pts->Height(); j++)
+    for (unsigned int i = 0; i < pts->Width(); i++)
     {
-      NFmiLocation loc((*pts)[i][j]);
+      NFmiLocation loc((*pts)(i, j));
       NFmiMetTime t(theQI.ValidTime());
       double angle = loc.ElevationAngle(t);
       values[i][j] = static_cast<float>(angle);
@@ -74,13 +73,10 @@ NFmiDataMatrix<float> elevation_angle_values(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> wind_chill_values(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> t2m;
-  NFmiDataMatrix<float> wspd;
-
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
   theQI.Param(kFmiWindSpeedMS);
-  theQI.Values(wspd);
+  auto wspd = theQI.Values();
 
   // overwrite t2m with wind chill
 
@@ -103,13 +99,10 @@ NFmiDataMatrix<float> wind_chill_values(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> dew_difference_values(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> tdew;
-  NFmiDataMatrix<float> troad;
-
   theQI.Param(kFmiRoadTemperature);
-  theQI.Values(troad);
+  auto troad = theQI.Values();
   theQI.Param(kFmiDewPoint);
-  theQI.Values(tdew);
+  auto tdew = theQI.Values();
 
   // overwrite troad with troad-tdew
 
@@ -137,13 +130,10 @@ NFmiDataMatrix<float> dew_difference_values(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> air_dew_difference_values(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> tdew;
-  NFmiDataMatrix<float> t2m;
-
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
   theQI.Param(kFmiDewPoint);
-  theQI.Values(tdew);
+  auto tdew = theQI.Values();
 
   // overwrite troad with troad-tdew
 
@@ -171,9 +161,8 @@ NFmiDataMatrix<float> air_dew_difference_values(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> n_cloudiness(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> n;
   theQI.Param(kFmiTotalCloudCover);
-  theQI.Values(n);
+  auto n = theQI.Values();
 
   for (unsigned int j = 0; j < n.NY(); j++)
     for (unsigned int i = 0; i < n.NX(); i++)
@@ -192,9 +181,8 @@ NFmiDataMatrix<float> n_cloudiness(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> nn_cloudiness(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> nn;
   theQI.Param(kFmiMiddleAndLowCloudCover);
-  theQI.Values(nn);
+  auto nn = theQI.Values();
 
   for (unsigned int j = 0; j < nn.NY(); j++)
     for (unsigned int i = 0; i < nn.NX(); i++)
@@ -297,16 +285,12 @@ void matrix_abs(const NFmiDataMatrix<float> &theX,
 
 NFmiDataMatrix<float> t2m_advection(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> wspd;
-  NFmiDataMatrix<float> wdir;
-  NFmiDataMatrix<float> t2m;
-
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
   theQI.Param(kFmiWindSpeedMS);
-  theQI.Values(wspd);
+  auto wspd = theQI.Values();
   theQI.Param(kFmiWindDirection);
-  theQI.Values(wdir);
+  auto wdir = theQI.Values();
 
   // advection = v dot nabla(t)
   // we overwrite wspd with the results
@@ -373,9 +357,8 @@ NFmiDataMatrix<float> t2m_advection(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> thermal_front(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> t2m;
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
 
   NFmiDataMatrix<float> tfp;
   tfp.Resize(t2m.NX(), t2m.NY(), kFloatMissing);
@@ -431,13 +414,10 @@ NFmiDataMatrix<float> thermal_front(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> snowprob(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> t2m;
-  NFmiDataMatrix<float> rh;
-
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
   theQI.Param(kFmiHumidity);
-  theQI.Values(rh);
+  auto rh = theQI.Values();
 
   // overwrite t2m with snowprob
 
@@ -466,16 +446,12 @@ NFmiDataMatrix<float> snowprob(LazyQueryData &theQI)
 
 NFmiDataMatrix<float> thetae(LazyQueryData &theQI)
 {
-  NFmiDataMatrix<float> t2m;
-  NFmiDataMatrix<float> rh;
-  NFmiDataMatrix<float> p;
-
   theQI.Param(kFmiTemperature);
-  theQI.Values(t2m);
+  auto t2m = theQI.Values();
   theQI.Param(kFmiHumidity);
-  theQI.Values(rh);
+  auto rh = theQI.Values();
   theQI.Param(kFmiPressure);
-  theQI.Values(p);
+  auto p = theQI.Values();
 
   // overwrite t2m with thetae
 

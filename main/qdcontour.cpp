@@ -2919,7 +2919,7 @@ void filter_values(NFmiDataMatrix<float> &theValues,
       NFmiTime t1 = globals.queryinfo->ValidTime();
       if (!MetaFunctions::isMeta(theSpec.param()))
       {
-        globals.queryinfo->Values(tmpvals);
+        tmpvals = globals.queryinfo->Values();
         globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()),
                                        tmpvals);
       }
@@ -2951,7 +2951,7 @@ void filter_values(NFmiDataMatrix<float> &theValues,
     int steps = 1;
     for (;;)
     {
-      globals.queryinfo->Values(tmpvals, tnow);
+      tmpvals = globals.queryinfo->Values(tnow);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), tmpvals);
 
       if (theSpec.replace())
@@ -3522,14 +3522,14 @@ void get_speed_direction(const NFmiArea &area,
   {
     if (globals.queryinfo->Param(toparam(globals.speedparam)))
     {
-      globals.queryinfo->Values(speed);
+      speed = globals.queryinfo->Values();
       speed.Replace(speed_src, speed_dst);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), speed);
     }
 
     if (globals.queryinfo->Param(toparam(globals.directionparam)))
     {
-      globals.queryinfo->Values(direction);
+      direction = globals.queryinfo->Values();
       direction.Replace(direction_src, direction_dst);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()),
                                      direction);
@@ -3540,10 +3540,12 @@ void get_speed_direction(const NFmiArea &area,
     NFmiDataMatrix<float> dx;
     NFmiDataMatrix<float> dy;
 
-    if (globals.queryinfo->Param(toparam(globals.speedxcomponent))) globals.queryinfo->Values(dx);
-    if (globals.queryinfo->Param(toparam(globals.speedycomponent))) globals.queryinfo->Values(dy);
+    if (globals.queryinfo->Param(toparam(globals.speedxcomponent)))
+      dx = globals.queryinfo->Values();
+    if (globals.queryinfo->Param(toparam(globals.speedycomponent)))
+      dy = globals.queryinfo->Values();
 
-    std::shared_ptr<NFmiDataMatrix<NFmiPoint>> latlon = globals.queryinfo->Locations();
+    std::shared_ptr<NFmiCoordinateMatrix> latlon = globals.queryinfo->Locations();
 
     if (dx.NX() != 0 && dx.NY() != 0 && dy.NX() != 0 && dy.NY() != 0)
     {
@@ -3557,7 +3559,7 @@ void get_speed_direction(const NFmiArea &area,
             speed[i][j] = sqrt(dx[i][j] * dx[i][j] + dy[i][j] * dy[i][j]);
             if (dx[i][j] != 0 || dy[i][j] != 0)
             {
-              double north = paper_north(area, (*latlon)[i][j]);
+              double north = paper_north(area, (*latlon)(i, j));
               direction[i][j] = fmod(180 + north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
             }
           }
@@ -4694,11 +4696,9 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 
   choose_queryinfo("Pressure", 0);
 
-  std::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
-      globals.queryinfo->LocationsWorldXY(theArea);
+  std::shared_ptr<NFmiCoordinateMatrix> worldpts = globals.queryinfo->LocationsWorldXY(theArea);
 
-  NFmiDataMatrix<float> vals;
-  globals.queryinfo->Values(vals);
+  auto vals = globals.queryinfo->Values();
   globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), vals);
 
   // Insert candidate coordinates into the system
@@ -4717,7 +4717,7 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       if (extrem != 0)
       {
         // the point in kilometer units
-        NFmiPoint point((*worldpts)[i][j].X() / 1000, (*worldpts)[i][j].Y() / 1000);
+        NFmiPoint point(worldpts->X(i, j) / 1000, worldpts->Y(i, j) / 1000);
 
         if (extrem < 0)
         {
@@ -5086,7 +5086,7 @@ void do_draw_contours(istream &theInput)
 
       if (!MetaFunctions::isMeta(name))
       {
-        globals.queryinfo->Values(vals);
+        vals = globals.queryinfo->Values();
         globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), vals);
       }
       else

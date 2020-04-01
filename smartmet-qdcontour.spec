@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}2
 Summary: %{BINNAME}2
 Name: %{RPMNAME}
-Version: 20.3.30
+Version: 20.4.1
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -14,13 +14,13 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 20.3.26
-BuildRequires: smartmet-library-newbase-devel >= 20.3.30
+BuildRequires: smartmet-library-imagine2-devel >= 20.4.1
+BuildRequires: smartmet-library-newbase-devel >= 20.3.31
 BuildRequires: smartmet-library-tron >= 20.3.26
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 20.3.26
-Requires: smartmet-library-newbase >= 20.3.30
+Requires: smartmet-library-imagine2 >= 20.4.1
+Requires: smartmet-library-newbase >= 20.3.31
 Requires: boost-iostreams
 Requires: boost-system
 Requires: freetype
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr  1 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.1-1.fmi
+- Use NFmiCoordinateMatrix instead of NFmiDataMatrix<NFmiPoint>
+
 * Mon Mar 30 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.3.30-1.fmi
 - Updated to use NFmiCoordinateMatrix and NFmiCoordinateTransformation
 

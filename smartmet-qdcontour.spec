@@ -2,27 +2,27 @@
 %define RPMNAME smartmet-%{BINNAME}2
 Summary: %{BINNAME}2
 Name: %{RPMNAME}
-Version: 19.11.20
+Version: 20.4.18
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
 URL: http://www.weatherproof.fi
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
-BuildRequires: boost-devel
+BuildRequires: boost169-devel
 BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 19.10.31
-BuildRequires: smartmet-library-newbase-devel >= 19.10.31
-BuildRequires: smartmet-library-tron >= 19.9.26
+BuildRequires: smartmet-library-imagine2-devel >= 20.4.18
+BuildRequires: smartmet-library-newbase-devel >= 20.4.18
+BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 19.10.31
-Requires: smartmet-library-newbase >= 19.10.31
-Requires: boost-iostreams
-Requires: boost-system
+Requires: smartmet-library-imagine2 >= 20.4.18
+Requires: smartmet-library-newbase >= 20.4.18
+Requires: boost169-iostreams
+Requires: boost169-system
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.18-1.fmi
+- Upgraded to Boost 1.69
+
 * Wed Nov 20 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.11.20-1.fmi
 - Repackaged due to newbase API changes
 

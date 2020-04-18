@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: qdcontour
 Name: %{RPMNAME}
-Version: 19.11.20
+Version: 20.4.18
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Tools
@@ -12,19 +12,19 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: gcc-c++
 BuildRequires: make
-BuildRequires: boost-devel
+BuildRequires: boost169-devel
 BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine-devel >= 19.11.20
-BuildRequires: smartmet-library-newbase-devel >= 19.11.20
-BuildRequires: smartmet-library-tron >= 19.10.31
+BuildRequires: smartmet-library-imagine-devel >= 20.4.18
+BuildRequires: smartmet-library-newbase-devel >= 20.4.18
+BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: zlib-devel
 BuildRequires: ImageMagick
 BuildRequires: bc
-Requires: smartmet-library-imagine >= 19.11.20
-Requires: smartmet-library-newbase >= 19.11.20
+Requires: smartmet-library-imagine >= 20.4.18
+Requires: smartmet-library-newbase >= 20.4.18
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.18-1.fmi
+- Upgraded to Boost 1.68
+
 * Wed Nov 20 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.11.20-1.fmi
 - Repackaged due to newbase API changes
 

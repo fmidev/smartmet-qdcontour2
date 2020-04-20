@@ -12,7 +12,7 @@
  * needed (when the counters are already available in the cache).
  *
  * To optimize the code we hence use a lazy matrix of coordinates,
- * which acts like a NFmiCoordinateMatrix, except that
+ * which acts like a Fmi::CoordinateMatrix, except that
  * the coordinates are only fetched from the global querydata
  * holder if necessary.
  *
@@ -24,13 +24,13 @@
 
 #include "Globals.h"
 #include "LazyQueryData.h"
-#include <newbase/NFmiCoordinateMatrix.h>
+#include <gis/CoordinateMatrix.h>
 #include <newbase/NFmiPoint.h>
 
 class LazyCoordinates
 {
  public:
-  typedef NFmiCoordinateMatrix data_type;
+  typedef Fmi::CoordinateMatrix data_type;
   typedef NFmiPoint element_type;
   typedef std::size_t size_type;
 
@@ -74,8 +74,8 @@ inline LazyCoordinates::element_type LazyCoordinates::operator()(
     int i, int j, const element_type &theDefault) const
 {
   init();
-  if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.Width() &&
-      static_cast<size_type>(j) < itsData.Height())
+  if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.width() &&
+      static_cast<size_type>(j) < itsData.height())
   {
     return itsData(i, j);
   }
@@ -116,7 +116,7 @@ inline LazyCoordinates::data_type &LazyCoordinates::operator*()
 inline LazyCoordinates::size_type LazyCoordinates::NX() const
 {
   init();
-  return itsData.Width();
+  return itsData.width();
 }
 
 // ----------------------------------------------------------------------
@@ -128,7 +128,7 @@ inline LazyCoordinates::size_type LazyCoordinates::NX() const
 inline LazyCoordinates::size_type LazyCoordinates::NY() const
 {
   init();
-  return itsData.Height();
+  return itsData.height();
 }
 
 // ----------------------------------------------------------------------

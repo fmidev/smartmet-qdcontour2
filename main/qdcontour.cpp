@@ -19,11 +19,11 @@
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
+#include <gis/CoordinateMatrix.h>
+#include <gis/CoordinateTransformation.h>
 #include <imagine/NFmiColorTools.h>
 #include <imagine/NFmiGeoShape.h>  // for esri data
 #include <newbase/NFmiCmdLine.h>   // command line options
-#include <newbase/NFmiCoordinateMatrix.h>
-#include <newbase/NFmiCoordinateTransformation.h>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiDataModifierClasses.h>
 #include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string

@@ -34,8 +34,12 @@ class NFmiGrid;
 class NFmiLevel;
 class NFmiPoint;
 class NFmiQueryData;
-class NFmiCoordinateMatrix;
 class NFmiSpatialReference;
+
+namespace Fmi
+{
+class CoordinateMatrix;
+}
 
 class LazyQueryData
 {
@@ -70,13 +74,13 @@ class LazyQueryData
 
   bool IsParamUsable() const;
 
-  using Coordinates = NFmiCoordinateMatrix;
+  using Coordinates = Fmi::CoordinateMatrix;
 
   std::shared_ptr<Coordinates> Locations() const;
   std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
   std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
 
-  NFmiCoordinateMatrix CoordinateMatrix() const;
+  Fmi::CoordinateMatrix CoordinateMatrix() const;
   const NFmiSpatialReference &SpatialReference() const;
 
   bool BiLinearInterpolation(double x,

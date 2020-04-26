@@ -16,17 +16,17 @@ EXTRAFLAGS = \
 	-Wcast-qual \
 	-Wcast-align \
 	-Wwrite-strings \
-	-Wnon-virtual-dtor \
 	-Wno-pmf-conversions \
 	-Wsign-promo \
 	-Wchar-subscripts \
-	-Wredundant-decls \
 	-Woverloaded-virtual
 
 DIFFICULTFLAGS = \
 	-Wunreachable-code \
 	-Wconversion \
 	-Wctor-dtor-privacy \
+	-Wnon-virtual-dtor \
+	-Wredundant-decls \
 	-Weffc++ \
 	-Wold-style-cast \
 	-pedantic \
@@ -49,10 +49,15 @@ CFLAGS_PROFILE = $(DEFINES) -O2 -g -pg -DNDEBUG $(MAINFLAGS)
 LDFLAGS_DEBUG =
 LDFLAGS_PROFILE =
 
-INCLUDES = \
-	-I$(PREFIX)/geos38/include \
-	-I$(PREFIX)/gdal30/include \
-	-I$(includedir) \
+# Boost 1.69
+
+ifneq "$(wildcard /usr/include/boost169)" ""
+  INCLUDES += -I/usr/include/boost169
+  LIBS += -L/usr/lib64/boost169
+endif
+
+
+INCLUDES += -I$(includedir) \
 	-I$(includedir)/smartmet \
 	-I$(includedir)/smartmet/newbase \
 	-I$(includedir)/smartmet/imagine2 \
@@ -60,10 +65,7 @@ INCLUDES = \
 	`pkg-config --cflags cairomm-1.0`
 
 
-LIBS = \
-	-L$(PREFIX)/geos38/lib64 -lgeos \
-	-L$(PREFIX)/gdal30/lib `pkg-config --libs gdal30` \
-	-L$(libdir) \
+LIBS += -L$(libdir) \
 	-lsmartmet-newbase \
 	-lsmartmet-imagine2 \
 	-lsmartmet-tron \

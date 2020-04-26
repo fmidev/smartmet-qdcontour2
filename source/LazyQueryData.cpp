@@ -180,13 +180,13 @@ bool LazyQueryData::IsParamUsable() const { return itsInfo->IsParamUsable(); }
  */
 // ----------------------------------------------------------------------
 
-std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
+std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::Locations() const
 {
   if (itsLocations.get() == 0)
   {
-    itsLocations.reset(new Coordinates(itsInfo->CoordinateMatrix()));
+    itsLocations.reset(new Fmi::CoordinateMatrix(itsInfo->CoordinateMatrix()));
     Fmi::CoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
-    itsLocations->Transform(transformation);
+    itsLocations->transform(transformation);
   }
 
   return itsLocations;
@@ -198,7 +198,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
  */
 // ----------------------------------------------------------------------
 
-std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
+std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::LocationsWorldXY(
     const NFmiArea &theArea) const
 {
   ostringstream os;
@@ -207,7 +207,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
   if (itsLocationsWorldXY.get() == 0 || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
-    itsLocationsWorldXY.reset(new Coordinates(itsInfo->LocationsWorldXY(theArea)));
+    itsLocationsWorldXY.reset(new Fmi::CoordinateMatrix(itsInfo->LocationsWorldXY(theArea)));
   }
   return itsLocationsWorldXY;
 }
@@ -218,8 +218,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsWorldXY(
  */
 // ----------------------------------------------------------------------
 
-std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsXY(
-    const NFmiArea &theArea) const
+std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::LocationsXY(const NFmiArea &theArea) const
 {
   ostringstream os;
   os << theArea;
@@ -227,7 +226,7 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::LocationsXY(
   if (itsLocationsXY.get() == 0 || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
-    itsLocationsXY.reset(new Coordinates(itsInfo->LocationsXY(theArea)));
+    itsLocationsXY.reset(new Fmi::CoordinateMatrix(itsInfo->LocationsXY(theArea)));
   }
   return itsLocationsXY;
 }
@@ -305,31 +304,12 @@ NFmiDataMatrix<float> LazyQueryData::Values(const NFmiMetTime &theTime)
   return itsInfo->Values(theTime);
 }
 
-// ----------------------------------------------------------------------
-/*!
- * \brief Test whether the data is world data
- */
-// ----------------------------------------------------------------------
-
-bool LazyQueryData::IsWorldData() const
-{
-  double lon1 = itsInfo->Area()->BottomLeftLatLon().X();
-  double lon2 = itsInfo->Area()->TopRightLatLon().X();
-  int xnumber = itsInfo->Grid()->XNumber();
-
-  // Predicted span if there was one more grid point
-  double span = (lon2 - lon1) * xnumber / (xnumber - 1);
-
-  // Sufficiently accurately the entire world?
-  return (std::abs(span - 360) < 0.001);
-}
-
 Fmi::CoordinateMatrix LazyQueryData::CoordinateMatrix() const
 {
   return itsInfo->CoordinateMatrix();
 }
 
-const NFmiSpatialReference &LazyQueryData::SpatialReference() const
+const Fmi::SpatialReference &LazyQueryData::SpatialReference() const
 {
   return itsInfo->SpatialReference();
 }

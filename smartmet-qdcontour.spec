@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: qdcontour
 Name: %{RPMNAME}
-Version: 20.4.18
+Version: 20.4.26
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Tools
@@ -17,16 +17,18 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine-devel >= 20.4.18
-BuildRequires: smartmet-library-newbase-devel >= 20.4.18
-BuildRequires: smartmet-library-tron >= 20.4.18
+BuildRequires: smartmet-library-imagine-devel >= 20.4.24
+BuildRequires: smartmet-library-newbase-devel >= 20.4.23
+BuildRequires: smartmet-library-tron >= 20.4.23
+BuildRequires: smartmet-library-gis > 1.0
 BuildRequires: geos38-devel
 BuildRequires: gdal30-devel
 BuildRequires: zlib-devel
 BuildRequires: ImageMagick
 BuildRequires: bc
-Requires: smartmet-library-imagine >= 20.4.18
-Requires: smartmet-library-newbase >= 20.4.18
+Requires: smartmet-library-imagine >= 20.4.24
+Requires: smartmet-library-newbase >= 20.4.23
+Requires: smartmet-library-gis >= 20.4.26
 Requires: geos38
 Requires: gdal30
 Requires: freetype
@@ -59,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 26 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.26-1.fmi
+- Use Fmi::CoordinateMatrix
+
 * Sat Apr 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.18-1.fmi
 - Upgraded to Boost 1.68
 

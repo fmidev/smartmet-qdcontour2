@@ -21,6 +21,7 @@
 #include <boost/shared_ptr.hpp>
 #include <gis/CoordinateMatrix.h>
 #include <gis/CoordinateTransformation.h>
+#include <gis/OGR.h>
 #include <imagine/NFmiColorTools.h>
 #include <imagine/NFmiGeoShape.h>  // for esri data
 #include <newbase/NFmiCmdLine.h>   // command line options
@@ -3408,29 +3409,6 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
 
 // ----------------------------------------------------------------------
 /*!
- * \brief Calculate direction of north on paper coordinates
- */
-// ----------------------------------------------------------------------
-
-double paper_north(const NFmiArea &theArea, const NFmiPoint &theLatLon)
-{
-  // Safety against polar regions just in case
-
-  if (theLatLon.Y() <= -89.9 || theLatLon.Y() >= 89.9) return 0;
-
-  const NFmiPoint origo = theArea.ToXY(theLatLon);
-
-  const float pi = 3.141592658979323f;
-  const double latstep = 0.01;  // degrees to north
-
-  const double lat = theLatLon.Y() + latstep;
-  const NFmiPoint north = theArea.ToXY(NFmiPoint(theLatLon.X(), lat));
-  const float alpha = static_cast<float>(atan2(origo.X() - north.X(), origo.Y() - north.Y()));
-  return alpha * 180 / pi;
-}
-
-// ----------------------------------------------------------------------
-/*!
  * \brief Return the circle for a round arrow
  */
 // ----------------------------------------------------------------------
@@ -3510,7 +3488,7 @@ void draw_roundarrow(NFmiImage &img, const NFmiPoint &xy, float speed, float ang
  */
 // ----------------------------------------------------------------------
 
-void get_speed_direction(const NFmiArea &area,
+void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
                          float speed_src,
                          float speed_dst,
                          float direction_src,
@@ -3545,7 +3523,7 @@ void get_speed_direction(const NFmiArea &area,
     if (globals.queryinfo->Param(toparam(globals.speedycomponent)))
       dy = globals.queryinfo->Values();
 
-    std::shared_ptr<NFmiCoordinateMatrix> latlon = globals.queryinfo->Locations();
+    auto latlon = globals.queryinfo->Locations();
 
     if (dx.NX() != 0 && dx.NY() != 0 && dy.NX() != 0 && dy.NY() != 0)
     {
@@ -3559,8 +3537,11 @@ void get_speed_direction(const NFmiArea &area,
             speed[i][j] = sqrt(dx[i][j] * dx[i][j] + dy[i][j] * dy[i][j]);
             if (dx[i][j] != 0 || dy[i][j] != 0)
             {
-              double north = paper_north(area, (*latlon)(i, j));
-              direction[i][j] = fmod(180 + north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+              auto north = Fmi::OGR::gridNorth(transformation, latlon->x(i, j), latlon->y(i, j));
+              if (north)
+                direction[i][j] = fmod(180 + *north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+              else
+                direction[i][j] = kFloatMissing;
             }
           }
         }
@@ -3574,7 +3555,7 @@ void get_speed_direction(const NFmiArea &area,
  */
 // ----------------------------------------------------------------------
 
-void get_speed_direction(const NFmiArea &area,
+void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
                          const NFmiPoint &latlon,
                          float speed_src,
                          float speed_dst,
@@ -3621,8 +3602,11 @@ void get_speed_direction(const NFmiArea &area,
       speed = sqrt(dx * dx + dy * dy);
       if (dx != 0 || dy != 0)
       {
-        double north = paper_north(area, latlon);
-        direction = fmod(180 + north + FmiDeg(atan2f(dx, dy)), 360.0);
+        auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+        if (north)
+          direction = fmod(180 + *north + FmiDeg(atan2f(dx, dy)), 360.0);
+        else
+          direction = kFloatMissing;
       }
     }
   }
@@ -3646,6 +3630,8 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
 
   list<NFmiPoint>::const_iterator iter;
 
+  Fmi::CoordinateTransformation transformation("WGS84", theArea.SpatialReference());
+
   for (iter = globals.arrowpoints.begin(); iter != globals.arrowpoints.end(); ++iter)
   {
     // The start point
@@ -3660,20 +3646,22 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
     float dir, speed;
 
     get_speed_direction(
-        theArea, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
+        transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
 
     // Ignore missing values
     if (dir == kFloatMissing || speed == kFloatMissing) continue;
 
     // Direction calculations
 
-    const float north = paper_north(theArea, latlon);
+    auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+
+    if (!north) continue;
 
     // Render the arrow
 
     if (globals.arrowfile == "roundarrow")
     {
-      draw_roundarrow(img, xy0, speed, -dir + north + 180);
+      draw_roundarrow(img, xy0, speed, -dir + *north + 180);
     }
     else
     {
@@ -3694,11 +3682,11 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
         }
 
         strokes.Scale(globals.arrowscale);
-        strokes.Rotate(-dir + north + 180);
+        strokes.Rotate(-dir + *north + 180);
         strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         flags.Scale(globals.arrowscale);
-        flags.Rotate(-dir + north + 180);
+        flags.Rotate(-dir + *north + 180);
         flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         ArrowStyle style = globals.getArrowStroke(speed);
@@ -3714,7 +3702,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
           arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                           globals.windarrowscaleC);
         arrowpath.Scale(globals.arrowscale);
-        arrowpath.Rotate(-dir + north + 180);
+        arrowpath.Rotate(-dir + *north + 180);
         arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         // And render it
@@ -3749,8 +3737,15 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   NFmiDataMatrix<float> speedvalues, dirvalues;
 
-  get_speed_direction(
-      theArea, speed_src, speed_dst, direction_src, direction_dst, speedvalues, dirvalues);
+  Fmi::CoordinateTransformation wgs84transformation("WGS84", theArea.SpatialReference());
+
+  get_speed_direction(wgs84transformation,
+                      speed_src,
+                      speed_dst,
+                      direction_src,
+                      direction_dst,
+                      speedvalues,
+                      dirvalues);
 
   if (dirvalues.NX() == 0 || dirvalues.NY() == 0)
   {
@@ -3763,16 +3758,16 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   auto coordinates = globals.queryinfo->CoordinateMatrix();
 
-  NFmiCoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
-                                              theArea.SpatialReference());
+  Fmi::CoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
+                                               theArea.SpatialReference());
 
-  if (!coordinates.Transform(transformation)) return;
+  if (!coordinates.transform(transformation)) return;
 
   // Needed for grid to latlon conversions
   const auto *grid = globals.queryinfo->Grid();
 
-  for (float y = 0; y < coordinates.Height() - 1; y += globals.windarrowdy)
-    for (float x = 0; x < coordinates.Width() - 1; x += globals.windarrowdx)
+  for (float y = 0; y < coordinates.height() - 1; y += globals.windarrowdy)
+    for (float x = 0; x < coordinates.width() - 1; x += globals.windarrowdx)
     {
       // The start point
 
@@ -3825,13 +3820,15 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
       const auto latlon = grid->GridToLatLon(x, y);
 
-      const float north = paper_north(theArea, latlon);
+      auto north = Fmi::OGR::gridNorth(wgs84transformation, latlon.X(), latlon.Y());
+
+      if (!north) continue;
 
       // Render the arrow
 
       if (globals.arrowfile == "roundarrow")
       {
-        draw_roundarrow(img, xy0, speed, -dir + north + 180);
+        draw_roundarrow(img, xy0, speed, -dir + *north + 180);
       }
       else
       {
@@ -3852,11 +3849,11 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
           }
 
           strokes.Scale(globals.arrowscale);
-          strokes.Rotate(-dir + north + 180);
+          strokes.Rotate(-dir + *north + 180);
           strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           flags.Scale(globals.arrowscale);
-          flags.Rotate(-dir + north + 180);
+          flags.Rotate(-dir + *north + 180);
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
@@ -3872,7 +3869,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
             arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                             globals.windarrowscaleC);
           arrowpath.Scale(globals.arrowscale);
-          arrowpath.Rotate(-dir + north + 180);
+          arrowpath.Rotate(-dir + *north + 180);
           arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           // And render it
@@ -3905,6 +3902,8 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 
   if (globals.windarrowsxydx <= 0 || globals.windarrowsxydy <= 0) return;
 
+  Fmi::CoordinateTransformation transformation("WGS84", theArea.SpatialReference());
+
   for (float y = globals.windarrowsxyy0; y <= img.Height(); y += globals.windarrowsxydy)
     for (float x = globals.windarrowsxyx0; x <= img.Width(); x += globals.windarrowsxydx)
     {
@@ -3922,7 +3921,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
       float dir, speed;
 
       get_speed_direction(
-          theArea, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
+          transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
 
       // Ignore missing values
 
@@ -3930,13 +3929,15 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 
       // Direction calculations
 
-      const float north = paper_north(theArea, latlon);
+      auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+
+      if (!north) continue;
 
       // Render the arrow
 
       if (globals.arrowfile == "roundarrow")
       {
-        draw_roundarrow(img, xy0, speed, -dir + north + 180);
+        draw_roundarrow(img, xy0, speed, -dir + *north + 180);
       }
       else
       {
@@ -3957,11 +3958,11 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
           }
 
           strokes.Scale(globals.arrowscale);
-          strokes.Rotate(-dir + north + 180);
+          strokes.Rotate(-dir + *north + 180);
           strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           flags.Scale(globals.arrowscale);
-          flags.Rotate(-dir + north + 180);
+          flags.Rotate(-dir + *north + 180);
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
@@ -3977,7 +3978,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
             arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                             globals.windarrowscaleC);
           arrowpath.Scale(globals.arrowscale);
-          arrowpath.Rotate(-dir + north + 180);
+          arrowpath.Rotate(-dir + *north + 180);
           arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           // And render it
@@ -4696,7 +4697,7 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 
   choose_queryinfo("Pressure", 0);
 
-  std::shared_ptr<NFmiCoordinateMatrix> worldpts = globals.queryinfo->LocationsWorldXY(theArea);
+  auto worldpts = globals.queryinfo->LocationsWorldXY(theArea);
 
   auto vals = globals.queryinfo->Values();
   globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), vals);
@@ -4717,7 +4718,7 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       if (extrem != 0)
       {
         // the point in kilometer units
-        NFmiPoint point(worldpts->X(i, j) / 1000, worldpts->Y(i, j) / 1000);
+        NFmiPoint point(worldpts->x(i, j) / 1000, worldpts->y(i, j) / 1000);
 
         if (extrem < 0)
         {

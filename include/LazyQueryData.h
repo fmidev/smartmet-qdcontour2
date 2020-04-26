@@ -34,12 +34,12 @@ class NFmiGrid;
 class NFmiLevel;
 class NFmiPoint;
 class NFmiQueryData;
-class NFmiSpatialReference;
 
 namespace Fmi
 {
 class CoordinateMatrix;
-}
+class SpatialReference;
+}  // namespace Fmi
 
 class LazyQueryData
 {
@@ -74,14 +74,12 @@ class LazyQueryData
 
   bool IsParamUsable() const;
 
-  using Coordinates = Fmi::CoordinateMatrix;
-
-  std::shared_ptr<Coordinates> Locations() const;
-  std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
-  std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Fmi::CoordinateMatrix> Locations() const;
+  std::shared_ptr<Fmi::CoordinateMatrix> LocationsWorldXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Fmi::CoordinateMatrix> LocationsXY(const NFmiArea &theArea) const;
 
   Fmi::CoordinateMatrix CoordinateMatrix() const;
-  const NFmiSpatialReference &SpatialReference() const;
+  const Fmi::SpatialReference &SpatialReference() const;
 
   bool BiLinearInterpolation(double x,
                              double y,
@@ -104,8 +102,6 @@ class LazyQueryData
   NFmiDataMatrix<float> Values();
   NFmiDataMatrix<float> Values(const NFmiMetTime &theTime);
 
-  bool IsWorldData() const;
-
  private:
   LazyQueryData(const LazyQueryData &theQD);
   LazyQueryData &operator=(const LazyQueryData &theQD);
@@ -115,9 +111,9 @@ class LazyQueryData
   std::shared_ptr<NFmiFastQueryInfo> itsInfo;
   std::shared_ptr<NFmiQueryData> itsData;
 
-  mutable std::shared_ptr<Coordinates> itsLocations;
-  mutable std::shared_ptr<Coordinates> itsLocationsWorldXY;
-  mutable std::shared_ptr<Coordinates> itsLocationsXY;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocations;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocationsWorldXY;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocationsXY;
   mutable std::string itsLocationsArea;
 
 };  // class LazyQueryData

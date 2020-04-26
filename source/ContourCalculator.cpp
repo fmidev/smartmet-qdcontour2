@@ -295,8 +295,6 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
 
   itsPimple->require_hints();
 
-  const bool worlddata = theData.IsWorldData();
-
   // Build the contours
 
 #if GEOS_VERSION_MAJOR == 3
@@ -316,42 +314,26 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     case Linear:
     case Missing:
     {
-      MyLinearContourer::fill(builder,
-                              *(itsPimple->itsData),
-                              theLoLimit,
-                              theHiLimit,
-                              worlddata,
-                              *(itsPimple->itsHints));
+      MyLinearContourer::fill(
+          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
       break;
     }
     case LogLinear:
     {
-      MyLogLinearContourer::fill(builder,
-                                 *(itsPimple->itsData),
-                                 theLoLimit,
-                                 theHiLimit,
-                                 worlddata,
-                                 *(itsPimple->itsHints));
+      MyLogLinearContourer::fill(
+          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
       break;
     }
     case Nearest:
     {
-      MyNearestContourer::fill(builder,
-                               *(itsPimple->itsData),
-                               theLoLimit,
-                               theHiLimit,
-                               worlddata,
-                               *(itsPimple->itsHints));
+      MyNearestContourer::fill(
+          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
       break;
     }
     case Discrete:
     {
-      MyDiscreteContourer::fill(builder,
-                                *(itsPimple->itsData),
-                                theLoLimit,
-                                theHiLimit,
-                                worlddata,
-                                *(itsPimple->itsHints));
+      MyDiscreteContourer::fill(
+          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
       break;
     }
   }
@@ -393,8 +375,6 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     return itsPimple->itsLineCache.find(theValue, kFloatMissing, theTime, theData);
   }
 
-  const bool worlddata = theData.IsWorldData();
-
   itsPimple->require_hints();
 
 #if GEOS_VERSION_MAJOR == 3
@@ -414,14 +394,12 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     case Linear:
     case Missing:
     {
-      MyLinearContourer::line(
-          builder, *(itsPimple->itsData), theValue, worlddata, *(itsPimple->itsHints));
+      MyLinearContourer::line(builder, *(itsPimple->itsData), theValue, *(itsPimple->itsHints));
       break;
     }
     case LogLinear:
     {
-      MyLogLinearContourer::line(
-          builder, *(itsPimple->itsData), theValue, worlddata, *(itsPimple->itsHints));
+      MyLogLinearContourer::line(builder, *(itsPimple->itsData), theValue, *(itsPimple->itsHints));
       break;
     }
     case Nearest:

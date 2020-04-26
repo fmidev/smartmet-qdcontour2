@@ -6,14 +6,14 @@
 // ======================================================================
 
 #include "MetaFunctions.h"
-#include <boost/shared_ptr.hpp>
+#include <gis/CoordinateMatrix.h>
 #include <newbase/NFmiArea.h>
-#include <newbase/NFmiCoordinateMatrix.h>
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiLocation.h>
 #include <newbase/NFmiMetMath.h>
 #include <newbase/NFmiMetTime.h>
 #include <newbase/NFmiPoint.h>
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -48,7 +48,7 @@ NFmiDataMatrix<float> elevation_angle_values(LazyQueryData &theQI)
 {
   NFmiDataMatrix<float> values;
 
-  std::shared_ptr<NFmiCoordinateMatrix> pts = theQI.Locations();
+  std::shared_ptr<Fmi::CoordinateMatrix> pts = theQI.Locations();
   values.Resize(pts->Width(), pts->Height(), kFloatMissing);
 
   for (unsigned int j = 0; j < pts->Height(); j++)

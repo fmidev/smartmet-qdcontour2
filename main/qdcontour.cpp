@@ -19,33 +19,32 @@
 #include "TimeTools.h"
 
 #ifdef IMAGINE_WITH_CAIRO
-#include "ImagineXr.h"
+#include <imagine2/ImagineXr.h>
 typedef ImagineXr ImagineXr_or_NFmiImage;
 #else
-#include "NFmiFace.h"
-#include "NFmiFreeType.h"
-#include "NFmiImage.h"
+#include <imagine2/NFmiFreeType.h>
+#include <imagine2/NFmiImage.h>
+#include <imnagine2/NFmiFace.h>
 typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #endif
 
-#include "NFmiGeoShape.h"  // for esri data
+#include <imagine2/NFmiGeoShape.h>  // for esri data
 
-// Newbase headers
-//
-#include "NFmiCmdLine.h"  // command line options
-#include "NFmiCoordinateMatrix.h"
-#include "NFmiCoordinateTransformation.h"
-#include "NFmiDataMatrix.h"
-#include "NFmiDataModifierClasses.h"
-#include "NFmiEnumConverter.h"  // FmiParameterName<-->string
-#include "NFmiFileSystem.h"     // FileExists()
-#include "NFmiGrid.h"
-#include "NFmiInterpolation.h"  // Interpolation functions
-#include "NFmiLevel.h"
-#include "NFmiPreProcessor.h"
-#include "NFmiSettings.h"  // Configuration
-#include "NFmiSmoother.h"  // for smoothing data
-#include "NFmiStringTools.h"
+#include <gis/CoordinateMatrix.h>
+
+#include <newbase/CmdLine.h>  // command line options
+#include <newbase/CoordinateTransformation.h>
+#include <newbase/DataMatrix.h>
+#include <newbase/DataModifierClasses.h>
+#include <newbase/EnumConverter.h>  // FmiParameterName<-->string
+#include <newbase/FileSystem.h>     // FileExists()
+#include <newbase/Grid.h>
+#include <newbase/Interpolation.h>  // Interpolation functions
+#include <newbase/Level.h>
+#include <newbase/PreProcessor.h>
+#include <newbase/Settings.h>  // Configuration
+#include <newbase/Smoother.h>  // for smoothing data
+#include <newbase/StringTools.h>
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>

@@ -11,16 +11,16 @@
 
 class PathAdapter
 {
-  public:
-    void moveto(float x, float y) { itsPath.MoveTo(x,y); }
-    void lineto(float x, float y) { itsPath.LineTo(x,y); }
-    void closepath() { itsPath.CloseLineTo(); }
-    const Imagine::NFmiPath & path() const { return itsPath; }
+ public:
+  void moveto(float x, float y) { itsPath.MoveTo(x, y); }
+  void lineto(float x, float y) { itsPath.LineTo(x, y); }
+  void closepath() { itsPath.CloseLineTo(); }
+  const Imagine::NFmiPath& path() const { return itsPath; }
 
-  private:
-    Imagine::NFmiPath itsPath;
+ private:
+  Imagine::NFmiPath itsPath;
 };
 
-#endif // PATHADAPTER_H
+#endif  // PATHADAPTER_H
 
 // ======================================================================

@@ -20,14 +20,8 @@ using namespace std;
  */
 // ----------------------------------------------------------------------
 
-ContourFont::ContourFont(float theValue,
-						 int theColor,
-						 int theSymbol,
-						 const std::string & theFont)
-  : itsValue(theValue)
-  , itsColor(theColor)
-  , itsSymbol(theSymbol)
-  , itsFont(theFont)
+ContourFont::ContourFont(float theValue, int theColor, int theSymbol, const std::string& theFont)
+    : itsValue(theValue), itsColor(theColor), itsSymbol(theSymbol), itsFont(theFont)
 {
 }
 
@@ -39,10 +33,7 @@ ContourFont::ContourFont(float theValue,
  */
 // ----------------------------------------------------------------------
 
-float ContourFont::value() const
-{
-  return itsValue;
-}
+float ContourFont::value() const { return itsValue; }
 
 // ----------------------------------------------------------------------
 /*!
@@ -52,10 +43,7 @@ float ContourFont::value() const
  */
 // ----------------------------------------------------------------------
 
-int ContourFont::color() const
-{
-  return itsColor;
-}
+int ContourFont::color() const { return itsColor; }
 
 // ----------------------------------------------------------------------
 /*!
@@ -65,10 +53,7 @@ int ContourFont::color() const
  */
 // ----------------------------------------------------------------------
 
-int ContourFont::symbol() const
-{
-  return itsSymbol;
-}
+int ContourFont::symbol() const { return itsSymbol; }
 
 // ----------------------------------------------------------------------
 /*!
@@ -78,9 +63,6 @@ int ContourFont::symbol() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourFont::font() const
-{
-  return itsFont;
-}
+const std::string& ContourFont::font() const { return itsFont; }
 
 // ======================================================================

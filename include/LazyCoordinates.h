@@ -12,7 +12,7 @@
  * needed (when the counters are already available in the cache).
  *
  * To optimize the code we hence use a lazy matrix of coordinates,
- * which acts like a NFmiCoordinateMatrix, except that
+ * which acts like a Fmi::CoordinateMatrix, except that
  * the coordinates are only fetched from the global querydata
  * holder if necessary.
  *
@@ -22,15 +22,15 @@
 #ifndef LAZYCOORDINATES_H
 #define LAZYCOORDINATES_H
 
+#include <gis/CoordinateMatrix.h>
+#include <newbase/NFmiPoint.h>
 #include "Globals.h"
 #include "LazyQueryData.h"
-#include <newbase/NFmiCoordinateMatrix.h>
-#include <newbase/NFmiPoint.h>
 
 class LazyCoordinates
 {
  public:
-  typedef NFmiCoordinateMatrix data_type;
+  typedef Fmi::CoordinateMatrix data_type;
   typedef NFmiPoint element_type;
   typedef std::size_t size_type;
 

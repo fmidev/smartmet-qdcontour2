@@ -21,10 +21,10 @@
 #ifndef LAZYQUERYDATA_H
 #define LAZYQUERYDATA_H
 
-#include <boost/shared_ptr.hpp>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiMetTime.h>
 #include <newbase/NFmiParameterName.h>
+#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <string>
 
@@ -34,8 +34,12 @@ class NFmiGrid;
 class NFmiLevel;
 class NFmiPoint;
 class NFmiQueryData;
-class NFmiCoordinateMatrix;
-class NFmiSpatialReference;
+
+namespace Fmi
+{
+class SpatialReference;
+class CoordinateMatrix;
+};  // namespace Fmi
 
 class LazyQueryData
 {
@@ -70,14 +74,14 @@ class LazyQueryData
 
   bool IsParamUsable() const;
 
-  using Coordinates = NFmiCoordinateMatrix;
+  using Coordinates = Fmi::CoordinateMatrix;
 
   std::shared_ptr<Coordinates> Locations() const;
   std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
   std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
 
-  NFmiCoordinateMatrix CoordinateMatrix() const;
-  const NFmiSpatialReference &SpatialReference() const;
+  Fmi::CoordinateMatrix CoordinateMatrix() const;
+  const Fmi::SpatialReference &SpatialReference() const;
 
   bool BiLinearInterpolation(double x,
                              double y,

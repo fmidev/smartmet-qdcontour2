@@ -1,3 +1,4 @@
+
 // ======================================================================
 /*!
  * \file
@@ -6,8 +7,8 @@
 // ======================================================================
 
 #include "LazyQueryData.h"
-#include <newbase/NFmiCoordinateMatrix.h>
-#include <newbase/NFmiCoordinateTransformation.h>
+#include <gis/CoordinateMatrix.h>
+#include <gis/CoordinateTransformation.h>
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiFileSystem.h>
 #include <newbase/NFmiGrid.h>
@@ -185,8 +186,8 @@ std::shared_ptr<LazyQueryData::Coordinates> LazyQueryData::Locations() const
   if (itsLocations.get() == 0)
   {
     itsLocations.reset(new Coordinates(itsInfo->CoordinateMatrix()));
-    NFmiCoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
-    itsLocations->Transform(transformation);
+    Fmi::CoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
+    itsLocations->transform(transformation);
   }
 
   return itsLocations;
@@ -324,9 +325,12 @@ bool LazyQueryData::IsWorldData() const
   return (std::abs(span - 360) < 0.001);
 }
 
-NFmiCoordinateMatrix LazyQueryData::CoordinateMatrix() const { return itsInfo->CoordinateMatrix(); }
+Fmi::CoordinateMatrix LazyQueryData::CoordinateMatrix() const
+{
+  return itsInfo->CoordinateMatrix();
+}
 
-const NFmiSpatialReference &LazyQueryData::SpatialReference() const
+const Fmi::SpatialReference &LazyQueryData::SpatialReference() const
 {
   return itsInfo->SpatialReference();
 }

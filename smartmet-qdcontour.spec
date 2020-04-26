@@ -14,13 +14,13 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 20.4.18
-BuildRequires: smartmet-library-newbase-devel >= 20.4.18
-BuildRequires: smartmet-library-tron >= 20.4.18
+BuildRequires: smartmet-library-imagine2-devel >= 20.4.24
+BuildRequires: smartmet-library-newbase-devel >= 20.4.23
+BuildRequires: smartmet-library-tron >= 20.4.23
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 20.4.18
-Requires: smartmet-library-newbase >= 20.4.18
+Requires: smartmet-library-imagine2 >= 20.4.24
+Requires: smartmet-library-newbase >= 20.4.23
 Requires: boost169-iostreams
 Requires: boost169-system
 Requires: freetype

@@ -71,7 +71,8 @@ else
 endif
 
 
-INCLUDES += -I$(includedir) \
+INCLUDES += \
+	-I$(includedir) \
 	-I$(includedir)/smartmet \
 	-I$(includedir)/smartmet/newbase \
 	-I$(includedir)/smartmet/imagine2 \
@@ -83,6 +84,8 @@ LIBS += -L$(libdir) \
 	-lsmartmet-newbase \
 	-lsmartmet-imagine2 \
 	-lsmartmet-tron \
+	-lsmartmet-gis \
+	-lgdal \
 	-lgeos \
 	-lboost_iostreams \
 	-lboost_system \

@@ -14,15 +14,15 @@
 #ifndef METAFUNCTIONS_H
 #define METAFUNCTIONS_H
 
-#include <string>
 #include "LazyQueryData.h"
-#include "NFmiDataMatrix.h"
+#include <newbase/NFmiDataMatrix.h>
+#include <string>
 
 namespace MetaFunctions
 {
-bool isMeta(const std::string& theFunction);
-int id(const std::string& theFunction);
-NFmiDataMatrix<float> values(const std::string& theFunction, LazyQueryData& theQI);
+bool isMeta(const std::string &theFunction);
+int id(const std::string &theFunction);
+NFmiDataMatrix<float> values(const std::string &theFunction, LazyQueryData &theQI);
 
 }  // namespace MetaFunctions
 

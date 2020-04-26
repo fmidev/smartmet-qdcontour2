@@ -21,10 +21,10 @@
 #ifndef LAZYQUERYDATA_H
 #define LAZYQUERYDATA_H
 
+#include <boost/shared_ptr.hpp>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiMetTime.h>
 #include <newbase/NFmiParameterName.h>
-#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <string>
 
@@ -37,9 +37,9 @@ class NFmiQueryData;
 
 namespace Fmi
 {
-class SpatialReference;
 class CoordinateMatrix;
-};  // namespace Fmi
+class SpatialReference;
+}  // namespace Fmi
 
 class LazyQueryData
 {
@@ -74,11 +74,9 @@ class LazyQueryData
 
   bool IsParamUsable() const;
 
-  using Coordinates = Fmi::CoordinateMatrix;
-
-  std::shared_ptr<Coordinates> Locations() const;
-  std::shared_ptr<Coordinates> LocationsWorldXY(const NFmiArea &theArea) const;
-  std::shared_ptr<Coordinates> LocationsXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Fmi::CoordinateMatrix> Locations() const;
+  std::shared_ptr<Fmi::CoordinateMatrix> LocationsWorldXY(const NFmiArea &theArea) const;
+  std::shared_ptr<Fmi::CoordinateMatrix> LocationsXY(const NFmiArea &theArea) const;
 
   Fmi::CoordinateMatrix CoordinateMatrix() const;
   const Fmi::SpatialReference &SpatialReference() const;
@@ -104,8 +102,6 @@ class LazyQueryData
   NFmiDataMatrix<float> Values();
   NFmiDataMatrix<float> Values(const NFmiMetTime &theTime);
 
-  bool IsWorldData() const;
-
  private:
   LazyQueryData(const LazyQueryData &theQD);
   LazyQueryData &operator=(const LazyQueryData &theQD);
@@ -115,9 +111,9 @@ class LazyQueryData
   std::shared_ptr<NFmiFastQueryInfo> itsInfo;
   std::shared_ptr<NFmiQueryData> itsData;
 
-  mutable std::shared_ptr<Coordinates> itsLocations;
-  mutable std::shared_ptr<Coordinates> itsLocationsWorldXY;
-  mutable std::shared_ptr<Coordinates> itsLocationsXY;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocations;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocationsWorldXY;
+  mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocationsXY;
   mutable std::string itsLocationsArea;
 
 };  // class LazyQueryData

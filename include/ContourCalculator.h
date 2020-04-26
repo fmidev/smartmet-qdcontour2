@@ -17,9 +17,9 @@
 
 #pragma once
 
+#include "ContourInterpolation.h"
 #include <boost/shared_ptr.hpp>
 #include <memory>
-#include "ContourInterpolation.h"
 
 template <typename T>
 class NFmiDataMatrix;
@@ -39,27 +39,27 @@ class ContourCalculator
   ~ContourCalculator();
   ContourCalculator();
 
-  Imagine::NFmiPath contour(const LazyQueryData& theData,
+  Imagine::NFmiPath contour(const LazyQueryData &theData,
                             float theLoLimit,
                             float theHiLimit,
-                            const NFmiTime& theTime,
+                            const NFmiTime &theTime,
                             ContourInterpolation theInterpolation);
 
-  Imagine::NFmiPath contour(const LazyQueryData& theData,
+  Imagine::NFmiPath contour(const LazyQueryData &theData,
                             float theValue,
-                            const NFmiTime& theTime,
+                            const NFmiTime &theTime,
                             ContourInterpolation theInterpolation);
 
-  void data(const NFmiDataMatrix<float>& theData);
+  void data(const NFmiDataMatrix<float> &theData);
   void clearCache();
   void cache(bool);
   bool wasCached(void) const;
 
  private:
-  ContourCalculator(const ContourCalculator& theCalc);
-  ContourCalculator& operator=(const ContourCalculator& theCalc);
+  ContourCalculator(const ContourCalculator &theCalc);
+  ContourCalculator &operator=(const ContourCalculator &theCalc);
 
-  boost::shared_ptr<ContourCalculatorPimple> itsPimple;
+  std::shared_ptr<ContourCalculatorPimple> itsPimple;
 
 };  // class ContourCalculator
 

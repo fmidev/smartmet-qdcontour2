@@ -25,6 +25,7 @@ class DataMatrixAdapter
   // edge coordinates for world data
   coord_type x(size_type i, size_type j) const { return static_cast<float>(i); }
   coord_type y(size_type i, size_type j) const { return static_cast<float>(j); }
+  bool valid(size_type i, size_type j) const { return true; }
   size_type width() const { return itsWidth; }
   size_type height() const { return itsHeight; }
 

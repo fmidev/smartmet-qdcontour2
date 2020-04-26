@@ -28,28 +28,24 @@ typedef ImagineXr ImagineXr_or_NFmiImage;
 typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #endif
 
-#include <imagine2/NFmiGeoShape.h>  // for esri data
-
 #include <gis/CoordinateMatrix.h>
-
-#include <newbase/CmdLine.h>  // command line options
-#include <newbase/CoordinateTransformation.h>
-#include <newbase/DataMatrix.h>
-#include <newbase/DataModifierClasses.h>
-#include <newbase/EnumConverter.h>  // FmiParameterName<-->string
-#include <newbase/FileSystem.h>     // FileExists()
-#include <newbase/Grid.h>
-#include <newbase/Interpolation.h>  // Interpolation functions
-#include <newbase/Level.h>
-#include <newbase/PreProcessor.h>
-#include <newbase/Settings.h>  // Configuration
-#include <newbase/Smoother.h>  // for smoothing data
-#include <newbase/StringTools.h>
-
+#include <gis/CoordinateTransformation.h>
+#include <imagine2/NFmiGeoShape.h>  // for esri data
+#include <newbase/NFmiCmdLine.h>    // command line options
+#include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiDataModifierClasses.h>
+#include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string
+#include <newbase/NFmiFileSystem.h>     // FileExists()
+#include <newbase/NFmiGrid.h>
+#include <newbase/NFmiInterpolation.h>  // Interpolation functions
+#include <newbase/NFmiLevel.h>
+#include <newbase/NFmiPreProcessor.h>
+#include <newbase/NFmiSettings.h>  // Configuration
+#include <newbase/NFmiSmoother.h>  // for smoothing data
+#include <newbase/NFmiStringTools.h>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
-
 #include <fstream>
 #include <iomanip>
 #include <list>
@@ -3787,16 +3783,16 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
   auto coordinates = globals.queryinfo->CoordinateMatrix();
 
-  NFmiCoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
-                                              theArea.SpatialReference());
+  Fmi::CoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
+                                               theArea.SpatialReference());
 
-  if (!coordinates.Transform(transformation)) return;
+  if (!coordinates.transform(transformation)) return;
 
   // Needed for grid to latlon conversions
   const auto *grid = globals.queryinfo->Grid();
 
-  for (float y = 0; y < coordinates.Height() - 1; y += globals.windarrowdy)
-    for (float x = 0; x < coordinates.Width() - 1; x += globals.windarrowdx)
+  for (float y = 0; y < coordinates.height() - 1; y += globals.windarrowdy)
+    for (float x = 0; x < coordinates.width() - 1; x += globals.windarrowdx)
     {
       // The start point
 
@@ -4748,7 +4744,7 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       if (extrem != 0)
       {
         // the point in kilometer units
-        NFmiPoint point(worldpts->X(i, j) / 1000, worldpts->Y(i, j) / 1000);
+        NFmiPoint point(worldpts->x(i, j) / 1000, worldpts->y(i, j) / 1000);
 
         if (extrem < 0)
         {

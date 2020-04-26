@@ -22,10 +22,10 @@
 #ifndef LAZYCOORDINATES_H
 #define LAZYCOORDINATES_H
 
-#include <gis/CoordinateMatrix.h>
-#include <newbase/NFmiPoint.h>
 #include "Globals.h"
 #include "LazyQueryData.h"
+#include <gis/CoordinateMatrix.h>
+#include <newbase/NFmiPoint.h>
 
 class LazyCoordinates
 {
@@ -74,8 +74,8 @@ inline LazyCoordinates::element_type LazyCoordinates::operator()(
     int i, int j, const element_type &theDefault) const
 {
   init();
-  if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.Width() &&
-      static_cast<size_type>(j) < itsData.Height())
+  if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.width() &&
+      static_cast<size_type>(j) < itsData.height())
   {
     return itsData(i, j);
   }
@@ -116,7 +116,7 @@ inline LazyCoordinates::data_type &LazyCoordinates::operator*()
 inline LazyCoordinates::size_type LazyCoordinates::NX() const
 {
   init();
-  return itsData.Width();
+  return itsData.width();
 }
 
 // ----------------------------------------------------------------------
@@ -128,7 +128,7 @@ inline LazyCoordinates::size_type LazyCoordinates::NX() const
 inline LazyCoordinates::size_type LazyCoordinates::NY() const
 {
   init();
-  return itsData.Height();
+  return itsData.height();
 }
 
 // ----------------------------------------------------------------------

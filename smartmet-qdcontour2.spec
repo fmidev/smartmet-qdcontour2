@@ -9,6 +9,9 @@ Group: Development/Tools
 URL: http://www.weatherproof.fi
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
+BuildRequires: rpm-build
+BuildRequires: gcc-c++
+BuildRequires: make
 BuildRequires: boost169-devel
 BuildRequires: freetype-devel
 BuildRequires: glibc-devel
@@ -19,16 +22,18 @@ BuildRequires: smartmet-library-newbase-devel >= 20.4.18
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 20.6.14
-Requires: smartmet-library-newbase >= 20.4.18
+BuildRequires: gcc-c++
+BuildRequires: make
 Requires: boost169-iostreams
 Requires: boost169-system
+Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: zlib
-Requires: cairomm
+Requires: smartmet-library-imagine2 >= 20.6.14
+Requires: smartmet-library-newbase >= 20.4.18
 Requires: xorg-x11-fonts-misc
+Requires: zlib
 Provides: qdcontour2
 
 %description

@@ -1,8 +1,8 @@
-%define BINNAME qdcontour
-%define RPMNAME smartmet-%{BINNAME}2
-Summary: %{BINNAME}2
+%define BINNAME qdcontour2
+%define RPMNAME smartmet-%{BINNAME}
+Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 20.4.18
+Version: 20.6.14
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -14,12 +14,12 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-imagine2-devel >= 20.4.18
+BuildRequires: smartmet-library-imagine2-devel >= 20.6.14
 BuildRequires: smartmet-library-newbase-devel >= 20.4.18
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
-Requires: smartmet-library-imagine2 >= 20.4.18
+Requires: smartmet-library-imagine2 >= 20.6.14
 Requires: smartmet-library-newbase >= 20.4.18
 Requires: boost169-iostreams
 Requires: boost169-system
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 14 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.6.14-1.fmi
+- Separated from a qdcontour branch into a separate repo
+
 * Sat Apr 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.18-1.fmi
 - Upgraded to Boost 1.69
 

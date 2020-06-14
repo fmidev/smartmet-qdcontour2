@@ -1,5 +1,5 @@
-MODULE = qdcontour
-SPEC = smartmet-qdcontour
+MODULE = qdcontour2
+SPEC = smartmet-qdcontour2
 
 MAINFLAGS = -MD -Wall -W -Wno-unused-parameter
 
@@ -181,9 +181,9 @@ objdir:
 rpm: clean
 	@if [ -a $(SPEC).spec ]; \
 	then \
-	  tar -czvf $(SPEC)2.tar.gz --exclude test --exclude vcs --transform "s,^,$(SPEC)2/," * ; \
-	  rpmbuild -ta $(SPEC)2.tar.gz ; \
-	  rm -f $(SPEC)2.tar.gz ; \
+	  tar -czvf $(SPEC)2.tar.gz --exclude test --exclude vcs --transform "s,^,$(SPEC)/," * ; \
+	  rpmbuild -ta $(SPEC).tar.gz ; \
+	  rm -f $(SPEC).tar.gz ; \
 	else \
 	  echo $(SPEC).spec missing; \
 	fi;

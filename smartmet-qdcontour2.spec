@@ -18,6 +18,7 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: smartmet-library-imagine2-devel >= 20.6.14
+BuildRequires: smartmet-library-imagine2 >= 20.6.14
 BuildRequires: smartmet-library-newbase-devel >= 20.4.18
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: zlib-devel

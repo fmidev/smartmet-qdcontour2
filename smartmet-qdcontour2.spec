@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 20.6.14
+Version: 20.6.15
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 15 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.6.15-1.fmi
+- Enable config replacements from environment variables
+
 * Sun Jun 14 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.6.14-1.fmi
 - Separated from a qdcontour branch into a separate repo
 

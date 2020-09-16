@@ -70,7 +70,8 @@ LIBS += -L$(libdir) \
 	-lgeos \
 	-lboost_iostreams \
 	-lboost_system \
-	`pkg-config --libs cairomm-1.0`
+	`pkg-config --libs cairomm-1.0` \
+	-lstdc++ -lm
 
 # Common library compiling template
 
@@ -153,7 +154,7 @@ profile: objdir $(MAINPROGS)
 
 .SECONDEXPANSION:
 $(MAINPROGS): % : $(OBJFILES) $(MAINOBJFILES)
-	$(CXX) $(LDFLAGS) -o $@ obj/$@.o $(OBJFILES) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ obj/$@.o $(OBJFILES) $(LIBS)
 
 clean:
 	rm -f $(MAINPROGS) source/*~ include/*~

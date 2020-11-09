@@ -1,7 +1,7 @@
-ifneq "$(wildcard ../qdcontour)" ""
-PROGRAM=../qdcontour
+ifneq "$(wildcard ../qdcontour2)" ""
+PROGRAM=../qdcontour2
 else
-PROGRAM=qdcontour
+PROGRAM=qdcontour2
 endif
 
 all: test

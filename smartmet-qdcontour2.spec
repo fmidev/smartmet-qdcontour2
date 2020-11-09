@@ -36,6 +36,11 @@ Requires: smartmet-library-newbase >= 20.8.21
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
+#TestRequires: ImageMagick                                                                                                     
+#TestRequires: bc                                                                                                              
+#TestRequires: xorg-x11-fonts-misc                                                                                             
+#TestRequires: coreutils                                                                                                       
+#TestRequires: liberation-sans-fonts 
 
 %description
 FMI qdcontour2

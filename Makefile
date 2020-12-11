@@ -181,7 +181,7 @@ rpm: clean
 	@if [ -a $(SPEC).spec ]; \
 	then \
 	  tar -czvf $(SPEC).tar.gz --exclude test --exclude vcs --transform "s,^,$(SPEC)/," * ; \
-	  rpmbuild -ta $(SPEC).tar.gz ; \
+	  rpmbuild -tb $(SPEC).tar.gz ; \
 	  rm -f $(SPEC).tar.gz ; \
 	else \
 	  echo $(SPEC).spec missing; \

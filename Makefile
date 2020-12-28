@@ -1,59 +1,26 @@
 MODULE = qdcontour2
 SPEC = smartmet-qdcontour2
 
-MAINFLAGS = -MD -Wall -W -Wno-unused-parameter
+REQUIRES = geos
+include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
-ifeq (6, $(RHEL_VERSION))
-  MAINFLAGS += -std=c++0x
-else
-  MAINFLAGS += -std=c++11 -fdiagnostics-color=always
-endif
+# Compiler options
 
-EXTRAFLAGS = \
-	-Werror \
-	-Winline \
-	-Wpointer-arith \
-	-Wcast-qual \
-	-Wcast-align \
-	-Wwrite-strings \
-	-Wno-pmf-conversions \
-	-Wsign-promo \
-	-Wchar-subscripts \
-	-Woverloaded-virtual
+DEFINES = -DUNIX -DUSE_UNSTABLE_GEOS_CPP_API
 
-DIFFICULTFLAGS = \
-	-Wunreachable-code \
-	-Wconversion \
-	-Wctor-dtor-privacy \
-	-Wnon-virtual-dtor \
-	-Wredundant-decls \
-	-Weffc++ \
-	-Wold-style-cast \
-	-pedantic \
-	-Wshadow
+LIBS += $(REQUIRED_LIBS) \
+	-lsmartmet-macgyver \
+	-lsmartmet-newbase \
+	-lsmartmet-imagine2 \
+	-lsmartmet-tron \
+	-lboost_iostreams \
+	-lboost_system \
+	-lboost_filesystem \
+	-lboost_thread \
+	`pkg-config --libs cairomm-1.0` \
+	-lstdc++ -lm
 
-# Default compiler flags
-
-DEFINES = -DUNIX
-
-CFLAGS = $(DEFINES) -O2 -DNDEBUG $(MAINFLAGS)
 LDFLAGS = 
-
-# Special modes
-
-CFLAGS_DEBUG = $(DEFINES) -O0 -g $(MAINFLAGS) $(EXTRAFLAGS) -Werror
-CFLAGS_PROFILE = $(DEFINES) -O2 -g -pg -DNDEBUG $(MAINFLAGS)
-
-LDFLAGS_DEBUG =
-LDFLAGS_PROFILE =
-
-# Boost 1.69
-
-ifneq "$(wildcard /usr/include/boost169)" ""
-  INCLUDES += -isystem /usr/include/boost169
-  LIBS += -L/usr/lib64/boost169
-endif
-
 
 INCLUDES += \
 	-I$(includedir)/smartmet \
@@ -62,67 +29,12 @@ INCLUDES += \
 	-I$(includedir)/smartmet/tron \
 	`pkg-config --cflags cairomm-1.0`
 
-
-LIBS += -L$(libdir) \
-	-lsmartmet-newbase \
-	-lsmartmet-imagine2 \
-	-lsmartmet-tron \
-	-lgeos \
-	-lboost_iostreams \
-	-lboost_system \
-	`pkg-config --libs cairomm-1.0` \
-	-lstdc++ -lm
-
-# Common library compiling template
-
-# Installation directories
-
-processor := $(shell uname -p)
-
-ifeq ($(origin PREFIX), undefined)
-  PREFIX = /usr
-else
-  PREFIX = $(PREFIX)
-endif
-
-ifeq ($(processor), x86_64)
-  libdir = $(PREFIX)/lib64
-else
-  libdir = $(PREFIX)/lib
-endif
-
-objdir = obj
-includedir = $(PREFIX)/include
-
-ifeq ($(origin BINDIR), undefined)
-  bindir = $(PREFIX)/bin
-else
-  bindir = $(BINDIR)
-endif
-
-# Special modes
-
-ifneq (,$(findstring debug,$(MAKECMDGOALS)))
-  CFLAGS = $(CFLAGS_DEBUG)
-  LDFLAGS = $(LDFLAGS_DEBUG)
-endif
-
-ifneq (,$(findstring profile,$(MAKECMDGOALS)))
-  CFLAGS = $(CFLAGS_PROFILE)
-  LDFLAGS = $(LDFLAGS_PROFILE)
-endif
-
 # Compilation directories
 
 vpath %.cpp source main
 vpath %.h include
 vpath %.o $(objdir)
 vpath %.d $(objdir)
-
-# How to install
-
-INSTALL_PROG = install -m 775
-INSTALL_DATA = install -m 664
 
 # The files to be compiled
 
@@ -167,8 +79,8 @@ install:
 	mkdir -p $(bindir)
 	@list='$(MAINPROGS)'; \
 	for prog in $$list; do \
-	  echo $(INSTALL_PROG) $$prog $(bindir)/$${prog}2; \
-	  $(INSTALL_PROG) $$prog $(bindir)/$${prog}2; \
+	  echo $(INSTALL_PROG) $$prog $(bindir)/$$prog; \
+	  $(INSTALL_PROG) $$prog $(bindir)/$$prog; \
 	done
 
 test:
@@ -177,15 +89,11 @@ test:
 objdir:
 	@mkdir -p $(objdir)
 
-rpm: clean
-	@if [ -a $(SPEC).spec ]; \
-	then \
-	  tar -czvf $(SPEC).tar.gz --exclude test --exclude vcs --transform "s,^,$(SPEC)/," * ; \
-	  rpmbuild -tb $(SPEC).tar.gz ; \
-	  rm -f $(SPEC).tar.gz ; \
-	else \
-	  echo $(SPEC).spec missing; \
-	fi;
+rpm: clean $(SPEC).spec
+	rm -f $(SPEC).tar.gz # Clean a possible leftover from previous attempt
+	tar -czvf $(SPEC).tar.gz --exclude test --exclude-vcs --transform "s,^,$(SPEC)/," *
+	rpmbuild -tb $(SPEC).tar.gz
+	rm -f $(SPEC).tar.gz
 
 .SUFFIXES: $(SUFFIXES) .cpp
 

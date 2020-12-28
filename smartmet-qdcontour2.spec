@@ -25,6 +25,7 @@ BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
 BuildRequires: make
+BuildRequires: geos38-devel
 Requires: boost169-iostreams
 Requires: boost169-system
 Requires: cairomm

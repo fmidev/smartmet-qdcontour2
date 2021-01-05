@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 20.8.21
+Version: 21.1.5
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -20,28 +20,28 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-macgyver-devel >= 20.12.15
-BuildRequires: smartmet-library-imagine2-devel >= 20.8.21
-BuildRequires: smartmet-library-imagine2 >= 20.8.21
-BuildRequires: smartmet-library-newbase-devel >= 20.8.21
-BuildRequires: smartmet-library-tron >= 20.4.18
+BuildRequires: smartmet-library-macgyver-devel >= 21.1.4
+BuildRequires: smartmet-library-imagine2-devel >= 20.12.15
+BuildRequires: smartmet-library-imagine2 >= 20.12.15
+BuildRequires: smartmet-library-newbase-devel >= 21.1.4
+BuildRequires: smartmet-library-tron >= 21.1.5
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
 BuildRequires: make
-BuildRequires: geos38-devel
+BuildRequires: geos39-devel
 Requires: boost169-iostreams
 Requires: boost169-system
 Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 20.8.21
-Requires: smartmet-library-newbase >= 20.8.21
+Requires: smartmet-library-imagine2 >= 20.12.15
+Requires: smartmet-library-newbase >= 21.1.4
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
-#TestRequires: smartmet-library-macgyver-devel >= 20.12.15
+#TestRequires: smartmet-library-macgyver-devel >= 21.1.4
 #TestRequires: ImageMagick                                                                                                     
 #TestRequires: bc                                                                                                              
 #TestRequires: xorg-x11-fonts-misc                                                                                             
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan  5 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.5-1.fmi
+- Upgrade to GEOS 3.9
+
 * Fri Aug 21 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.21-1.fmi
 - Upgrade to fmt 6.2
 

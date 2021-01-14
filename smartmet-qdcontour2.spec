@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 21.1.5
+Version: 21.1.14
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -20,11 +20,11 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: smartmet-library-macgyver-devel >= 21.1.4
-BuildRequires: smartmet-library-imagine2-devel >= 20.12.15
-BuildRequires: smartmet-library-imagine2 >= 20.12.15
-BuildRequires: smartmet-library-newbase-devel >= 21.1.4
-BuildRequires: smartmet-library-tron >= 21.1.5
+BuildRequires: smartmet-library-macgyver-devel >= 21.1.14
+BuildRequires: smartmet-library-imagine2-devel >= 21.1.14
+BuildRequires: smartmet-library-imagine2 >= 21.1.14
+BuildRequires: smartmet-library-newbase-devel >= 21.1.14
+BuildRequires: smartmet-library-tron >= 21.1.14
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -36,12 +36,12 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 20.12.15
-Requires: smartmet-library-newbase >= 21.1.4
+Requires: smartmet-library-imagine2 >= 21.1.14
+Requires: smartmet-library-newbase >= 21.1.14
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
-#TestRequires: smartmet-library-macgyver-devel >= 21.1.4
+#TestRequires: smartmet-library-macgyver-devel >= 21.1.14
 #TestRequires: ImageMagick                                                                                                     
 #TestRequires: bc                                                                                                              
 #TestRequires: xorg-x11-fonts-misc                                                                                             
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 14 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.14-1.fmi
+- Repackaged smartmet to resolve debuginfo issues
+
 * Tue Jan  5 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.5-1.fmi
 - Upgrade to GEOS 3.9
 

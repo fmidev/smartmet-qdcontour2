@@ -41,6 +41,7 @@ Requires: smartmet-library-newbase >= 21.1.14
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
+#TestRequires: gcc-c++
 #TestRequires: smartmet-library-macgyver-devel >= 21.1.14
 #TestRequires: ImageMagick                                                                                                     
 #TestRequires: bc                                                                                                              

@@ -3837,7 +3837,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
         flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         ArrowStyle style = globals.getArrowStroke(speed);
-        strokes.Stroke(img, style.color, style.rule);
+        strokes.Stroke(img, style.width, style.color, style.rule);
         flags.Fill(img, style.color, style.rule);
       }
       else
@@ -3858,7 +3858,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
         arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
         ArrowStyle strokestyle = globals.getArrowStroke(speed);
-        arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
+        arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
       }
     }
   }
@@ -4008,7 +4008,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
-          strokes.Stroke(img, style.color, style.rule);
+          strokes.Stroke(img, style.width, style.color, style.rule);
           flags.Fill(img, style.color, style.rule);
         }
         else
@@ -4029,7 +4029,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
           arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
           ArrowStyle strokestyle = globals.getArrowStroke(speed);
-          arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
+          arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
         }
       }
     }
@@ -4121,7 +4121,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
-          strokes.Stroke(img, style.color, style.rule);
+          strokes.Stroke(img, style.width, style.color, style.rule);
           flags.Fill(img, style.color, style.rule);
         }
         else
@@ -4142,7 +4142,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
           arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
           ArrowStyle strokestyle = globals.getArrowStroke(speed);
-          arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
+          arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
         }
       }
     }

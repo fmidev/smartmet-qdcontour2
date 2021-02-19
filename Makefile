@@ -81,8 +81,8 @@ install:
 	mkdir -p $(bindir)
 	@list='$(MAINPROGS)'; \
 	for prog in $$list; do \
-	  echo $(INSTALL_PROG) $$prog $(bindir)/$${prog}2; \
-	  $(INSTALL_PROG) $$prog $(bindir)/$${prog}2; \
+	  echo $(INSTALL_PROG) $$prog $(bindir)/$${prog}; \
+	  $(INSTALL_PROG) $$prog $(bindir)/$${prog}; \
 	done
 
 test:

@@ -1,7 +1,7 @@
 MODULE = qdcontour2
 SPEC = smartmet-qdcontour2
 
-REQUIRES = geos
+REQUIRES = geos gdal
 
 include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
@@ -13,6 +13,7 @@ LIBS += $(REQUIRED_LIBS) \
 	-lsmartmet-macgyver \
 	-lsmartmet-newbase \
 	-lsmartmet-imagine2 \
+	-lsmartmet-gis \
 	-lsmartmet-tron \
 	-lboost_iostreams \
 	-lboost_system \

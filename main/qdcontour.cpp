@@ -18,8 +18,6 @@
 #include "ProjectionFactory.h"
 #include "TimeTools.h"
 
-#include "NFmiColorTools.h"
-
 #ifdef IMAGINE_WITH_CAIRO
 #include "ImagineXr.h"
 typedef ImagineXr ImagineXr_or_NFmiImage;
@@ -30,28 +28,29 @@ typedef ImagineXr ImagineXr_or_NFmiImage;
 typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #endif
 
-#include "NFmiGeoShape.h"  // for esri data
-
-// Newbase headers
-//
-#include "NFmiCmdLine.h"  // command line options
-#include "NFmiDataMatrix.h"
-#include "NFmiDataModifierClasses.h"
-#include "NFmiEnumConverter.h"  // FmiParameterName<-->string
-#include "NFmiFileSystem.h"     // FileExists()
-#include "NFmiInterpolation.h"  // Interpolation functions
-#include "NFmiLatLonArea.h"     // Geographic projection
-#include "NFmiLevel.h"
-#include "NFmiPreProcessor.h"
-#include "NFmiSettings.h"           // Configuration
-#include "NFmiSmoother.h"           // for smoothing data
-#include "NFmiStereographicArea.h"  // Stereographic projection
-#include "NFmiStringTools.h"
-
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
-
+#include <gis/CoordinateMatrix.h>
+#include <gis/CoordinateTransformation.h>
+#include <gis/OGR.h>
+#include <gis/SpatialReference.h>
+#include <imagine2/NFmiColorTools.h>
+#include <imagine2/NFmiGeoShape.h>  // for esri data
+#include <newbase/NFmiCmdLine.h>  // command line options
+#include <newbase/NFmiDataMatrix.h>
+#include <newbase/NFmiDataModifierClasses.h>
+#include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string
+#include <newbase/NFmiFileSystem.h>  // FileExists()
+#include <newbase/NFmiGrid.h>
+#include <newbase/NFmiInterpolation.h>  // Interpolation functions
+#include <newbase/NFmiLatLonArea.h>  // Geographic projection
+#include <newbase/NFmiLevel.h>
+#include <newbase/NFmiPreProcessor.h>
+#include <newbase/NFmiSettings.h>  // Configuration
+#include <newbase/NFmiSmoother.h>  // for smoothing data
+#include <newbase/NFmiStereographicArea.h>  // Stereographic projection
+#include <newbase/NFmiStringTools.h>
 #include <fstream>
 #include <iomanip>
 #include <list>
@@ -119,7 +118,8 @@ void Usage(void)
 
 bool IsMasked(const NFmiPoint &thePoint, const std::string &theMask)
 {
-  if (theMask.empty()) return false;
+  if (theMask.empty())
+    return false;
 
   int x = static_cast<int>(round(thePoint.X()));
   int y = static_cast<int>(round(thePoint.Y()));
@@ -151,7 +151,8 @@ void parse_command_line(int argc, const char *argv[])
 
   // Check for parsing errors
 
-  if (cmdline.Status().IsError()) throw runtime_error(cmdline.Status().ErrorLog().CharPtr());
+  if (cmdline.Status().IsError())
+    throw runtime_error(cmdline.Status().ErrorLog().CharPtr());
 
   // Handle -h option
 
@@ -163,18 +164,22 @@ void parse_command_line(int argc, const char *argv[])
 
   // Read -v option
 
-  if (cmdline.isOption('v')) globals.verbose = true;
+  if (cmdline.isOption('v'))
+    globals.verbose = true;
 
   // Read -f option
 
-  if (cmdline.isOption('f')) globals.force = true;
+  if (cmdline.isOption('f'))
+    globals.force = true;
 
-  if (cmdline.isOption('q')) globals.cmdline_querydata = cmdline.OptionValue('q');
+  if (cmdline.isOption('q'))
+    globals.cmdline_querydata = cmdline.OptionValue('q');
 
   // AKa 22-Aug-2008: Added for allowing "format pdf" enforcing (or any other
   //                  command) from the command line.
   //
-  if (cmdline.isOption('c')) globals.cmdline_conf = cmdline.OptionValue('c');
+  if (cmdline.isOption('c'))
+    globals.cmdline_conf = cmdline.OptionValue('c');
 
   // Read command filenames
 
@@ -269,7 +274,8 @@ const string preprocess_script(const string &theScript)
 void invert_if_missing(NFmiPath &thePath, float lolimit, float hilimit)
 {
   const float m = 10000;
-  if (lolimit != kFloatMissing || hilimit != kFloatMissing) return;
+  if (lolimit != kFloatMissing || hilimit != kFloatMissing)
+    return;
   thePath.MoveTo(-m, -m);
   thePath.LineTo(m, -m);
   thePath.LineTo(m, m);
@@ -285,7 +291,8 @@ void invert_if_missing(NFmiPath &thePath, float lolimit, float hilimit)
 
 void check_errors(istream &theInput, const string &theFunction)
 {
-  if (theInput.fail()) throw runtime_error("Processing the '" + theFunction + "' command failed");
+  if (theInput.fail())
+    throw runtime_error("Processing the '" + theFunction + "' command failed");
 }
 
 // ----------------------------------------------------------------------
@@ -309,7 +316,8 @@ bool set_level(LazyQueryData &theInfo, int theLevel)
   else
   {
     for (theInfo.ResetLevel(); theInfo.NextLevel();)
-      if (theInfo.Level()->LevelValue() == static_cast<unsigned int>(theLevel)) return true;
+      if (theInfo.Level()->LevelValue() == static_cast<unsigned int>(theLevel))
+        return true;
     return false;
   }
 }
@@ -363,7 +371,8 @@ static void write_image(const ImagineXr &xr)
   const string filename = xr.Filename();
   const string format = xr.Format();
 
-  if (globals.verbose) cout << "Writing '" << filename << "'" << endl;
+  if (globals.verbose)
+    cout << "Writing '" << filename << "'" << endl;
 
   if ((format == "pdf") || (format == "svg") || (format == "eps") || (format == "ps") ||
       (format == "png" && (!globals.reducecolors)))
@@ -396,23 +405,28 @@ static void write_image(const ImagineXr &xr)
 #endif
     globals.setImageModes(img);
 
-    if (globals.reducecolors) img.ReduceColors();
+    if (globals.reducecolors)
+      img.ReduceColors();
 
     img.Write(filename, format);
   }
 
-  if (!globals.itsImageCacheOn) globals.itsImageCache.clear();
+  if (!globals.itsImageCacheOn)
+    globals.itsImageCache.clear();
 }
 #else
 static void write_image(NFmiImage &theImage, const string &theName, const string &theFormat)
 {
-  if (globals.verbose) cout << "Writing '" << theName << "'" << endl;
+  if (globals.verbose)
+    cout << "Writing '" << theName << "'" << endl;
 
-  if (globals.reducecolors) theImage.ReduceColors();
+  if (globals.reducecolors)
+    theImage.ReduceColors();
 
   theImage.Write(theName, theFormat);
 
-  if (!globals.itsImageCacheOn) globals.itsImageCache.clear();
+  if (!globals.itsImageCacheOn)
+    globals.itsImageCache.clear();
 }
 #endif
 
@@ -427,7 +441,10 @@ static void write_image(NFmiImage &theImage, const string &theName, const string
 // ----------------------------------------------------------------------
 
 #ifndef IMAGINE_WITH_CAIRO
-Imagine::NFmiFace make_face(const string &theSpec) { return NFmiFace(theSpec); }
+Imagine::NFmiFace make_face(const string &theSpec)
+{
+  return NFmiFace(theSpec);
+}
 #endif
 
 // ----------------------------------------------------------------------
@@ -533,7 +550,8 @@ void do_level(istream &theInput)
 
   check_errors(theInput, "level");
 
-  if (!globals.specs.empty()) globals.specs.back().level(globals.querydatalevel);
+  if (!globals.specs.empty())
+    globals.specs.back().level(globals.querydatalevel);
 }
 
 // ----------------------------------------------------------------------
@@ -567,7 +585,8 @@ void do_timestepskip(istream &theInput)
 
   check_errors(theInput, "timestepskip");
 
-  if (globals.timestepskip < 0) throw runtime_error("timestepskip cannot be negative");
+  if (globals.timestepskip < 0)
+    throw runtime_error("timestepskip cannot be negative");
 
   const int ludicruous = 30 * 24 * 60;  // 1 month
   if (globals.timestepskip > ludicruous)
@@ -588,7 +607,8 @@ void do_timestep(istream &theInput)
 
   check_errors(theInput, "timestep");
 
-  if (globals.timestep < 0) throw runtime_error("timestep cannot be negative");
+  if (globals.timestep < 0)
+    throw runtime_error("timestep cannot be negative");
 
   const int ludicruous = 30 * 24 * 60;  // 1 month
   if (globals.timestep > ludicruous)
@@ -608,7 +628,8 @@ void do_timeinterval(istream &theInput)
 
   check_errors(theInput, "timeinterval");
 
-  if (globals.timeinterval < 0) throw runtime_error("timeinterval cannot be negative");
+  if (globals.timeinterval < 0)
+    throw runtime_error("timeinterval cannot be negative");
 
   const int ludicruous = 30 * 24 * 60;  // 1 month
   if (globals.timeinterval > ludicruous)
@@ -628,7 +649,8 @@ void do_timesteps(istream &theInput)
 
   check_errors(theInput, "timesteps");
 
-  if (globals.timesteps < 0) throw runtime_error("timesteps cannot be negative");
+  if (globals.timesteps < 0)
+    throw runtime_error("timesteps cannot be negative");
 
   const int ludicruous = 30 * 24 * 60;  // 1 month
   if (globals.timesteps > ludicruous)
@@ -838,7 +860,8 @@ void do_fillrule(istream &theInput)
 
   ColorTools::checkrule(globals.fillrule);
 
-  if (!globals.shapespecs.empty()) globals.shapespecs.back().fillrule(globals.fillrule);
+  if (!globals.shapespecs.empty())
+    globals.shapespecs.back().fillrule(globals.fillrule);
 }
 
 // ----------------------------------------------------------------------
@@ -855,7 +878,8 @@ void do_strokerule(istream &theInput)
 
   ColorTools::checkrule(globals.strokerule);
 
-  if (!globals.shapespecs.empty()) globals.shapespecs.back().strokerule(globals.strokerule);
+  if (!globals.shapespecs.empty())
+    globals.shapespecs.back().strokerule(globals.strokerule);
 }
 
 // ----------------------------------------------------------------------
@@ -1260,7 +1284,8 @@ void do_overlay(istream &theInput)
 
   theInput >> paramname >> imgname;
 
-  if (imgname == "-" || imgname == "none") imgname = "";
+  if (imgname == "-" || imgname == "none")
+    imgname = "";
 
   check_errors(theInput, "overlay");
 
@@ -1522,7 +1547,8 @@ void do_hilimit(istream &theInput)
 
   check_errors(theInput, "hilimit");
 
-  if (!globals.specs.empty()) globals.specs.back().exactHiLimit(limit);
+  if (!globals.specs.empty())
+    globals.specs.back().exactHiLimit(limit);
 }
 
 // ----------------------------------------------------------------------
@@ -1538,7 +1564,8 @@ void do_datalolimit(istream &theInput)
 
   check_errors(theInput, "datalolimit");
 
-  if (!globals.specs.empty()) globals.specs.back().dataLoLimit(limit);
+  if (!globals.specs.empty())
+    globals.specs.back().dataLoLimit(limit);
 }
 
 // ----------------------------------------------------------------------
@@ -1554,7 +1581,8 @@ void do_datahilimit(istream &theInput)
 
   check_errors(theInput, "datahilimit");
 
-  if (!globals.specs.empty()) globals.specs.back().dataHiLimit(limit);
+  if (!globals.specs.empty())
+    globals.specs.back().dataHiLimit(limit);
 }
 
 // ----------------------------------------------------------------------
@@ -1570,7 +1598,8 @@ void do_datareplace(istream &theInput)
 
   check_errors(theInput, "datareplace");
 
-  if (!globals.specs.empty()) globals.specs.back().replace(src, dst);
+  if (!globals.specs.empty())
+    globals.specs.back().replace(src, dst);
 }
 
 // ----------------------------------------------------------------------
@@ -1597,7 +1626,8 @@ void do_despeckle(istream &theInput)
   if (lo != kFloatMissing && hi != kFloatMissing && lo >= hi)
     throw runtime_error("despeckle hilimit must be > lolimit");
 
-  if (radius < 1 || radius > 50) throw runtime_error("despeckle radius must be in the range 1-50");
+  if (radius < 1 || radius > 50)
+    throw runtime_error("despeckle radius must be in the range 1-50");
 
   if (iterations < 1 || iterations > 50)
     throw runtime_error("despeckle iterations must be in the range 1-50");
@@ -1605,7 +1635,8 @@ void do_despeckle(istream &theInput)
   if (weight < 0 || weight > 100)
     throw runtime_error("despeckle weight must be in the range 0-100");
 
-  if (!globals.specs.empty()) globals.specs.back().despeckle(lo, hi, radius, weight, iterations);
+  if (!globals.specs.empty())
+    globals.specs.back().despeckle(lo, hi, radius, weight, iterations);
 }
 
 // ----------------------------------------------------------------------
@@ -1672,7 +1703,8 @@ void do_smoother(istream &theInput)
 
   check_errors(theInput, "smoother");
 
-  if (!globals.specs.empty()) globals.specs.back().smoother(globals.smoother);
+  if (!globals.specs.empty())
+    globals.specs.back().smoother(globals.smoother);
 }
 
 // ----------------------------------------------------------------------
@@ -1687,7 +1719,8 @@ void do_smootherradius(istream &theInput)
 
   check_errors(theInput, "smootherradius");
 
-  if (!globals.specs.empty()) globals.specs.back().smootherRadius(globals.smootherradius);
+  if (!globals.specs.empty())
+    globals.specs.back().smootherRadius(globals.smootherradius);
 }
 
 // ----------------------------------------------------------------------
@@ -1702,7 +1735,8 @@ void do_smootherfactor(istream &theInput)
 
   check_errors(theInput, "smootherfactor");
 
-  if (!globals.specs.empty()) globals.specs.back().smootherFactor(globals.smootherfactor);
+  if (!globals.specs.empty())
+    globals.specs.back().smootherFactor(globals.smootherfactor);
 }
 
 // ----------------------------------------------------------------------
@@ -1871,7 +1905,8 @@ void do_contourfont(istream &theInput)
 
   NFmiColorTools::Color color = ColorTools::checkcolor(scolor);
 
-  if (!globals.specs.empty()) globals.specs.back().add(ContourFont(value, color, symbol, font));
+  if (!globals.specs.empty())
+    globals.specs.back().add(ContourFont(value, color, symbol, font));
 }
 
 // ----------------------------------------------------------------------
@@ -1911,7 +1946,8 @@ void do_contourlinewidth(istream &theInput)
 
   check_errors(theInput, "contourlinewidth");
 
-  if (globals.contourlinewidth <= 0) throw runtime_error("conturlinewidth must be nonnegative");
+  if (globals.contourlinewidth <= 0)
+    throw runtime_error("conturlinewidth must be nonnegative");
 }
 
 // ----------------------------------------------------------------------
@@ -1938,7 +1974,8 @@ void do_contourfills(istream &theInput)
     float tmplo = lo + i * step;
     float tmphi = lo + (i + 1) * step;
     int color = color1;  // in case steps=1
-    if (steps != 1) color = NFmiColorTools::Interpolate(color1, color2, i / (steps - 1.0f));
+    if (steps != 1)
+      color = NFmiColorTools::Interpolate(color1, color2, i / (steps - 1.0f));
     if (!globals.specs.empty())
       globals.specs.back().add(ContourRange(tmplo, tmphi, color, globals.fillrule));
   }
@@ -1988,7 +2025,8 @@ void do_contourlabel(istream &theInput)
 
   check_errors(theInput, "contourlabel");
 
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabel");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabel");
 
   globals.specs.back().add(ContourLabel(value));
 }
@@ -2006,7 +2044,8 @@ void do_contourlabels(istream &theInput)
 
   check_errors(theInput, "contourlabels");
 
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabels");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabels");
 
   int steps = static_cast<int>((hi - lo) / step);
 
@@ -2028,7 +2067,8 @@ void do_contourlabeltext(istream &theInput)
   string value, text;
   theInput >> value >> text;
   check_errors(theInput, "contourlabeltext");
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabeltext");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabeltext");
 
   globals.specs.back().addContourLabelText(NFmiStringTools::Convert<float>(value), text);
 }
@@ -2047,7 +2087,8 @@ void do_contourlabelfont(istream &theInput)
 
   check_errors(theInput, "contourlabelfont");
 
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabelfont");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabelfont");
 
   globals.specs.back().contourLabelFont(font);
 }
@@ -2066,7 +2107,8 @@ void do_contourlabelcolor(istream &theInput)
 
   check_errors(theInput, "contourlabelcolor");
 
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabelcolor");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabelcolor");
 
   NFmiColorTools::Color color = ColorTools::checkcolor(scolor);
 
@@ -2109,7 +2151,8 @@ void do_contourlabelmargin(istream &theInput)
 
   check_errors(theInput, "contourlabelmargin");
 
-  if (globals.specs.empty()) throw runtime_error("Must define parameter before contourlabelmargin");
+  if (globals.specs.empty())
+    throw runtime_error("Must define parameter before contourlabelmargin");
 
   globals.specs.back().contourLabelBackgroundXMargin(dx);
   globals.specs.back().contourLabelBackgroundYMargin(dy);
@@ -2363,7 +2406,8 @@ void do_labelfont(istream &theInput)
 
   check_errors(theInput, "labelfont");
 
-  if (!globals.specs.empty()) globals.specs.back().labelFont(font);
+  if (!globals.specs.empty())
+    globals.specs.back().labelFont(font);
 }
 
 // ----------------------------------------------------------------------
@@ -2379,7 +2423,8 @@ void do_labelcolor(istream &theInput)
 
   check_errors(theInput, "labelcolor");
 
-  if (!globals.specs.empty()) globals.specs.back().labelColor(ColorTools::checkcolor(color));
+  if (!globals.specs.empty())
+    globals.specs.back().labelColor(ColorTools::checkcolor(color));
 }
 
 // ----------------------------------------------------------------------
@@ -2397,7 +2442,8 @@ void do_labelrule(istream &theInput)
 
   ColorTools::checkrule(rule);
 
-  if (!globals.specs.empty()) globals.specs.back().labelRule(rule);
+  if (!globals.specs.empty())
+    globals.specs.back().labelRule(rule);
 }
 
 // ----------------------------------------------------------------------
@@ -2413,7 +2459,8 @@ void do_labelalign(istream &theInput)
 
   check_errors(theInput, "labelalign");
 
-  if (!globals.specs.empty()) globals.specs.back().labelAlignment(align);
+  if (!globals.specs.empty())
+    globals.specs.back().labelAlignment(align);
 }
 
 // ----------------------------------------------------------------------
@@ -2429,8 +2476,10 @@ void do_labelformat(istream &theInput)
 
   check_errors(theInput, "labelformat");
 
-  if (format == "-") format = "";
-  if (!globals.specs.empty()) globals.specs.back().labelFormat(format);
+  if (format == "-")
+    format = "";
+  if (!globals.specs.empty())
+    globals.specs.back().labelFormat(format);
 }
 
 // ----------------------------------------------------------------------
@@ -2446,9 +2495,11 @@ void do_labelmissing(istream &theInput)
 
   check_errors(theInput, "labelmissing");
 
-  if (label == "none") label = "";
+  if (label == "none")
+    label = "";
 
-  if (!globals.specs.empty()) globals.specs.back().labelMissing(label);
+  if (!globals.specs.empty())
+    globals.specs.back().labelMissing(label);
 }
 
 // ----------------------------------------------------------------------
@@ -2507,7 +2558,8 @@ void do_label(istream &theInput)
 
   check_errors(theInput, "label");
 
-  if (!globals.specs.empty()) globals.specs.back().add(NFmiPoint(lon, lat));
+  if (!globals.specs.empty())
+    globals.specs.back().add(NFmiPoint(lon, lat));
 }
 
 // ----------------------------------------------------------------------
@@ -2524,7 +2576,8 @@ void do_labelxy(istream &theInput)
 
   check_errors(theInput, "labelxy");
 
-  if (!globals.specs.empty()) globals.specs.back().add(NFmiPoint(lon, lat), NFmiPoint(dx, dy));
+  if (!globals.specs.empty())
+    globals.specs.back().add(NFmiPoint(lon, lat), NFmiPoint(dx, dy));
 }
 
 // ----------------------------------------------------------------------
@@ -2540,7 +2593,8 @@ void do_labels(istream &theInput)
 
   check_errors(theInput, "labels");
 
-  if (dx < 0 || dy < 0) throw runtime_error("labels arguments must be nonnegative");
+  if (dx < 0 || dy < 0)
+    throw runtime_error("labels arguments must be nonnegative");
 
   if (!globals.specs.empty())
   {
@@ -2562,7 +2616,8 @@ void do_labelsxy(istream &theInput)
 
   check_errors(theInput, "labelsxy");
 
-  if (dx < 0 || dy < 0) throw runtime_error("labelsxy arguments must be nonnegative");
+  if (dx < 0 || dy < 0)
+    throw runtime_error("labelsxy arguments must be nonnegative");
 
   if (!globals.specs.empty())
   {
@@ -2587,7 +2642,8 @@ void do_labelfile(istream &theInput)
   check_errors(theInput, "labelfile");
 
   ifstream datafile(datafilename.c_str());
-  if (!datafile) throw runtime_error("No data file named " + datafilename);
+  if (!datafile)
+    throw runtime_error("No data file named " + datafilename);
   string datacommand;
   while (datafile >> datacommand)
   {
@@ -2601,7 +2657,8 @@ void do_labelfile(istream &theInput)
     {
       float lon, lat;
       datafile >> lon >> lat;
-      if (!globals.specs.empty()) globals.specs.back().add(NFmiPoint(lon, lat));
+      if (!globals.specs.empty())
+        globals.specs.back().add(NFmiPoint(lon, lat));
     }
     else
       throw runtime_error("Unknown datacommand " + datacommand);
@@ -2624,7 +2681,8 @@ void do_units(istream &theInput)
   check_errors(theInput, "units");
 
   FmiParameterName param = toparam(paramname);
-  if (param == kFmiBadParameter) throw runtime_error("Unknown parametername '" + paramname + "'");
+  if (param == kFmiBadParameter)
+    throw runtime_error("Unknown parametername '" + paramname + "'");
   globals.unitsconverter.setConversion(param, conversion);
 }
 
@@ -2714,7 +2772,8 @@ void do_draw_shapes(istream &theInput)
 
   boost::shared_ptr<NFmiArea> area = globals.createArea();
 
-  if (globals.verbose) report_area(*area);
+  if (globals.verbose)
+    report_area(*area);
 
   int imgwidth = static_cast<int>(area->Width() + 0.5);
   int imgheight = static_cast<int>(area->Height() + 0.5);
@@ -2784,9 +2843,11 @@ void do_draw_imagemap(istream &theInput)
 
   string outfile = filename + ".map";
   ofstream out(outfile.c_str());
-  if (!out) throw runtime_error("Failed to open " + outfile + " for writing");
+  if (!out)
+    throw runtime_error("Failed to open " + outfile + " for writing");
 
-  if (globals.verbose) cout << "Writing " << outfile << endl;
+  if (globals.verbose)
+    cout << "Writing " << outfile << endl;
 
   list<ShapeSpec>::const_iterator iter;
   list<ShapeSpec>::const_iterator begin = globals.shapespecs.begin();
@@ -2809,7 +2870,8 @@ void do_draw_imagemap(istream &theInput)
 
 void draw_graticule(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 {
-  if (globals.graticulecolor.empty()) return;
+  if (globals.graticulecolor.empty())
+    return;
 
   NFmiPath path;
 
@@ -2863,7 +2925,8 @@ int paramid(const string &theParam)
 
 unsigned int choose_queryinfo(const string &theName, int theLevel)
 {
-  if (globals.querystreams.size() == 0) throw runtime_error("No querydata has been specified");
+  if (globals.querystreams.size() == 0)
+    throw runtime_error("No querydata has been specified");
 
   if (MetaFunctions::isMeta(theName))
   {
@@ -2882,7 +2945,8 @@ unsigned int choose_queryinfo(const string &theName, int theLevel)
       globals.queryinfo->Param(param);
       if (globals.queryinfo->IsParamUsable())
       {
-        if (set_level(*globals.queryinfo, theLevel)) return qi;
+        if (set_level(*globals.queryinfo, theLevel))
+          return qi;
       }
     }
     if (theLevel < 0)
@@ -2958,7 +3022,7 @@ void filter_values(NFmiDataMatrix<float> &theValues,
       NFmiTime t1 = globals.queryinfo->ValidTime();
       if (!MetaFunctions::isMeta(theSpec.param()))
       {
-        globals.queryinfo->Values(tmpvals);
+        tmpvals = globals.queryinfo->Values();
         globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()),
                                        tmpvals);
       }
@@ -2990,7 +3054,7 @@ void filter_values(NFmiDataMatrix<float> &theValues,
     int steps = 1;
     for (;;)
     {
-      globals.queryinfo->Values(tmpvals, tnow);
+      tmpvals = globals.queryinfo->Values(tnow);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), tmpvals);
 
       if (theSpec.replace())
@@ -3008,10 +3072,12 @@ void filter_values(NFmiDataMatrix<float> &theValues,
       ++steps;
       --tnow;
 
-      if (tnow.IsLessThan(tprev)) break;
+      if (tnow.IsLessThan(tprev))
+        break;
     }
 
-    if (globals.filter == "mean") theValues /= static_cast<float>(steps);
+    if (globals.filter == "mean")
+      theValues /= static_cast<float>(steps);
   }
 
   // Noise reduction
@@ -3153,11 +3219,13 @@ void draw_label_markers(ImagineXr_or_NFmiImage &img,
                         const ContourSpec &theSpec,
                         const NFmiArea &theArea)
 {
-  if (theSpec.labelMarker().empty()) return;
+  if (theSpec.labelMarker().empty())
+    return;
 
   // Establish that something is to be done
 
-  if (theSpec.labelPoints().empty() && theSpec.pixelLabels().empty()) return;
+  if (theSpec.labelPoints().empty() && theSpec.pixelLabels().empty())
+    return;
 
   // Establish the marker specs
 
@@ -3184,12 +3252,14 @@ void draw_label_markers(ImagineXr_or_NFmiImage &img,
       if (theSpec.labelMissing().empty())
       {
         float value = theSpec.labelValues()[pointnumber++];
-        if (value == kFloatMissing) continue;
+        if (value == kFloatMissing)
+          continue;
       }
 
       // Skip rendering if the start point is masked
 
-      if (IsMasked(xy, globals.mask)) continue;
+      if (IsMasked(xy, globals.mask))
+        continue;
 
       img.Composite(marker,
                     markerrule,
@@ -3212,12 +3282,14 @@ void draw_label_markers(ImagineXr_or_NFmiImage &img,
 
       // Skip rendering if the start point is masked
 
-      if (IsMasked(NFmiPoint(x, y), globals.mask)) continue;
+      if (IsMasked(NFmiPoint(x, y), globals.mask))
+        continue;
 
       float value = iter->second;
 
       // Skip rendering if LabelMissing is "" and value is missing
-      if (theSpec.labelMissing().empty() && value == kFloatMissing) continue;
+      if (theSpec.labelMissing().empty() && value == kFloatMissing)
+        continue;
 
       img.Composite(marker,
                     markerrule,
@@ -3241,11 +3313,13 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
 {
   // Establish that something is to be done
 
-  if (theSpec.labelPoints().empty() && theSpec.pixelLabels().empty()) return;
+  if (theSpec.labelPoints().empty() && theSpec.pixelLabels().empty())
+    return;
 
   // Quick exit if no labels are desired for this parameter
 
-  if (theSpec.labelFormat() == "") return;
+  if (theSpec.labelFormat() == "")
+    return;
 
     // Create the face object to be used
 
@@ -3294,7 +3368,8 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
 
       // Skip rendering if the start point is masked
 
-      if (IsMasked(NFmiPoint(x, y), globals.mask)) continue;
+      if (IsMasked(NFmiPoint(x, y), globals.mask))
+        continue;
 
       // Convert value to string
       string strvalue = theSpec.labelMissing();
@@ -3307,7 +3382,8 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
       }
 
       // Don't bother drawing empty strings
-      if (strvalue.empty()) continue;
+      if (strvalue.empty())
+        continue;
 
 #ifdef IMAGINE_WITH_CAIRO
       /* Cairo text (must be in UTF-8!)
@@ -3379,7 +3455,8 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
 
       // Skip rendering if the start point is masked
 
-      if (IsMasked(NFmiPoint(x, y), globals.mask)) continue;
+      if (IsMasked(NFmiPoint(x, y), globals.mask))
+        continue;
 
       // Convert value to string
       string strvalue = theSpec.labelMissing();
@@ -3392,7 +3469,8 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
       }
 
       // Don't bother drawing empty strings
-      if (strvalue.empty()) continue;
+      if (strvalue.empty())
+        continue;
 
 #ifdef IMAGINE_WITH_CAIRO
       /* Cairo text (must be in UTF-8!)
@@ -3455,7 +3533,8 @@ double paper_north(const NFmiArea &theArea, const NFmiPoint &theLatLon)
 {
   // Safety against polar regions just in case
 
-  if (theLatLon.Y() <= -89.9 || theLatLon.Y() >= 89.9) return 0;
+  if (theLatLon.Y() <= -89.9 || theLatLon.Y() >= 89.9)
+    return 0;
 
   const NFmiPoint origo = theArea.ToXY(theLatLon);
 
@@ -3478,7 +3557,8 @@ NFmiPath roundarrow_circle(const NFmiPoint &xy, const RoundArrowSize &sz)
 {
   NFmiPath path;
 
-  if (sz.circleradius <= 0) return path;
+  if (sz.circleradius <= 0)
+    return path;
 
   float circumference = 2 * pi * sz.circleradius;
   int segments = static_cast<int>(circumference / 5);
@@ -3508,7 +3588,8 @@ NFmiPath roundarrow_triangle(const NFmiPoint &xy, float angle, const RoundArrowS
 {
   NFmiPath path;
 
-  if (sz.trianglewidth <= 0) return path;
+  if (sz.trianglewidth <= 0)
+    return path;
 
   float triangleh = sz.trianglewidth / 2 / tan(pi * sz.triangleangle / 2 / 180);
   path.MoveTo(0, -sz.triangleradius - triangleh);
@@ -3549,7 +3630,7 @@ void draw_roundarrow(ImagineXr_or_NFmiImage &img, const NFmiPoint &xy, float spe
  */
 // ----------------------------------------------------------------------
 
-void get_speed_direction(const NFmiArea &area,
+void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
                          float speed_src,
                          float speed_dst,
                          float direction_src,
@@ -3561,14 +3642,14 @@ void get_speed_direction(const NFmiArea &area,
   {
     if (globals.queryinfo->Param(toparam(globals.speedparam)))
     {
-      globals.queryinfo->Values(speed);
+      speed = globals.queryinfo->Values();
       speed.Replace(speed_src, speed_dst);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), speed);
     }
 
     if (globals.queryinfo->Param(toparam(globals.directionparam)))
     {
-      globals.queryinfo->Values(direction);
+      direction = globals.queryinfo->Values();
       direction.Replace(direction_src, direction_dst);
       globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()),
                                      direction);
@@ -3579,10 +3660,12 @@ void get_speed_direction(const NFmiArea &area,
     NFmiDataMatrix<float> dx;
     NFmiDataMatrix<float> dy;
 
-    if (globals.queryinfo->Param(toparam(globals.speedxcomponent))) globals.queryinfo->Values(dx);
-    if (globals.queryinfo->Param(toparam(globals.speedycomponent))) globals.queryinfo->Values(dy);
+    if (globals.queryinfo->Param(toparam(globals.speedxcomponent)))
+      dx = globals.queryinfo->Values();
+    if (globals.queryinfo->Param(toparam(globals.speedycomponent)))
+      dy = globals.queryinfo->Values();
 
-    boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> latlon = globals.queryinfo->Locations();
+    auto latlon = globals.queryinfo->Locations();
 
     if (dx.NX() != 0 && dx.NY() != 0 && dy.NX() != 0 && dy.NY() != 0)
     {
@@ -3596,8 +3679,11 @@ void get_speed_direction(const NFmiArea &area,
             speed[i][j] = sqrt(dx[i][j] * dx[i][j] + dy[i][j] * dy[i][j]);
             if (dx[i][j] != 0 || dy[i][j] != 0)
             {
-              double north = paper_north(area, (*latlon)[i][j]);
-              direction[i][j] = fmod(180 + north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+              auto north = Fmi::OGR::gridNorth(transformation, latlon->x(i, j), latlon->y(i, j));
+              if (north)
+                direction[i][j] = fmod(180 - *north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+              else
+                direction[i][j] = kFloatMissing;
             }
           }
         }
@@ -3611,7 +3697,7 @@ void get_speed_direction(const NFmiArea &area,
  */
 // ----------------------------------------------------------------------
 
-void get_speed_direction(const NFmiArea &area,
+void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
                          const NFmiPoint &latlon,
                          float speed_src,
                          float speed_dst,
@@ -3627,7 +3713,8 @@ void get_speed_direction(const NFmiArea &area,
     if (globals.queryinfo->Param(toparam(globals.directionparam)))
     {
       direction = globals.queryinfo->InterpolatedValue(latlon);
-      if (direction == direction_src) direction = direction_dst;
+      if (direction == direction_src)
+        direction = direction_dst;
 
       direction = globals.unitsconverter.convert(
           FmiParameterName(globals.queryinfo->GetParamIdent()), direction);
@@ -3636,7 +3723,8 @@ void get_speed_direction(const NFmiArea &area,
     if (globals.queryinfo->Param(toparam(globals.speedparam)))
     {
       speed = globals.queryinfo->InterpolatedValue(latlon);
-      if (speed == speed_src) speed = speed_dst;
+      if (speed == speed_src)
+        speed = speed_dst;
       speed = globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()),
                                              speed);
     }
@@ -3658,8 +3746,11 @@ void get_speed_direction(const NFmiArea &area,
       speed = sqrt(dx * dx + dy * dy);
       if (dx != 0 || dy != 0)
       {
-        double north = paper_north(area, latlon);
-        direction = fmod(180 + north + FmiDeg(atan2f(dx, dy)), 360.0);
+        auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+        if (north)
+          direction = fmod(180 - *north + FmiDeg(atan2f(dx, dy)), 360.0);
+        else
+          direction = kFloatMissing;
       }
     }
   }
@@ -3683,6 +3774,8 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
 
   list<NFmiPoint>::const_iterator iter;
 
+  Fmi::CoordinateTransformation transformation("WGS84", theArea.SpatialReference());
+
   for (iter = globals.arrowpoints.begin(); iter != globals.arrowpoints.end(); ++iter)
   {
     // The start point
@@ -3692,25 +3785,30 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
 
     // Skip rendering if the start point is masked
 
-    if (IsMasked(xy0, globals.mask)) continue;
+    if (IsMasked(xy0, globals.mask))
+      continue;
 
     float dir, speed;
 
     get_speed_direction(
-        theArea, *iter, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
+        transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
 
     // Ignore missing values
-    if (dir == kFloatMissing || speed == kFloatMissing) continue;
+    if (dir == kFloatMissing || speed == kFloatMissing)
+      continue;
 
     // Direction calculations
 
-    const float north = paper_north(theArea, latlon);
+    auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+
+    if (!north)
+      continue;
 
     // Render the arrow
 
     if (globals.arrowfile == "roundarrow")
     {
-      draw_roundarrow(img, xy0, speed, -dir + north + 180);
+      draw_roundarrow(img, xy0, speed, -dir - *north + 180);
     }
     else
     {
@@ -3731,15 +3829,15 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
         }
 
         strokes.Scale(globals.arrowscale);
-        strokes.Rotate(-dir + north + 180);
+        strokes.Rotate(-dir - *north + 180);
         strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         flags.Scale(globals.arrowscale);
-        flags.Rotate(-dir + north + 180);
+        flags.Rotate(-dir - *north + 180);
         flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         ArrowStyle style = globals.getArrowStroke(speed);
-        strokes.Stroke(img, style.width, style.color, style.rule);
+        strokes.Stroke(img, style.color, style.rule);
         flags.Fill(img, style.color, style.rule);
       }
       else
@@ -3751,7 +3849,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
           arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                           globals.windarrowscaleC);
         arrowpath.Scale(globals.arrowscale);
-        arrowpath.Rotate(-dir + north + 180);
+        arrowpath.Rotate(-dir - *north + 180);
         arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
         // And render it
@@ -3760,7 +3858,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
         arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
         ArrowStyle strokestyle = globals.getArrowStroke(speed);
-        arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
+        arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
       }
     }
   }
@@ -3782,44 +3880,61 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 {
   // Draw the full grid if so desired
 
-  if (globals.windarrowdx <= 0 || globals.windarrowdy <= 0) return;
+  if (globals.windarrowdx <= 0 || globals.windarrowdy <= 0)
+    return;
 
   NFmiDataMatrix<float> speedvalues, dirvalues;
 
-  get_speed_direction(
-      theArea, speed_src, speed_dst, direction_src, direction_dst, speedvalues, dirvalues);
+  Fmi::CoordinateTransformation wgs84transformation("WGS84", theArea.SpatialReference());
+
+  get_speed_direction(wgs84transformation,
+                      speed_src,
+                      speed_dst,
+                      direction_src,
+                      direction_dst,
+                      speedvalues,
+                      dirvalues);
 
   if (dirvalues.NX() == 0 || dirvalues.NY() == 0)
-  {
     return;
-  }
 
   bool speedok = (speedvalues.NX() != 0 && speedvalues.NY() != 0);
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
-      globals.queryinfo->LocationsWorldXY(theArea);
-  for (float y = 0; y <= worldpts->NY() - 1; y += globals.windarrowdy)
-    for (float x = 0; x <= worldpts->NX() - 1; x += globals.windarrowdx)
+  // Data coordinates to target area worldxy coordinates
+
+  auto coordinates = globals.queryinfo->CoordinateMatrix();
+
+  Fmi::CoordinateTransformation transformation(globals.queryinfo->SpatialReference(),
+                                               theArea.SpatialReference());
+
+  auto ocoordinates = coordinates;
+
+  if (!coordinates.transform(transformation))
+    return;
+
+  // Needed for grid to latlon conversions
+  const auto *grid = globals.queryinfo->Grid();
+
+  for (float y = 0; y <= coordinates.height() - 1; y += globals.windarrowdy)
+    for (float x = 0; x <= coordinates.width() - 1; x += globals.windarrowdx)
     {
       // The start point
 
       const int i = static_cast<int>(floor(x));
       const int j = static_cast<int>(floor(y));
 
-      NFmiPoint bad(kFloatMissing, kFloatMissing);
       NFmiPoint xy = NFmiInterpolation::BiLinear(x - i,
                                                  y - j,
-                                                 worldpts->At(i, j + 1, bad),
-                                                 worldpts->At(i + 1, j + 1, bad),
-                                                 worldpts->At(i, j, bad),
-                                                 worldpts->At(i + 1, j, bad));
+                                                 coordinates(i, j + 1),
+                                                 coordinates(i + 1, j + 1),
+                                                 coordinates(i, j),
+                                                 coordinates(i + 1, j));
 
-      NFmiPoint latlon = theArea.WorldXYToLatLon(xy);
-      // latlon = MeridianTools::Relocate(latlon,theArea);
-      NFmiPoint xy0 = theArea.ToXY(latlon);
+      NFmiPoint xy0 = theArea.WorldXYToXY(xy);
 
       // Skip rendering if the start point is masked
-      if (IsMasked(xy0, globals.mask)) continue;
+      if (IsMasked(xy0, globals.mask))
+        continue;
 
       // Skip rendering if the start point is way outside the image
 
@@ -3853,13 +3968,18 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
       // Direction calculations
 
-      const float north = paper_north(theArea, latlon);
+      const auto latlon = grid->GridToLatLon(x, y);
+
+      auto north = Fmi::OGR::gridNorth(wgs84transformation, latlon.X(), latlon.Y());
+
+      if (!north)
+        continue;
 
       // Render the arrow
 
       if (globals.arrowfile == "roundarrow")
       {
-        draw_roundarrow(img, xy0, speed, -dir + north + 180);
+        draw_roundarrow(img, xy0, speed, -dir - *north + 180);
       }
       else
       {
@@ -3880,15 +4000,15 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
           }
 
           strokes.Scale(globals.arrowscale);
-          strokes.Rotate(-dir + north + 180);
+          strokes.Rotate(-dir - *north + 180);
           strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           flags.Scale(globals.arrowscale);
-          flags.Rotate(-dir + north + 180);
+          flags.Rotate(-dir - *north + 180);
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
-          strokes.Stroke(img, style.width, style.color, style.rule);
+          strokes.Stroke(img, style.color, style.rule);
           flags.Fill(img, style.color, style.rule);
         }
         else
@@ -3900,7 +4020,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
             arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                             globals.windarrowscaleC);
           arrowpath.Scale(globals.arrowscale);
-          arrowpath.Rotate(-dir + north + 180);
+          arrowpath.Rotate(-dir - *north + 180);
           arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           // And render it
@@ -3909,7 +4029,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
           arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
           ArrowStyle strokestyle = globals.getArrowStroke(speed);
-          arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
+          arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
         }
       }
     }
@@ -3931,7 +4051,10 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 {
   // Draw the full grid if so desired
 
-  if (globals.windarrowsxydx <= 0 || globals.windarrowsxydy <= 0) return;
+  if (globals.windarrowsxydx <= 0 || globals.windarrowsxydy <= 0)
+    return;
+
+  Fmi::CoordinateTransformation transformation("WGS84", theArea.SpatialReference());
 
   for (float y = globals.windarrowsxyy0; y <= img.Height(); y += globals.windarrowsxydy)
     for (float x = globals.windarrowsxyx0; x <= img.Width(); x += globals.windarrowsxydx)
@@ -3939,7 +4062,8 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
       NFmiPoint xy0(x, y);
 
       // Skip the point if it is masked
-      if (IsMasked(xy0, globals.mask)) continue;
+      if (IsMasked(xy0, globals.mask))
+        continue;
 
       // Calculate the latlon value
 
@@ -3950,21 +4074,25 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
       float dir, speed;
 
       get_speed_direction(
-          theArea, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
+          transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
 
       // Ignore missing values
 
-      if (dir == kFloatMissing || speed == kFloatMissing) continue;
+      if (dir == kFloatMissing || speed == kFloatMissing)
+        continue;
 
       // Direction calculations
 
-      const float north = paper_north(theArea, latlon);
+      auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+
+      if (!north)
+        continue;
 
       // Render the arrow
 
       if (globals.arrowfile == "roundarrow")
       {
-        draw_roundarrow(img, xy0, speed, -dir + north + 180);
+        draw_roundarrow(img, xy0, speed, -dir - *north + 180);
       }
       else
       {
@@ -3985,15 +4113,15 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
           }
 
           strokes.Scale(globals.arrowscale);
-          strokes.Rotate(-dir + north + 180);
+          strokes.Rotate(-dir - *north + 180);
           strokes.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           flags.Scale(globals.arrowscale);
-          flags.Rotate(-dir + north + 180);
+          flags.Rotate(-dir - *north + 180);
           flags.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           ArrowStyle style = globals.getArrowStroke(speed);
-          strokes.Stroke(img, style.width, style.color, style.rule);
+          strokes.Stroke(img, style.color, style.rule);
           flags.Fill(img, style.color, style.rule);
         }
         else
@@ -4005,7 +4133,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
             arrowpath.Scale(globals.windarrowscaleA * log10(globals.windarrowscaleB * speed + 1) +
                             globals.windarrowscaleC);
           arrowpath.Scale(globals.arrowscale);
-          arrowpath.Rotate(-dir + north + 180);
+          arrowpath.Rotate(-dir - *north + 180);
           arrowpath.Translate(static_cast<float>(xy0.X()), static_cast<float>(xy0.Y()));
 
           // And render it
@@ -4014,7 +4142,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
           arrowpath.Fill(img, fillstyle.color, fillstyle.rule);
 
           ArrowStyle strokestyle = globals.getArrowStroke(speed);
-          arrowpath.Stroke(img, strokestyle.width, strokestyle.color, strokestyle.rule);
+          arrowpath.Stroke(img, strokestyle.color, strokestyle.rule);
         }
       }
     }
@@ -4045,7 +4173,8 @@ void draw_wind_arrows(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       name = globals.speedxcomponent;
     }
 
-    if (param == kFmiBadParameter) throw runtime_error("Unknown parameter " + name);
+    if (param == kFmiBadParameter)
+      throw runtime_error("Unknown parameter " + name);
 
     // Find the proper queryinfo to be used
 
@@ -4055,10 +4184,12 @@ void draw_wind_arrows(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       globals.queryinfo = globals.querystreams[qi];
       globals.queryinfo->Param(param);
       ok = globals.queryinfo->IsParamUsable();
-      if (ok) break;
+      if (ok)
+        break;
     }
 
-    if (!ok) throw runtime_error("Parameter is not usable: " + name);
+    if (!ok)
+      throw runtime_error("Parameter is not usable: " + name);
 
     // Read the arrow definition
 
@@ -4133,7 +4264,8 @@ void draw_contour_fills(ImagineXr_or_NFmiImage &img,
       cout << "Using cached " << it->lolimit() << " - " << it->hilimit() << endl;
 
     // Avoid unnecessary work if the path is empty
-    if (path.Empty() && it->lolimit() != kFloatMissing && it->hilimit() != kFloatMissing) continue;
+    if (path.Empty() && it->lolimit() != kFloatMissing && it->hilimit() != kFloatMissing)
+      continue;
 
     // MeridianTools::Relocate(path,theArea);
     path.Project(&theArea);
@@ -4278,7 +4410,8 @@ void draw_contour_labels(ImagineXr_or_NFmiImage &img)
 {
   const LabelLocator::ParamCoordinates &coords = globals.labellocator.chooseLabels();
 
-  if (coords.empty()) return;
+  if (coords.empty())
+    return;
 
   // Iterate through all parameters
 
@@ -4293,7 +4426,8 @@ void draw_contour_labels(ImagineXr_or_NFmiImage &img)
     const int id = paramid(piter->param());
 
     LabelLocator::ParamCoordinates::const_iterator pit = coords.find(id);
-    if (pit == coords.end()) continue;
+    if (pit == coords.end())
+      continue;
 
     // Rended the contours
 
@@ -4321,7 +4455,8 @@ void draw_contour_labels(ImagineXr_or_NFmiImage &img)
 
       // Handle possible contourlabeltext override
       std::map<float, std::string>::const_iterator it = piter->contourLabelTexts().find(value);
-      if (it != piter->contourLabelTexts().end()) text = it->second;
+      if (it != piter->contourLabelTexts().end())
+        text = it->second;
 
       for (LabelLocator::Coordinates::const_iterator it = cit->second.begin();
            it != cit->second.end();
@@ -4409,7 +4544,8 @@ void draw_contour_symbols(ImagineXr_or_NFmiImage &img)
 {
   const LabelLocator::ParamCoordinates &paramcoords = globals.imagelocator.chooseLabels();
 
-  if (paramcoords.empty()) return;
+  if (paramcoords.empty())
+    return;
 
   // Iterate through all parameters
 
@@ -4424,7 +4560,8 @@ void draw_contour_symbols(ImagineXr_or_NFmiImage &img)
     const int id = paramid(piter->param());
 
     LabelLocator::ParamCoordinates::const_iterator pit = paramcoords.find(id);
-    if (pit == paramcoords.end()) continue;
+    if (pit == paramcoords.end())
+      continue;
 
     const LabelLocator::ContourCoordinates &coords = pit->second;
 
@@ -4453,7 +4590,8 @@ void draw_contour_symbols(ImagineXr_or_NFmiImage &img)
           inside = false;
         else
           inside = true;
-        if (inside) break;
+        if (inside)
+          break;
       }
 
       // Should never happen
@@ -4486,7 +4624,8 @@ void draw_contour_fonts(ImagineXr_or_NFmiImage &img)
 {
   const LabelLocator::ParamCoordinates &paramcoords = globals.symbollocator.chooseLabels();
 
-  if (paramcoords.empty()) return;
+  if (paramcoords.empty())
+    return;
 
   // Iterate through all parameters
 
@@ -4501,7 +4640,8 @@ void draw_contour_fonts(ImagineXr_or_NFmiImage &img)
     const int id = paramid(piter->param());
 
     LabelLocator::ParamCoordinates::const_iterator pit = paramcoords.find(id);
-    if (pit == paramcoords.end()) continue;
+    if (pit == paramcoords.end())
+      continue;
 
     const LabelLocator::ContourCoordinates &coords = pit->second;
 
@@ -4517,7 +4657,8 @@ void draw_contour_fonts(ImagineXr_or_NFmiImage &img)
       list<ContourFont>::const_iterator fit;
       for (fit = piter->contourFonts().begin(); fit != piter->contourFonts().end(); ++fit)
       {
-        if (fit->value() == value) break;
+        if (fit->value() == value)
+          break;
       }
 
       // Should never happen
@@ -4627,7 +4768,8 @@ void save_contour_fonts(ImagineXr_or_NFmiImage &img,
 
 void draw_overlay(ImagineXr_or_NFmiImage &img, const ContourSpec &theSpec)
 {
-  if (theSpec.overlay().empty()) return;
+  if (theSpec.overlay().empty())
+    return;
 
   img.Composite(globals.getImage(theSpec.overlay()),
                 NFmiColorTools::kFmiColorOver,
@@ -4665,7 +4807,8 @@ int extrematype(
     for (int dx = -DX; dx <= DX; dx++)
     {
       // quick exit for missing values
-      if (theValues[i + dx][j + dy] == kFloatMissing) return 0;
+      if (theValues[i + dx][j + dy] == kFloatMissing)
+        return 0;
 
       if (dx != 0 && dy != 0)
       {
@@ -4676,7 +4819,8 @@ int extrematype(
       }
 
       // quick exit for non-extrema
-      if (smaller > 0 && bigger > 0) return 0;
+      if (smaller > 0 && bigger > 0)
+        return 0;
 
       // update extrema values
 
@@ -4726,17 +4870,16 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 
   // Exit if none
 
-  if (!dohigh && !dolow) return;
+  if (!dohigh && !dolow)
+    return;
 
   // Get the data to be analyzed
 
   choose_queryinfo("Pressure", 0);
 
-  boost::shared_ptr<NFmiDataMatrix<NFmiPoint>> worldpts =
-      globals.queryinfo->LocationsWorldXY(theArea);
+  auto worldpts = globals.queryinfo->LocationsWorldXY(theArea);
 
-  NFmiDataMatrix<float> vals;
-  globals.queryinfo->Values(vals);
+  auto vals = globals.queryinfo->Values();
   globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), vals);
 
   // Insert candidate coordinates into the system
@@ -4754,16 +4897,17 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
       int extrem = extrematype(vals, i, j, DX, DY, required_gradient);
       if (extrem != 0)
       {
-        // the point in kilometer units
-        NFmiPoint point((*worldpts)[i][j].X() / 1000, (*worldpts)[i][j].Y() / 1000);
+        NFmiPoint point(worldpts->x(i, j) / 1000, worldpts->y(i, j) / 1000);
 
         if (extrem < 0)
         {
-          if (dolow) globals.pressurelocator.add(ExtremaLocator::Minimum, point.X(), point.Y());
+          if (dolow)
+            globals.pressurelocator.add(ExtremaLocator::Minimum, point.X(), point.Y());
         }
         else
         {
-          if (dohigh) globals.pressurelocator.add(ExtremaLocator::Maximum, point.X(), point.Y());
+          if (dohigh)
+            globals.pressurelocator.add(ExtremaLocator::Maximum, point.X(), point.Y());
         }
       }
     }
@@ -4819,7 +4963,8 @@ void draw_pressure_markers(ImagineXr_or_NFmiImage &img, const NFmiArea &theArea)
 
 void draw_foreground(ImagineXr_or_NFmiImage &img)
 {
-  if (globals.foreground.empty()) return;
+  if (globals.foreground.empty())
+    return;
 
   NFmiColorTools::NFmiBlendRule rule = ColorTools::checkrule(globals.foregroundrule);
 
@@ -4853,7 +4998,8 @@ void do_draw_contours(istream &theInput)
   globals.symbollocator.clear();
   globals.imagelocator.clear();
 
-  if (globals.querystreams.empty()) throw runtime_error("No query data has been read!");
+  if (globals.querystreams.empty())
+    throw runtime_error("No query data has been read!");
 
   boost::shared_ptr<NFmiArea> area = globals.createArea();
 
@@ -4862,7 +5008,8 @@ void do_draw_contours(istream &theInput)
   if (!globals.background.empty())
     cout << "Contouring for background " << globals.background << endl;
 
-  if (globals.verbose) report_area(*area);
+  if (globals.verbose)
+    report_area(*area);
 
   // Establish querydata timelimits and initialize
   // the XY-coordinates simultaneously.
@@ -4897,8 +5044,10 @@ void do_draw_contours(istream &theInput)
     }
     else
     {
-      if (time1.IsLessThan(t1)) time1 = t1;
-      if (!time2.IsLessThan(t2)) time2 = t2;
+      if (time1.IsLessThan(t1))
+        time1 = t1;
+      if (!time2.IsLessThan(t2))
+        time2 = t2;
     }
   }
 
@@ -4913,7 +5062,8 @@ void do_draw_contours(istream &theInput)
                       globals.timesteprounding ? (globals.timestep > 0 ? globals.timestep : 1) : 1);
 
   tmptime.ChangeByMinutes(globals.timestepskip);
-  if (globals.timesteprounding) tmptime.PreviousMetTime();
+  if (globals.timesteprounding)
+    tmptime.PreviousMetTime();
   NFmiTime t = tmptime;
 
   // Loop over all times
@@ -4922,7 +5072,8 @@ void do_draw_contours(istream &theInput)
   bool labeldxdydone = false;
   for (;;)
   {
-    if (imagesdone >= globals.timesteps) break;
+    if (imagesdone >= globals.timesteps)
+      break;
 
     // Skip to next time to be drawn
 
@@ -4930,7 +5081,8 @@ void do_draw_contours(istream &theInput)
 
     // If the time is after time2, we're done
 
-    if (time2.IsLessThan(t)) break;
+    if (time2.IsLessThan(t))
+      break;
 
     // Search first time >= the desired time
     // This is quaranteed to succeed since we've
@@ -4945,13 +5097,15 @@ void do_draw_contours(istream &theInput)
       while (globals.queryinfo->NextTime())
       {
         NFmiTime loc = globals.queryinfo->ValidTime();
-        if (!loc.IsLessThan(t)) break;
+        if (!loc.IsLessThan(t))
+          break;
       }
       NFmiTime tnow = globals.queryinfo->ValidTime();
 
       // we wanted
 
-      if (globals.timestep == 0) t = tnow;
+      if (globals.timestep == 0)
+        t = tnow;
 
       // If time is before time1, ignore it
 
@@ -4997,7 +5151,8 @@ void do_draw_contours(istream &theInput)
       }
     }
 
-    if (!ok) continue;
+    if (!ok)
+      continue;
 
     // The image is accepted for rendering, but
     // we might not overwrite an existing one.
@@ -5011,7 +5166,8 @@ void do_draw_contours(istream &theInput)
 
     NFmiString datatimestr = t.ToStr(globals.timestampformat);
 
-    if (globals.verbose) cout << "Time is " << datatimestr.CharPtr() << endl;
+    if (globals.verbose)
+      cout << "Time is " << datatimestr.CharPtr() << endl;
 
     string filename = globals.savepath + "/" + globals.prefix + datatimestr.CharPtr();
 
@@ -5034,7 +5190,8 @@ void do_draw_contours(istream &theInput)
 
     if (!globals.force && !NFmiFileSystem::FileEmpty(filename))
     {
-      if (globals.verbose) cout << "Not overwriting " << filename << endl;
+      if (globals.verbose)
+        cout << "Not overwriting " << filename << endl;
       continue;
     }
 
@@ -5075,7 +5232,8 @@ void do_draw_contours(istream &theInput)
         throw runtime_error("Background image size does not match area size");
       }
     }
-    if (image.get() == 0) throw runtime_error("Failed to allocate a new image for rendering");
+    if (image.get() == 0)
+      throw runtime_error("Failed to allocate a new image for rendering");
 
     globals.setImageModes(*image);
 #define xr image /* HACK */
@@ -5111,7 +5269,8 @@ void do_draw_contours(istream &theInput)
 
       qi = choose_queryinfo(name, level);
 
-      if (globals.verbose) report_queryinfo(name, qi);
+      if (globals.verbose)
+        report_queryinfo(name, qi);
 
       // Establish the contour method
 
@@ -5124,7 +5283,7 @@ void do_draw_contours(istream &theInput)
 
       if (!MetaFunctions::isMeta(name))
       {
-        globals.queryinfo->Values(vals);
+        vals = globals.queryinfo->Values();
         globals.unitsconverter.convert(FmiParameterName(globals.queryinfo->GetParamIdent()), vals);
       }
       else
@@ -5132,7 +5291,8 @@ void do_draw_contours(istream &theInput)
 
       // Replace values if so requested
 
-      if (piter->replace()) vals.Replace(piter->replaceSourceValue(), piter->replaceTargetValue());
+      if (piter->replace())
+        vals.Replace(piter->replaceSourceValue(), piter->replaceTargetValue());
 
       // Filter the values if so requested
 
@@ -5140,7 +5300,8 @@ void do_draw_contours(istream &theInput)
 
       // Expand the data if so requested
 
-      if (globals.expanddata) expand_data(vals);
+      if (globals.expanddata)
+        expand_data(vals);
 
       // Call smoother only if necessary to avoid LazyCoordinates dereferencing
 
@@ -5164,7 +5325,8 @@ void do_draw_contours(istream &theInput)
       // First, however, if this is the first image, we add
       // the grid points to the set of points, if so requested
 
-      if (!labeldxdydone) add_label_grid_values(*piter, *area, worldpts);
+      if (!labeldxdydone)
+        add_label_grid_values(*piter, *area, worldpts);
 
       // For pixelgrids we must repeat the process for all new
       // background images, since the pixel spacing changes
@@ -5578,7 +5740,8 @@ int domain(int argc, const char *argv[])
   {
     // Get the script to be executed
 
-    if (globals.verbose) cout << "Processing file: " << *fileiter << endl;
+    if (globals.verbose)
+      cout << "Processing file: " << *fileiter << endl;
 
     string text = read_script(*fileiter);
     text = preprocess_script(text);

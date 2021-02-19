@@ -24,6 +24,7 @@ BuildRequires: smartmet-library-macgyver-devel >= 21.1.25
 BuildRequires: smartmet-library-imagine2-devel >= 21.2.18
 BuildRequires: smartmet-library-imagine2 >= 21.2.18
 BuildRequires: smartmet-library-newbase-devel >= 21.2.18
+BuildRequires: smartmet-library-gis-devel >= 21.2.11
 BuildRequires: smartmet-library-tron >= 21.2.10
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel

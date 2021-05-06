@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 21.4.9
+Version: 21.5.6
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -22,11 +22,11 @@ BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal32-devel
 BuildRequires: smartmet-library-macgyver-devel >= 21.2.25
-BuildRequires: smartmet-library-imagine2-devel >= 21.3.30
-BuildRequires: smartmet-library-imagine2 >= 21.3.30
-BuildRequires: smartmet-library-newbase-devel >= 21.3.20
-BuildRequires: smartmet-library-gis-devel >= 21.3.29
-BuildRequires: smartmet-library-tron-devel >= 21.4.9
+BuildRequires: smartmet-library-imagine2-devel >= 21.5.6
+BuildRequires: smartmet-library-imagine2 >= 21.5.6
+BuildRequires: smartmet-library-newbase-devel >= 21.5.6
+BuildRequires: smartmet-library-gis-devel >= 21.5.5
+BuildRequires: smartmet-library-tron-devel >= 21.4.15
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -38,15 +38,15 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 21.3.30
-Requires: smartmet-library-newbase >= 21.3.20
-Requires: smartmet-library-tron >= 21.4.9
+Requires: smartmet-library-imagine2 >= 21.5.6
+Requires: smartmet-library-newbase >= 21.5.6
+Requires: smartmet-library-tron >= 21.4.15
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
 #TestRequires: smartmet-library-macgyver-devel >= 21.2.25
-#TestRequires: smartmet-library-tron >= 21.4.9
+#TestRequires: smartmet-library-tron >= 21.4.15
 #TestRequires: ImageMagick                                                                                                     
 #TestRequires: bc                                                                                                              
 #TestRequires: xorg-x11-fonts-misc                                                                                             
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May  6 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.5.6-1.fmi
+- Repackaged due to ABI	changes	in NFmiAzimuthalArea
+
 * Fri Apr  9 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.4.9-1.fmi
 - Repackaged with the latest Tron library for faster contouring
 

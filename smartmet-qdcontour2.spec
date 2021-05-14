@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 21.5.6
+Version: 21.5.14
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 14 2021 Andris Pavēnis <andris.pavenis@fmi.fi> 21.5.14-1.fmi
+- Fix build when TSAN or ASAN is being used
+
 * Thu May  6 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.5.6-1.fmi
 - Repackaged due to ABI	changes	in NFmiAzimuthalArea
 

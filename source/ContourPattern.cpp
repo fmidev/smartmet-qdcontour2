@@ -22,15 +22,15 @@ using namespace std;
 // ----------------------------------------------------------------------
 
 ContourPattern::ContourPattern(float theLoLimit,
-							   float theHiLimit,
-							   const std::string & thePattern,
-							   const std::string & theRule,
-							   float theFactor)
-  : itsLoLimit(theLoLimit)
-  , itsHiLimit(theHiLimit)
-  , itsPattern(thePattern)
-  , itsRule(theRule)
-  , itsFactor(theFactor)
+                               float theHiLimit,
+                               const std::string& thePattern,
+                               const std::string& theRule,
+                               float theFactor)
+    : itsLoLimit(theLoLimit),
+      itsHiLimit(theHiLimit),
+      itsPattern(thePattern),
+      itsRule(theRule),
+      itsFactor(theFactor)
 {
 }
 
@@ -68,7 +68,7 @@ float ContourPattern::hilimit() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourPattern::pattern() const
+const std::string& ContourPattern::pattern() const
 {
   return itsPattern;
 }
@@ -81,7 +81,7 @@ const std::string & ContourPattern::pattern() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourPattern::rule() const
+const std::string& ContourPattern::rule() const
 {
   return itsRule;
 }

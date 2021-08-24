@@ -17,10 +17,7 @@ using namespace std;
  */
 // ----------------------------------------------------------------------
 
-ContourLabel::ContourLabel(float theValue)
-  : itsValue(theValue)
-{
-}
+ContourLabel::ContourLabel(float theValue) : itsValue(theValue) {}
 
 // ----------------------------------------------------------------------
 /*!

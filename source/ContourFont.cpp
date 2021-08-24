@@ -20,14 +20,8 @@ using namespace std;
  */
 // ----------------------------------------------------------------------
 
-ContourFont::ContourFont(float theValue,
-						 int theColor,
-						 int theSymbol,
-						 const std::string & theFont)
-  : itsValue(theValue)
-  , itsColor(theColor)
-  , itsSymbol(theSymbol)
-  , itsFont(theFont)
+ContourFont::ContourFont(float theValue, int theColor, int theSymbol, const std::string& theFont)
+    : itsValue(theValue), itsColor(theColor), itsSymbol(theSymbol), itsFont(theFont)
 {
 }
 
@@ -78,7 +72,7 @@ int ContourFont::symbol() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourFont::font() const
+const std::string& ContourFont::font() const
 {
   return itsFont;
 }

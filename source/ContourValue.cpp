@@ -21,13 +21,10 @@ using namespace std;
 // ----------------------------------------------------------------------
 
 ContourValue::ContourValue(float theValue,
-						   float theLineWidth,
-						   int theColor,
-						   const std::string & theRule)
-  : itsValue(theValue)
-  , itsLineWidth(theLineWidth)
-  , itsColor(theColor)
-  , itsRule(theRule)
+                           float theLineWidth,
+                           int theColor,
+                           const std::string& theRule)
+    : itsValue(theValue), itsLineWidth(theLineWidth), itsColor(theColor), itsRule(theRule)
 {
 }
 
@@ -78,7 +75,7 @@ int ContourValue::color() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourValue::rule() const
+const std::string& ContourValue::rule() const
 {
   return itsRule;
 }

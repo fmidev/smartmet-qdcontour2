@@ -21,13 +21,10 @@ using namespace std;
 // ----------------------------------------------------------------------
 
 ContourRange::ContourRange(float theLoLimit,
-						   float theHiLimit,
-						   int theColor,
-						   const std::string & theRule)
-  : itsLoLimit(theLoLimit)
-  , itsHiLimit(theHiLimit)
-  , itsColor(theColor)
-  , itsRule(theRule)
+                           float theHiLimit,
+                           int theColor,
+                           const std::string& theRule)
+    : itsLoLimit(theLoLimit), itsHiLimit(theHiLimit), itsColor(theColor), itsRule(theRule)
 {
 }
 
@@ -78,7 +75,7 @@ int ContourRange::color() const
  */
 // ----------------------------------------------------------------------
 
-const std::string & ContourRange::rule() const
+const std::string& ContourRange::rule() const
 {
   return itsRule;
 }

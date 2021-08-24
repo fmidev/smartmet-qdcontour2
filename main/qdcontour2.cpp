@@ -37,18 +37,18 @@ typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #include <gis/SpatialReference.h>
 #include <imagine2/NFmiColorTools.h>
 #include <imagine2/NFmiGeoShape.h>  // for esri data
-#include <newbase/NFmiCmdLine.h>  // command line options
+#include <newbase/NFmiCmdLine.h>    // command line options
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiDataModifierClasses.h>
 #include <newbase/NFmiEnumConverter.h>  // FmiParameterName<-->string
-#include <newbase/NFmiFileSystem.h>  // FileExists()
+#include <newbase/NFmiFileSystem.h>     // FileExists()
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiInterpolation.h>  // Interpolation functions
-#include <newbase/NFmiLatLonArea.h>  // Geographic projection
+#include <newbase/NFmiLatLonArea.h>     // Geographic projection
 #include <newbase/NFmiLevel.h>
 #include <newbase/NFmiPreProcessor.h>
-#include <newbase/NFmiSettings.h>  // Configuration
-#include <newbase/NFmiSmoother.h>  // for smoothing data
+#include <newbase/NFmiSettings.h>           // Configuration
+#include <newbase/NFmiSmoother.h>           // for smoothing data
 #include <newbase/NFmiStereographicArea.h>  // Stereographic projection
 #include <newbase/NFmiStringTools.h>
 #include <fstream>

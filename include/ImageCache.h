@@ -13,7 +13,6 @@
 #endif
 
 #include "NFmiImage.h"
-
 #include <map>
 #include <string>
 

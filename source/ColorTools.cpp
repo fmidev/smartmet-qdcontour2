@@ -5,10 +5,10 @@
  */
 // ======================================================================
 
+#include "ColorTools.h"
+
 #include <stdexcept>
 #include <vector>
-
-#include "ColorTools.h"
 
 using namespace std;
 

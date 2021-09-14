@@ -10,7 +10,6 @@
 
 #include "NFmiDataMatrix.h"
 #include "NFmiParameterName.h"
-
 #include <string>
 #include <vector>
 

@@ -5,10 +5,10 @@
 class DataMatrixAdapter
 {
  public:
-  typedef float value_type;
-  typedef float coord_type;
+  using value_type = float;
+  using coord_type = float;
 
-  typedef NFmiDataMatrix<float>::size_type size_type;
+  using size_type = NFmiDataMatrix<float>::size_type;
 
   DataMatrixAdapter(const NFmiDataMatrix<float> &theMatrix)
       : itsMatrix(theMatrix), itsWidth(theMatrix.NX()), itsHeight(theMatrix.NY())

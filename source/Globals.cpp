@@ -8,9 +8,8 @@
 #include "Globals.h"
 #include "ColorTools.h"
 #include "LazyQueryData.h"
-#include "TimeTools.h"
-
 #include "NFmiEsriBox.h"
+#include "TimeTools.h"
 
 #ifdef IMAGINE_WITH_CAIRO
 #include "ImagineXr.h"
@@ -19,14 +18,11 @@
 #include "NFmiFreeType.h"
 #endif
 
-#include "NFmiPath.h"
-
 #include "NFmiAreaFactory.h"
+#include "NFmiPath.h"
 #include "NFmiSettings.h"
 #include "NFmiTime.h"
-
 #include <boost/foreach.hpp>
-
 #include <string>
 
 using NFmiSettings::Optional;

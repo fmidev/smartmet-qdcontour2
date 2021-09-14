@@ -12,27 +12,23 @@
 #include "ContourCalculator.h"
 #include "ContourSpec.h"
 #include "ExtremaLocator.h"
-
 #include "ImageCache.h"
-
 #include "LabelLocator.h"
 #include "ShapeSpec.h"
 #include "UnitsConverter.h"
 
 #include "imagine-config.h"
 #ifdef IMAGINE_WITH_CAIRO
-#include "ImagineXr.h"
+#include <imagine2/ImagineXr.h>
 #else
-#include "NFmiColorTools.h"
+#include <imagine/NFmiColorTools.h>
 #endif
 
-#include "NFmiArea.h"
 #include "NFmiImage.h"
 #include "NFmiPath.h"
-#include "NFmiPoint.h"
-
 #include <boost/shared_ptr.hpp>
-
+#include <newbase/NFmiArea.h>
+#include <newbase/NFmiPoint.h>
 #include <list>
 #include <memory>
 #include <string>

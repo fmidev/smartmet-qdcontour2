@@ -15,11 +15,26 @@ OK_PNG=$1
 PNG=$2
 DIFF_PNG=$3
 
+# Detect WGS84 branch
+grep --quiet "#define WGS84 1" /usr/include/smartmet/newbase/NFmiGlobals.h
+wgs84=$(expr $? == 0)
+
+# And use WGS84 result if it exists in WGS84 branch
+
+if [[ $wgs84 == 1 ]]; then
+    wgs84png=${OK_PNG}.wgs84
+    if [ -e $wgs84png ]; then
+	OK_PNG=$wgs84png
+    fi
+fi
+
+
+
 if [[ $CI == "" ]]; then
   COL_RED="$(tput setaf 1)"
   COL_GREEN="$(tput setaf 2)"
   COL_YELLOW="$(tput setaf 3)"
-  COL_NORM="$(tput setaf 0)"
+  COL_NORM="$(tput setaf 7)"
   COL_BOLD="$(tput bold)"
   COL_OFF="$(tput sgr0)"
 fi

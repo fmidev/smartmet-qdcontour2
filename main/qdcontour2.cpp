@@ -15,7 +15,6 @@
 #include "LazyQueryData.h"
 #include "MeridianTools.h"
 #include "MetaFunctions.h"
-#include "ProjectionFactory.h"
 #include "TimeTools.h"
 
 #ifdef IMAGINE_WITH_CAIRO
@@ -44,12 +43,10 @@ typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #include <newbase/NFmiFileSystem.h>     // FileExists()
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiInterpolation.h>  // Interpolation functions
-#include <newbase/NFmiLatLonArea.h>     // Geographic projection
 #include <newbase/NFmiLevel.h>
 #include <newbase/NFmiPreProcessor.h>
-#include <newbase/NFmiSettings.h>           // Configuration
-#include <newbase/NFmiSmoother.h>           // for smoothing data
-#include <newbase/NFmiStereographicArea.h>  // Stereographic projection
+#include <newbase/NFmiSettings.h>  // Configuration
+#include <newbase/NFmiSmoother.h>  // for smoothing data
 #include <newbase/NFmiStringTools.h>
 #include <fstream>
 #include <iomanip>

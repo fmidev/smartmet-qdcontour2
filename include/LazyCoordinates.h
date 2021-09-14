@@ -12,7 +12,7 @@
  * needed (when the counters are already available in the cache).
  *
  * To optimize the code we hence use a lazy matrix of coordinates,
- * which acts like a NFmiDataMatrix<NFmiPoint>, except that
+ * which acts like a Fmi::CoordinateMatrix, except that
  * the coordinates are only fetched from the global querydata
  * holder if necessary.
  *
@@ -36,6 +36,7 @@ class LazyCoordinates
 {
  public:
   typedef Fmi::CoordinateMatrix data_type;
+  typedef NFmiPoint element_type;
   typedef std::size_t size_type;
 
   LazyCoordinates(const NFmiArea &theArea);
@@ -62,10 +63,10 @@ class LazyCoordinates
  */
 // ----------------------------------------------------------------------
 
-inline NFmiPoint LazyCoordinates::operator()(size_type i, size_type j) const
+inline LazyCoordinates::element_type LazyCoordinates::operator()(size_type i, size_type j) const
 {
   init();
-  return {itsData.x(i, j), itsData.y(i, j)};
+  return itsData(i, j);
 }
 
 // ----------------------------------------------------------------------
@@ -74,13 +75,14 @@ inline NFmiPoint LazyCoordinates::operator()(size_type i, size_type j) const
  */
 // ----------------------------------------------------------------------
 
-inline NFmiPoint LazyCoordinates::operator()(int i, int j, const NFmiPoint &theDefault) const
+inline LazyCoordinates::element_type LazyCoordinates::operator()(
+    int i, int j, const element_type &theDefault) const
 {
   init();
   if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.width() &&
       static_cast<size_type>(j) < itsData.height())
   {
-    return {itsData.x(i, j), itsData.y(i, j)};
+    return itsData(i, j);
   }
   return dummy;
 }

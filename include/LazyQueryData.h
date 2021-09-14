@@ -32,7 +32,6 @@ class NFmiArea;
 class NFmiFastQueryInfo;
 class NFmiGrid;
 class NFmiLevel;
-// class NFmiMetTime;
 class NFmiPoint;
 class NFmiQueryData;
 
@@ -109,8 +108,8 @@ class LazyQueryData
 
   std::string itsInputName;
   std::string itsDataFile;
-  boost::shared_ptr<NFmiFastQueryInfo> itsInfo;
-  boost::shared_ptr<NFmiQueryData> itsData;
+  std::shared_ptr<NFmiFastQueryInfo> itsInfo;
+  std::shared_ptr<NFmiQueryData> itsData;
 
   mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocations;
   mutable std::shared_ptr<Fmi::CoordinateMatrix> itsLocationsWorldXY;

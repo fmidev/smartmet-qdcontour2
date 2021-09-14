@@ -9,19 +9,13 @@
 #include "ContourCache.h"
 #include "DataMatrixAdapter.h"
 #include "LazyQueryData.h"
-
-#include <newbase/NFmiDataMatrix.h>
-
+#include <boost/make_shared.hpp>
 #include <geos/version.h>
-
-#include <tron/FmiBuilder.h>
-#include <tron/Tron.h>
-
+#include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiMetTime.h>
-
-#include <boost/make_shared.hpp>
-
+#include <tron/FmiBuilder.h>
+#include <tron/Tron.h>
 #include <memory>
 #include <stdexcept>
 
@@ -193,6 +187,7 @@ class ContourCalculatorPimple
 
   ContourCache itsAreaCache;
   ContourCache itsLineCache;
+
   std::shared_ptr<DataMatrixAdapter> itsData;  // does not own!
   std::shared_ptr<MyHints> itsHints;
   bool itsHintsOK = false;
@@ -352,7 +347,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     }
   }
 
-  boost::shared_ptr<Geometry> geom = builder.result();
+  auto geom = builder.result();
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());
@@ -427,7 +422,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     }
   }
 
-  boost::shared_ptr<Geometry> geom = builder.result();
+  std::shared_ptr<Geometry> geom = builder.result();
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());

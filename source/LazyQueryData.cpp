@@ -234,6 +234,7 @@ std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::Locations() const
     Fmi::CoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
     itsLocations->transform(transformation);
   }
+
   return itsLocations;
 }
 

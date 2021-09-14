@@ -7,9 +7,7 @@
 
 #include "ContourCache.h"
 #include "LazyQueryData.h"
-
 #include "NFmiTime.h"
-
 #include <sstream>
 
 using namespace std;

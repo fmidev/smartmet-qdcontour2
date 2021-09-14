@@ -5,6 +5,7 @@
 // ======================================================================
 
 #include "NoiseTools.h"
+
 #include <algorithm>
 #include <iterator>
 

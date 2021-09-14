@@ -43,7 +43,6 @@
 #define CONTOURCACHE_H
 
 #include "NFmiPath.h"
-
 #include <map>
 #include <string>
 

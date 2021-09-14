@@ -11,10 +11,8 @@
 #include "ContourRange.h"
 #include "ContourSymbol.h"
 #include "ContourValue.h"
-
 #include "NFmiDataMatrix.h"
 #include "NFmiPoint.h"
-
 #include <list>
 #include <string>
 #include <vector>

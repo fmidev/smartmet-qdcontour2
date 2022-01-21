@@ -20,33 +20,33 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: gdal33-devel
-BuildRequires: smartmet-library-macgyver-devel >= 21.12.1
-BuildRequires: smartmet-library-imagine2-devel >= 21.12.2
-BuildRequires: smartmet-library-imagine2 >= 21.2.2
-BuildRequires: smartmet-library-newbase-devel >= 21.12.1
-BuildRequires: smartmet-library-gis-devel >= 21.12.1
-BuildRequires: smartmet-library-tron-devel >= 21.6.21
+BuildRequires: gdal34-devel
+BuildRequires: smartmet-library-macgyver-devel >= 21.1.21
+BuildRequires: smartmet-library-imagine2-devel >= 21.1.21
+BuildRequires: smartmet-library-imagine2 >= 21.1.21
+BuildRequires: smartmet-library-newbase-devel >= 21.1.21
+BuildRequires: smartmet-library-gis-devel >= 21.1.21
+BuildRequires: smartmet-library-tron-devel >= 21.1.21
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
 BuildRequires: make
-BuildRequires: geos39-devel
+BuildRequires: geos310-devel
 Requires: boost169-iostreams
 Requires: boost169-system
 Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 21.12.2
-Requires: smartmet-library-newbase >= 21.12.1
-Requires: smartmet-library-tron >= 21.6.21
+Requires: smartmet-library-imagine2 >= 21.1.21
+Requires: smartmet-library-newbase >= 21.1.21
+Requires: smartmet-library-tron >= 21.1.21
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 21.12.1
-#TestRequires: smartmet-library-tron >= 21.6.21
+#TestRequires: smartmet-library-macgyver-devel >= 21.1.21
+#TestRequires: smartmet-library-tron >= 21.1.21
 #TestRequires: ImageMagick
 #TestRequires: bc
 #TestRequires: xorg-x11-fonts-misc

@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 22.5.20
+Version: 22.5.24
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -22,11 +22,11 @@ BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal34-devel
 BuildRequires: smartmet-library-macgyver-devel >= 22.3.28
-BuildRequires: smartmet-library-imagine2-devel >= 22.5.20
-BuildRequires: smartmet-library-imagine2 >= 22.5.20
-BuildRequires: smartmet-library-newbase-devel >= 22.5.20
+BuildRequires: smartmet-library-imagine2-devel >= 22.5.24
+BuildRequires: smartmet-library-imagine2 >= 22.5.24
+BuildRequires: smartmet-library-newbase-devel >= 22.5.24
 BuildRequires: smartmet-library-gis-devel >= 22.5.4
-BuildRequires: smartmet-library-tron-devel >= 22.1.21
+BuildRequires: smartmet-library-tron-devel >= 22.5.23
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -38,15 +38,15 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 22.5.20
-Requires: smartmet-library-newbase >= 22.5.20
-Requires: smartmet-library-tron >= 22.1.21
+Requires: smartmet-library-imagine2 >= 22.5.24
+Requires: smartmet-library-newbase >= 22.5.24
+Requires: smartmet-library-tron >= 22.5.23
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
 #TestRequires: smartmet-library-macgyver-devel >= 22.3.28
-#TestRequires: smartmet-library-tron >= 22.1.21
+#TestRequires: smartmet-library-tron >= 22.5.23
 #TestRequires: ImageMagick
 #TestRequires: bc
 #TestRequires: xorg-x11-fonts-misc
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 24 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.5.24-1.fmi
+- Repackaged due to NFmiArea ABI changes
+
 * Fri May 20 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.5.20-1.fmi
 - Repackaged due to ABI changes to newbase LatLon methods
 

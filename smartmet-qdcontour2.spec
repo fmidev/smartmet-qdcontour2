@@ -9,44 +9,51 @@ Group: Development/Tools
 URL: http://www.weatherproof.fi
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
+
+%if 0%{?rhel} && 0%{rhel} < 9
+%define smartmet_boost boost169
+%else
+%define smartmet_boost boost
+%endif
+
 BuildRequires: rpm-build
 BuildRequires: gcc-c++
 %if %{defined el7}
 BuildRequires: devtoolset-7-gcc-c++
 %endif
 BuildRequires: make
-BuildRequires: boost169-devel
+BuildRequires: %{smartmet_boost}-devel
 BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal34-devel
-BuildRequires: smartmet-library-macgyver-devel >= 22.3.28
-BuildRequires: smartmet-library-imagine2-devel >= 22.5.24
-BuildRequires: smartmet-library-imagine2 >= 22.5.24
-BuildRequires: smartmet-library-newbase-devel >= 22.5.24
-BuildRequires: smartmet-library-gis-devel >= 22.5.4
-BuildRequires: smartmet-library-tron-devel >= 22.5.23
+BuildRequires: smartmet-library-macgyver-devel >= 22.6.16
+BuildRequires: smartmet-library-imagine2-devel >= 22.6.16
+BuildRequires: smartmet-library-imagine2 >= 22.6.16
+BuildRequires: smartmet-library-newbase-devel >= 22.6.16
+BuildRequires: smartmet-library-gis-devel >= 22.6.16
+BuildRequires: smartmet-library-tron-devel >= 22.6.16
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
 BuildRequires: make
 BuildRequires: geos310-devel
-Requires: boost169-iostreams
-Requires: boost169-system
+Requires: %{smartmet_boost}-iostreams
+Requires: %{smartmet_boost}-system
 Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 22.5.24
-Requires: smartmet-library-newbase >= 22.5.24
-Requires: smartmet-library-tron >= 22.5.23
+Requires: smartmet-library-imagine2 >= 22.6.16
+Requires: smartmet-library-newbase >= 22.6.16
+Requires: smartmet-library-tron >= 22.6.16
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 22.3.28
-#TestRequires: smartmet-library-tron >= 22.5.23
+#TestRequires: smartmet-library-macgyver-devel >= 22.6.16
+#TestRequires: smartmet-library-tron >= 22.6.16
 #TestRequires: ImageMagick
 #TestRequires: bc
 #TestRequires: xorg-x11-fonts-misc

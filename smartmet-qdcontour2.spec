@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 22.6.17
+Version: 22.8.19
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -28,12 +28,12 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal34-devel
-BuildRequires: smartmet-library-macgyver-devel >= 22.6.16
-BuildRequires: smartmet-library-imagine2-devel >= 22.6.16
-BuildRequires: smartmet-library-imagine2 >= 22.6.16
+BuildRequires: smartmet-library-macgyver-devel >= 22.8.9
+BuildRequires: smartmet-library-imagine2-devel >= 22.6.17
+BuildRequires: smartmet-library-imagine2 >= 22.6.17
 BuildRequires: smartmet-library-newbase-devel >= 22.6.16
-BuildRequires: smartmet-library-gis-devel >= 22.6.16
-BuildRequires: smartmet-library-tron-devel >= 22.6.16
+BuildRequires: smartmet-library-gis-devel >= 22.7.27
+BuildRequires: smartmet-library-tron-devel >= 22.6.17
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -45,15 +45,16 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 22.6.16
+Requires: smartmet-library-imagine2 >= 22.6.17
 Requires: smartmet-library-newbase >= 22.6.16
-Requires: smartmet-library-tron >= 22.6.16
+Requires: smartmet-library-tron >= 22.6.17
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 22.6.16
-#TestRequires: smartmet-library-tron >= 22.6.16
+#TestRequires: smartmet-library-macgyver-devel >= 22.8.9
+#TestRequires: smartmet-library-tron >= 22.6.17
+#TestRequires: smartmet-fonts
 #TestRequires: ImageMagick
 #TestRequires: bc
 #TestRequires: xorg-x11-fonts-misc
@@ -83,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 19 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.8.19-1.fmi
+- Tests now use the system installed smartmet-fonts package
+
 * Fri Jun 17 2022 Andris Pavēnis <andris.pavenis@fmi.fi> 22.6.17-1.fmi
 - Add support for RHEL9. Update libpqxx to 7.7.0 (rhel8+) and fmt to 8.1.1
 

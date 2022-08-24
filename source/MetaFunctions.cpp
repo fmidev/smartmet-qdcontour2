@@ -301,9 +301,9 @@ NFmiDataMatrix<float> t2m_advection(LazyQueryData &theQI)
 
   // grid resolution in meters for difference formulas
   const float dx = static_cast<float>((static_cast<float>(theQI.Area()->WorldXYWidth())) /
-                                      (static_cast<float>(theQI.Grid()->XNumber())));
+                                      (static_cast<float>(theQI.Grid()->XNumber() - 1)));
   const float dy = static_cast<float>((static_cast<float>(theQI.Area()->WorldXYHeight())) /
-                                      (static_cast<float>(theQI.Grid()->YNumber())));
+                                      (static_cast<float>(theQI.Grid()->YNumber() - 1)));
 
   const float pirad = 3.14159265358979323f / 360.f;
 

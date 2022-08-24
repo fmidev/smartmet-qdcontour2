@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 22.8.19
+Version: 22.8.24
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -28,10 +28,10 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal34-devel
-BuildRequires: smartmet-library-macgyver-devel >= 22.8.9
+BuildRequires: smartmet-library-macgyver-devel >= 22.8.23
 BuildRequires: smartmet-library-imagine2-devel >= 22.6.17
 BuildRequires: smartmet-library-imagine2 >= 22.6.17
-BuildRequires: smartmet-library-newbase-devel >= 22.6.16
+BuildRequires: smartmet-library-newbase-devel >= 22.8.24
 BuildRequires: smartmet-library-gis-devel >= 22.7.27
 BuildRequires: smartmet-library-tron-devel >= 22.6.17
 BuildRequires: zlib-devel
@@ -46,13 +46,13 @@ Requires: freetype
 Requires: libjpeg
 Requires: libpng
 Requires: smartmet-library-imagine2 >= 22.6.17
-Requires: smartmet-library-newbase >= 22.6.16
+Requires: smartmet-library-newbase >= 22.8.24
 Requires: smartmet-library-tron >= 22.6.17
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 22.8.9
+#TestRequires: smartmet-library-macgyver-devel >= 22.8.23
 #TestRequires: smartmet-library-tron >= 22.6.17
 #TestRequires: smartmet-fonts
 #TestRequires: ImageMagick
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 24 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.8.24-1.fmi
+- Fixed resolution calculation for temperature advection
+
 * Fri Aug 19 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.8.19-1.fmi
 - Tests now use the system installed smartmet-fonts package
 

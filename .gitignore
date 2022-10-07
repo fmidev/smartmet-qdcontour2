@@ -1,13 +1,13 @@
-qdcontour
-obj
+/qdcontour2
+/obj
 ._*
 .DS_Store
 .sconsign.dblite
 *.exe
 *.exe.manifest
 *.dll
-test/results/
-test/results_diff/
+/test/results/
+/test/results_diff/
 *~
 .#*
 

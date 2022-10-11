@@ -941,6 +941,19 @@ void do_speedcomponents(istream &theInput)
 
 // ----------------------------------------------------------------------
 /*!
+ * \brief handle "uvorientation" command
+ */
+// ----------------------------------------------------------------------
+
+void do_uvorientation(istream &theInput)
+{
+  theInput >> globals.uvorientation;
+
+  check_errors(theInput, "uvorientation");
+}
+
+// ----------------------------------------------------------------------
+/*!
  * \brief Handle "arrowscale" command
  */
 // ----------------------------------------------------------------------
@@ -3676,11 +3689,15 @@ void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
             speed[i][j] = sqrt(dx[i][j] * dx[i][j] + dy[i][j] * dy[i][j]);
             if (dx[i][j] != 0 || dy[i][j] != 0)
             {
-              auto north = Fmi::OGR::gridNorth(transformation, latlon->x(i, j), latlon->y(i, j));
-              if (north)
-                direction[i][j] = fmod(180 - *north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
-              else
-                direction[i][j] = kFloatMissing;
+              if (!globals.uvorientation)
+                direction[i][j] = fmod(180 + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+              {
+                auto north = Fmi::OGR::gridNorth(transformation, latlon->x(i, j), latlon->y(i, j));
+                if (north)
+                  direction[i][j] = fmod(180 + *north + FmiDeg(atan2(dx[i][j], dy[i][j])), 360.0);
+                else
+                  direction[i][j] = kFloatMissing;
+              }
             }
           }
         }
@@ -3743,11 +3760,16 @@ void get_speed_direction(const Fmi::CoordinateTransformation &transformation,
       speed = sqrt(dx * dx + dy * dy);
       if (dx != 0 || dy != 0)
       {
-        auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
-        if (north)
-          direction = fmod(180 - *north + FmiDeg(atan2f(dx, dy)), 360.0);
+        if (!globals.uvorientation)
+          direction = fmod(180 + FmiDeg(atan2f(dx, dy)), 360.0);
         else
-          direction = kFloatMissing;
+        {
+          auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+          if (north)
+            direction = fmod(180 + *north + FmiDeg(atan2f(dx, dy)), 360.0);
+          else
+            direction = kFloatMissing;
+        }
       }
     }
   }
@@ -3796,7 +3818,11 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
 
     // Direction calculations
 
-    auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+    boost::optional<double> north;
+    if (globals.uvorientation)
+      north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+    else
+      north = 0.0;
 
     if (!north)
       continue;
@@ -3967,7 +3993,11 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
       const auto latlon = grid->GridToLatLon(x, y);
 
-      auto north = Fmi::OGR::gridNorth(wgs84transformation, latlon.X(), latlon.Y());
+      boost::optional<double> north;
+      if (globals.uvorientation)
+        north = Fmi::OGR::gridNorth(wgs84transformation, latlon.X(), latlon.Y());
+      else
+        north = 0.0;
 
       if (!north)
         continue;
@@ -4080,7 +4110,11 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 
       // Direction calculations
 
-      auto north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+      boost::optional<double> north;
+      if (globals.uvorientation)
+        north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
+      else
+        north = 0.0;
 
       if (!north)
         continue;

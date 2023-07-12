@@ -27,7 +27,7 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: gdal34-devel
+BuildRequires: gdal35-devel
 BuildRequires: smartmet-library-macgyver-devel >= 22.8.23
 BuildRequires: smartmet-library-imagine2-devel >= 22.6.17
 BuildRequires: smartmet-library-imagine2 >= 22.6.17
@@ -38,7 +38,7 @@ BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
 BuildRequires: make
-BuildRequires: geos310-devel
+BuildRequires: geos311-devel
 Requires: %{smartmet_boost}-iostreams
 Requires: %{smartmet_boost}-system
 Requires: cairomm

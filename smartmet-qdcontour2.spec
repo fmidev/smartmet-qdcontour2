@@ -56,6 +56,7 @@ Provides: qdcontour2
 #TestRequires: smartmet-library-tron >= 23.7.28
 #TestRequires: smartmet-fonts
 #TestRequires: smartmet-utils-devel >= 23.9.6
+#TestRequires: smartmet-library-newbase-devel
 #TestRequires: ImageMagick
 #TestRequires: bc
 #TestRequires: xorg-x11-fonts-misc

@@ -29,7 +29,7 @@ typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <gis/CoordinateMatrix.h>
 #include <gis/CoordinateTransformation.h>
 #include <gis/OGR.h>
@@ -525,7 +525,7 @@ void do_querydata(istream &theInput)
       vector<string>::const_iterator iter;
       for (iter = qnames.begin(); iter != qnames.end(); ++iter)
       {
-        boost::shared_ptr<LazyQueryData> tmp(new LazyQueryData());
+        std::shared_ptr<LazyQueryData> tmp(new LazyQueryData());
         string filename = NFmiFileSystem::FileComplete(*iter, globals.datapath);
         globals.queryfilenames.push_back(filename);
         tmp->Read(filename);
@@ -2780,7 +2780,7 @@ void do_draw_shapes(istream &theInput)
 
   check_errors(theInput, "draw shapes");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  std::shared_ptr<NFmiArea> area = globals.createArea();
 
   if (globals.verbose)
     report_area(*area);
@@ -2847,7 +2847,7 @@ void do_draw_imagemap(istream &theInput)
 
   check_errors(theInput, "draw imagemap");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  std::shared_ptr<NFmiArea> area = globals.createArea();
 
   // Generate map from all shapes in the list
 
@@ -3818,7 +3818,7 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
 
     // Direction calculations
 
-    boost::optional<double> north;
+    std::optional<double> north;
     if (globals.uvorientation)
       north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
     else
@@ -3993,7 +3993,7 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
 
       const auto latlon = grid->GridToLatLon(x, y);
 
-      boost::optional<double> north;
+      std::optional<double> north;
       if (globals.uvorientation)
         north = Fmi::OGR::gridNorth(wgs84transformation, latlon.X(), latlon.Y());
       else
@@ -4110,7 +4110,7 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 
       // Direction calculations
 
-      boost::optional<double> north;
+      std::optional<double> north;
       if (globals.uvorientation)
         north = Fmi::OGR::gridNorth(transformation, latlon.X(), latlon.Y());
       else
@@ -5032,7 +5032,7 @@ void do_draw_contours(istream &theInput)
   if (globals.querystreams.empty())
     throw runtime_error("No query data has been read!");
 
-  boost::shared_ptr<NFmiArea> area = globals.createArea();
+  std::shared_ptr<NFmiArea> area = globals.createArea();
 
   // This message intentionally ignores globals.verbose
 
@@ -5250,7 +5250,7 @@ void do_draw_contours(istream &theInput)
       xr->Composite(xr2);
     }
 #else
-    boost::shared_ptr<Imagine::NFmiImage> image;
+    std::shared_ptr<Imagine::NFmiImage> image;
     if (globals.background.empty())
     {
       image.reset(new Imagine::NFmiImage(imgwidth, imgheight, erasecolor));

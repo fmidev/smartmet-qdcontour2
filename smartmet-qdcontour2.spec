@@ -28,12 +28,12 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal35-devel
-BuildRequires: smartmet-library-macgyver-devel >= 24.1.17
-BuildRequires: smartmet-library-imagine2-devel >= 24.2.23
-BuildRequires: smartmet-library-imagine2 >= 24.2.23
-BuildRequires: smartmet-library-newbase-devel >= 24.2.23
-BuildRequires: smartmet-library-gis-devel >= 24.1.3
-BuildRequires: smartmet-library-tron-devel >= 23.7.28
+BuildRequires: smartmet-library-macgyver-devel >= 24.7.12
+BuildRequires: smartmet-library-imagine2-devel >= 24.7.12
+BuildRequires: smartmet-library-imagine2 >= 24.7.12
+BuildRequires: smartmet-library-newbase-devel >= 24.7.12
+BuildRequires: smartmet-library-gis-devel >= 24.7.12
+BuildRequires: smartmet-library-tron-devel >= 24.7.12
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -45,15 +45,15 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 24.2.23
-Requires: smartmet-library-newbase >= 24.2.23
-Requires: smartmet-library-tron >= 23.7.28
+Requires: smartmet-library-imagine2 >= 24.7.12
+Requires: smartmet-library-newbase >= 24.7.12
+Requires: smartmet-library-tron >= 24.7.12
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 24.1.17
-#TestRequires: smartmet-library-tron >= 23.7.28
+#TestRequires: smartmet-library-macgyver-devel >= 24.7.12
+#TestRequires: smartmet-library-tron >= 24.7.12
 #TestRequires: smartmet-fonts
 #TestRequires: smartmet-utils-devel >= 23.9.6
 #TestRequires: ImageMagick

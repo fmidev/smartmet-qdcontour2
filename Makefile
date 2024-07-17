@@ -17,7 +17,6 @@ LIBS += $(REQUIRED_LIBS) \
 	-lsmartmet-tron \
 	-lboost_iostreams \
 	-lboost_system \
-	-lboost_filesystem \
 	-lboost_thread \
 	`pkg-config --libs cairomm-1.0` \
 	-lstdc++ -lm

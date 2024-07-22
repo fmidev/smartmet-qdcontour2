@@ -22,7 +22,6 @@
 #include "NFmiPath.h"
 #include "NFmiSettings.h"
 #include "NFmiTime.h"
-#include <boost/foreach.hpp>
 #include <string>
 
 using NFmiSettings::Optional;
@@ -419,7 +418,7 @@ bool rangefits(float speed, float lolimit, float hilimit)
 
 ArrowStyle Globals::getArrowFill(float speed) const
 {
-  BOOST_FOREACH (const ArrowStyle &c, arrowfillstyles)
+  for (const ArrowStyle &c : arrowfillstyles)
   {
     if (rangefits(speed, c.lolimit, c.hilimit))
       return c;
@@ -429,7 +428,7 @@ ArrowStyle Globals::getArrowFill(float speed) const
 
 ArrowStyle Globals::getArrowStroke(float speed) const
 {
-  BOOST_FOREACH (const ArrowStyle &c, arrowstrokestyles)
+  for (const ArrowStyle &c : arrowstrokestyles)
   {
     if (rangefits(speed, c.lolimit, c.hilimit))
       return c;
@@ -441,7 +440,7 @@ ArrowStyle Globals::getArrowStroke(float speed) const
 
 RoundArrowColor Globals::getRoundArrowFillColor(float speed) const
 {
-  BOOST_FOREACH (const RoundArrowColor &c, roundarrowfillcolors)
+  for (const RoundArrowColor &c : roundarrowfillcolors)
   {
     if (rangefits(speed, c.lolimit, c.hilimit))
       return c;
@@ -451,7 +450,7 @@ RoundArrowColor Globals::getRoundArrowFillColor(float speed) const
 
 RoundArrowColor Globals::getRoundArrowStrokeColor(float speed) const
 {
-  BOOST_FOREACH (const RoundArrowColor &c, roundarrowstrokecolors)
+  for (const RoundArrowColor &c : roundarrowstrokecolors)
   {
     if (rangefits(speed, c.lolimit, c.hilimit))
       return c;
@@ -461,7 +460,7 @@ RoundArrowColor Globals::getRoundArrowStrokeColor(float speed) const
 
 RoundArrowSize Globals::getRoundArrowSize(float speed) const
 {
-  BOOST_FOREACH (const RoundArrowSize &sz, roundarrowsizes)
+  for (const RoundArrowSize &sz : roundarrowsizes)
   {
     if (rangefits(speed, sz.lolimit, sz.hilimit))
       return sz;

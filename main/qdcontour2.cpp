@@ -27,7 +27,6 @@ typedef ImagineXr ImagineXr_or_NFmiImage;
 typedef Imagine::NFmiImage ImagineXr_or_NFmiImage;
 #endif
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <memory>
 #include <gis/CoordinateMatrix.h>
@@ -1299,7 +1298,7 @@ void do_overlay(istream &theInput)
 
   check_errors(theInput, "overlay");
 
-  BOOST_FOREACH (ContourSpec &spec, globals.specs)
+  for (ContourSpec &spec : globals.specs)
   {
     if (spec.param() == paramname)
     {

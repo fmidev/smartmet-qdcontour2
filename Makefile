@@ -18,7 +18,6 @@ LIBS += \
 	-lsmartmet-gis \
 	-lsmartmet-tron \
 	-lboost_iostreams \
-	-lboost_system \
 	-lboost_thread \
 	`pkg-config --libs cairomm-1.0` \
 	-lstdc++ -lm

@@ -30,7 +30,7 @@ BuildRequires: freetype-devel
 BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: gdal310-devel
+BuildRequires: gdal312-devel
 BuildRequires: smartmet-library-macgyver-devel >= 25.2.18
 BuildRequires: smartmet-library-imagine2-devel >= 25.2.18
 BuildRequires: smartmet-library-imagine2 >= 25.2.18

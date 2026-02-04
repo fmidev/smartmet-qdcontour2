@@ -31,12 +31,12 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal312-devel
-BuildRequires: smartmet-library-macgyver-devel >= 25.2.18
-BuildRequires: smartmet-library-imagine2-devel >= 25.2.18
-BuildRequires: smartmet-library-imagine2 >= 25.2.18
-BuildRequires: smartmet-library-newbase-devel >= 25.2.18
-BuildRequires: smartmet-library-gis-devel >= 25.2.18
-BuildRequires: smartmet-library-tron-devel >= 25.2.18
+BuildRequires: smartmet-library-macgyver-devel >= 26.2.4
+BuildRequires: smartmet-library-imagine2-devel >= 26.2.4
+BuildRequires: smartmet-library-imagine2 >= 26.2.4
+BuildRequires: smartmet-library-newbase-devel >= 26.2.4
+BuildRequires: smartmet-library-gis-devel >= 26.2.4
+BuildRequires: smartmet-library-tron-devel >= 26.2.4
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -48,17 +48,17 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 25.2.18
-Requires: smartmet-library-newbase >= 25.2.18
-Requires: smartmet-library-tron >= 25.2.18
+Requires: smartmet-library-imagine2 >= 26.2.4
+Requires: smartmet-library-newbase >= 26.2.4
+Requires: smartmet-library-tron >= 26.2.4
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 25.2.18
-#TestRequires: smartmet-library-tron >= 25.2.18
+#TestRequires: smartmet-library-macgyver-devel >= 26.2.4
+#TestRequires: smartmet-library-tron >= 26.2.4
 #TestRequires: smartmet-fonts
-#TestRequires: smartmet-utils-devel >= 25.2.18
+#TestRequires: smartmet-utils-devel >= 26.2.4
 #TestRequires: smartmet-library-newbase-devel
 #TestRequires: ImageMagick
 #TestRequires: bc

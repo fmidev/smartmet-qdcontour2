@@ -1,0 +1,67 @@
+.TH QDCONTOUR2 1 "2026-05-02" "smartmet-qdcontour2" "SmartMet Tools"
+.SH NAME
+qdcontour2 \- render contour images and maps from querydata and shapefiles (v2)
+.SH SYNOPSIS
+.B qdcontour2
+.RI [ options ]
+.RI [ conffiles... ]
+.SH DESCRIPTION
+.B qdcontour2
+is the successor of
+.BR qdcontour (1)
+with an updated rendering backend
+.RB ( imagine2 ", " giza )
+and improved color handling. It reads one or more control files
+describing a rendering pipeline and produces raster images
+.RB ( PNG ", " JPEG )
+showing contours, isobands, weather symbols and shapefile-based map
+backgrounds.
+.PP
+The control-file syntax is largely compatible with the original
+qdcontour and is documented in the package's
+.IR docs/qdcontour.txt .
+For server-side rendering, the SmartMet WMS plugin is generally
+preferred over qdcontour2.
+.SH OPTIONS
+.TP
+.B \-h
+Display the built-in help and exit.
+.TP
+.B \-v
+Verbose mode.
+.TP
+.B \-f
+Force overwriting of existing output images.
+.TP
+.BI \-q " querydata"
+Use the given querydata file. Overrides any
+.B querydata
+directive in the control file.
+.TP
+.BI \-c " line"
+Inject the given configuration line before processing the control
+file. For example,
+.B \-c
+.I """format pdf"""
+forces the PDF output backend.
+.SH EXAMPLES
+Render a single control file:
+.PP
+.RS 4
+qdcontour2 map.cnf
+.RE
+.PP
+Override input data and request PNG output:
+.PP
+.RS 4
+qdcontour2 \-q forecast.sqd \-c "format png" map.cnf
+.RE
+.SH SEE ALSO
+.BR qdcontour (1),
+.BR shape2ps (1),
+.BR qdview (1),
+.BR qdinfo (1)
+.SH AUTHOR
+Finnish Meteorological Institute
+.PP
+Report issues at <https://github.com/fmidev/smartmet-qdcontour2/issues>.

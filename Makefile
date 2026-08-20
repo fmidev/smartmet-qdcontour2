@@ -16,7 +16,7 @@ LIBS += \
 	-lsmartmet-newbase \
 	-lsmartmet-imagine2 \
 	-lsmartmet-gis \
-	-lsmartmet-tron \
+	-lsmartmet-trax \
 	-lboost_iostreams \
 	-lboost_thread \
 	`pkg-config --libs cairomm-1.0` \
@@ -28,7 +28,6 @@ INCLUDES += \
 	-I$(includedir)/smartmet \
 	-I$(includedir)/smartmet/newbase \
 	-I$(includedir)/smartmet/imagine2 \
-	-I$(includedir)/smartmet/tron \
 	`pkg-config --cflags cairomm-1.0`
 
 # Compilation directories

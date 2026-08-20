@@ -17,7 +17,7 @@ make rpm              # Build RPM package
 make install          # Install binary to $(bindir)
 ```
 
-Build uses the shared SmartMet build config via `makefile.inc`. Key dependencies: `newbase`, `imagine2`, `gis`, `tron`, `macgyver`, cairomm, GEOS, GDAL.
+Build uses the shared SmartMet build config via `makefile.inc`. Key dependencies: `newbase`, `imagine2`, `gis`, `trax`, `macgyver`, cairomm, GEOS, GDAL.
 
 ## Running a single test
 
@@ -48,7 +48,7 @@ The tool is driven by a **conf script** (plain text command file). The main loop
 
 Key classes:
 - **`ContourSpec`** — rendering specification for one parameter (contour fills/lines/patterns/symbols/labels/fonts)
-- **`ContourCalculator`** — computes and caches contour paths (isolines/isobands) from grid data using the Tron library
+- **`ContourCalculator`** — computes and caches contour paths (isolines/isobands) from grid data using the Trax library
 - **`LazyQueryData`** — lazy-loading wrapper around `NFmiQueryData` (FMI's native gridded data format)
 - **`ShapeSpec`** — specification for rendering ESRI shapefiles as map backgrounds
 

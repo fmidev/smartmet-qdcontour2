@@ -10,31 +10,36 @@
 #include "DataMatrixAdapter.h"
 #include "LazyQueryData.h"
 #include <boost/make_shared.hpp>
-#include <geos/version.h>
+#include <geos/geom/GeometryFactory.h>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiGrid.h>
 #include <newbase/NFmiMetTime.h>
-#include <tron/FmiBuilder.h>
-#include <tron/Tron.h>
+#include <trax/Contour.h>
+#include <trax/Geos.h>
+#include <trax/IsobandLimits.h>
+#include <trax/IsolineValues.h>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 
-typedef Tron::Traits<double, double, Tron::FmiMissing> MyTraits;
+// Trax provides no separate nearest neighbour and discrete methods, its midpoint
+// method covers both. Trax::to_interpolation_type maps the names the same way.
 
-typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>
-    MyLinearContourer;
-
-typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation>
-    MyLogLinearContourer;
-
-typedef Tron::
-    Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>
-        MyNearestContourer;
-
-typedef Tron::Contourer<DataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation>
-    MyDiscreteContourer;
-
-typedef Tron::Hints<DataMatrixAdapter, MyTraits> MyHints;
+Trax::InterpolationType to_trax_interpolation(ContourInterpolation theInterpolation)
+{
+  switch (theInterpolation)
+  {
+    case Nearest:
+    case Discrete:
+      return Trax::InterpolationType::Midpoint;
+    case LogLinear:
+      return Trax::InterpolationType::Logarithmic;
+    case Linear:
+    case Missing:
+      break;
+  }
+  return Trax::InterpolationType::Linear;
+}
 
 using namespace geos::geom;
 
@@ -189,29 +194,10 @@ class ContourCalculatorPimple
   ContourCache itsLineCache;
 
   std::shared_ptr<DataMatrixAdapter> itsData;  // does not own!
-  std::shared_ptr<MyHints> itsHints;
-  bool itsHintsOK = false;
   bool isCacheOn = false;
   bool itWasCached = false;
 
-  void require_hints();
-
 };  // class ContourCalculatorPimple
-
-// ----------------------------------------------------------------------
-/*!
- * \brief Require the pimple to be up to date
- */
-// ----------------------------------------------------------------------
-
-void ContourCalculatorPimple::require_hints()
-{
-  if (itsHintsOK)
-    return;
-
-  itsHints.reset(new MyHints(*itsData));
-  itsHintsOK = true;
-}
 
 // ----------------------------------------------------------------------
 /*!
@@ -275,7 +261,6 @@ bool ContourCalculator::wasCached() const
 void ContourCalculator::data(const NFmiDataMatrix<float> &theData)
 {
   itsPimple->itsData.reset(new DataMatrixAdapter(theData));
-  itsPimple->itsHintsOK = false;
 }
 
 // ----------------------------------------------------------------------
@@ -302,52 +287,24 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     return itsPimple->itsAreaCache.find(theLoLimit, theHiLimit, theTime, theData);
   }
 
-  itsPimple->require_hints();
-
   // Build the contours
 
-#if GEOS_VERSION_MAJOR == 3
-#if GEOS_VERSION_MINOR < 7
-  std::shared_ptr<GeometryFactory> geomFactory = std::make_shared<GeometryFactory>();
-  Tron::FmiBuilder builder(geomFactory);
-#else
   geos::geom::GeometryFactory::Ptr geomFactory(geos::geom::GeometryFactory::create());
-  Tron::FmiBuilder builder(*geomFactory);
-#endif
-#else
-#pragma message(Cannot handle current GEOS version correctly)
-#endif
 
-  switch (theInterpolation)
-  {
-    case Linear:
-    case Missing:
-    {
-      MyLinearContourer::fill(
-          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
-      break;
-    }
-    case LogLinear:
-    {
-      MyLogLinearContourer::fill(
-          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
-      break;
-    }
-    case Nearest:
-    {
-      MyNearestContourer::fill(
-          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
-      break;
-    }
-    case Discrete:
-    {
-      MyDiscreteContourer::fill(
-          builder, *(itsPimple->itsData), theLoLimit, theHiLimit, *(itsPimple->itsHints));
-      break;
-    }
-  }
+  // kFloatMissing marks an open ended range. Note that an unlimited range from
+  // -infinity to +infinity contours all valid values, the caller inverts the
+  // result to get the missing ones.
 
-  auto geom = builder.result();
+  Trax::IsobandLimits limits;
+  limits.add(theLoLimit == kFloatMissing ? -std::numeric_limits<float>::infinity() : theLoLimit,
+             theHiLimit == kFloatMissing ? std::numeric_limits<float>::infinity() : theHiLimit);
+
+  Trax::Contour contourer;
+  contourer.interpolation(to_trax_interpolation(theInterpolation));
+  contourer.closed_range(true);
+
+  auto result = contourer.isobands(*(itsPimple->itsData), limits);
+  auto geom = Trax::to_geos_geom(result[0], geomFactory);
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());
@@ -384,45 +341,28 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
     return itsPimple->itsLineCache.find(theValue, kFloatMissing, theTime, theData);
   }
 
-  itsPimple->require_hints();
-
-#if GEOS_VERSION_MAJOR == 3
-#if GEOS_VERSION_MINOR < 7
-  std::shared_ptr<GeometryFactory> geomFactory = std::make_shared<GeometryFactory>();
-  Tron::FmiBuilder builder(geomFactory);
-#else
-  geos::geom::GeometryFactory::Ptr geomFactory(geos::geom::GeometryFactory::create());
-  Tron::FmiBuilder builder(*geomFactory);
-#endif
-#else
-#pragma message(Cannot handle current GEOS version correctly)
-#endif
-
   switch (theInterpolation)
   {
-    case Linear:
-    case Missing:
-    {
-      MyLinearContourer::line(builder, *(itsPimple->itsData), theValue, *(itsPimple->itsHints));
-      break;
-    }
-    case LogLinear:
-    {
-      MyLogLinearContourer::line(builder, *(itsPimple->itsData), theValue, *(itsPimple->itsHints));
-      break;
-    }
     case Nearest:
-    {
       throw std::runtime_error("Contour lines not supported for nearest neighbour interpolation");
-    }
     case Discrete:
-    {
       throw std::runtime_error("Contour lines not supported for discrete neighbour interpolation");
+    case Linear:
+    case LogLinear:
+    case Missing:
       break;
-    }
   }
 
-  std::shared_ptr<Geometry> geom = builder.result();
+  geos::geom::GeometryFactory::Ptr geomFactory(geos::geom::GeometryFactory::create());
+
+  Trax::IsolineValues limits;
+  limits.add(theValue);
+
+  Trax::Contour contourer;
+  contourer.interpolation(to_trax_interpolation(theInterpolation));
+
+  auto result = contourer.isolines(*(itsPimple->itsData), limits);
+  auto geom = Trax::to_geos_geom(result[0], geomFactory);
 
   Imagine::NFmiPath path;
   add_path(path, geom.get());

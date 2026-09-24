@@ -10,6 +10,7 @@
 #include "DataMatrixAdapter.h"
 #include "LazyQueryData.h"
 #include <boost/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <geos/geom/GeometryFactory.h>
 #include <newbase/NFmiDataMatrix.h>
 #include <newbase/NFmiGrid.h>
@@ -45,7 +46,7 @@ using namespace geos::geom;
 
 // Forward declaration needed
 
-void add_path(Imagine::NFmiPath &path, const Geometry *geom);
+void add_path(Imagine::NFmiPath& path, const Geometry* geom);
 
 // ----------------------------------------------------------------------
 /*!
@@ -53,14 +54,14 @@ void add_path(Imagine::NFmiPath &path, const Geometry *geom);
  */
 // ----------------------------------------------------------------------
 
-void add_linearring(Imagine::NFmiPath &path, const LinearRing *geom)
+void add_linearring(Imagine::NFmiPath& path, const LinearRing* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
 
   for (unsigned long i = 0, n = geom->getNumPoints(); i < n - 1; ++i)
   {
-    const Coordinate &coord = geom->getCoordinateN(boost::numeric_cast<int>(i));
+    const Coordinate& coord = geom->getCoordinateN(boost::numeric_cast<int>(i));
     if (i == 0)
       path.MoveTo(coord.x, coord.y);
     else
@@ -74,7 +75,7 @@ void add_linearring(Imagine::NFmiPath &path, const LinearRing *geom)
  */
 // ----------------------------------------------------------------------
 
-void add_linestring(Imagine::NFmiPath &path, const LineString *geom)
+void add_linestring(Imagine::NFmiPath& path, const LineString* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
@@ -83,7 +84,7 @@ void add_linestring(Imagine::NFmiPath &path, const LineString *geom)
 
   for (unsigned long i = 0; i < n; ++i)
   {
-    const Coordinate &coord = geom->getCoordinateN(boost::numeric_cast<int>(i));
+    const Coordinate& coord = geom->getCoordinateN(boost::numeric_cast<int>(i));
     if (i == 0)
       path.MoveTo(coord.x, coord.y);
     else
@@ -97,7 +98,7 @@ void add_linestring(Imagine::NFmiPath &path, const LineString *geom)
  */
 // ----------------------------------------------------------------------
 
-void add_polygon(Imagine::NFmiPath &path, const Polygon *geom)
+void add_polygon(Imagine::NFmiPath& path, const Polygon* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
@@ -114,13 +115,13 @@ void add_polygon(Imagine::NFmiPath &path, const Polygon *geom)
  */
 // ----------------------------------------------------------------------
 
-void add_multilinestring(Imagine::NFmiPath &path, const MultiLineString *geom)
+void add_multilinestring(Imagine::NFmiPath& path, const MultiLineString* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
 
   for (size_t i = 0, n = geom->getNumGeometries(); i < n; ++i)
-    add_linestring(path, dynamic_cast<const LineString *>(geom->getGeometryN(i)));
+    add_linestring(path, dynamic_cast<const LineString*>(geom->getGeometryN(i)));
 }
 
 // ----------------------------------------------------------------------
@@ -129,13 +130,13 @@ void add_multilinestring(Imagine::NFmiPath &path, const MultiLineString *geom)
  */
 // ----------------------------------------------------------------------
 
-void add_multipolygon(Imagine::NFmiPath &path, const MultiPolygon *geom)
+void add_multipolygon(Imagine::NFmiPath& path, const MultiPolygon* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
 
   for (size_t i = 0, n = geom->getNumGeometries(); i < n; ++i)
-    add_polygon(path, dynamic_cast<const Polygon *>(geom->getGeometryN(i)));
+    add_polygon(path, dynamic_cast<const Polygon*>(geom->getGeometryN(i)));
 }
 
 // ----------------------------------------------------------------------
@@ -144,7 +145,7 @@ void add_multipolygon(Imagine::NFmiPath &path, const MultiPolygon *geom)
  */
 // ----------------------------------------------------------------------
 
-void add_geometrycollection(Imagine::NFmiPath &path, const GeometryCollection *geom)
+void add_geometrycollection(Imagine::NFmiPath& path, const GeometryCollection* geom)
 {
   if (geom == nullptr || geom->isEmpty())
     return;
@@ -159,19 +160,19 @@ void add_geometrycollection(Imagine::NFmiPath &path, const GeometryCollection *g
  */
 // ----------------------------------------------------------------------
 
-void add_path(Imagine::NFmiPath &path, const Geometry *geom)
+void add_path(Imagine::NFmiPath& path, const Geometry* geom)
 {
-  if (const LinearRing *lr = dynamic_cast<const LinearRing *>(geom))
+  if (const LinearRing* lr = dynamic_cast<const LinearRing*>(geom))
     add_linearring(path, lr);
-  else if (const LineString *ls = dynamic_cast<const LineString *>(geom))
+  else if (const LineString* ls = dynamic_cast<const LineString*>(geom))
     add_linestring(path, ls);
-  else if (const Polygon *p = dynamic_cast<const Polygon *>(geom))
+  else if (const Polygon* p = dynamic_cast<const Polygon*>(geom))
     add_polygon(path, p);
-  else if (const MultiLineString *ml = dynamic_cast<const MultiLineString *>(geom))
+  else if (const MultiLineString* ml = dynamic_cast<const MultiLineString*>(geom))
     add_multilinestring(path, ml);
-  else if (const MultiPolygon *mpg = dynamic_cast<const MultiPolygon *>(geom))
+  else if (const MultiPolygon* mpg = dynamic_cast<const MultiPolygon*>(geom))
     add_multipolygon(path, mpg);
-  else if (const GeometryCollection *g = dynamic_cast<const GeometryCollection *>(geom))
+  else if (const GeometryCollection* g = dynamic_cast<const GeometryCollection*>(geom))
     add_geometrycollection(path, g);
   else
     throw std::runtime_error("Bad shit");
@@ -258,7 +259,7 @@ bool ContourCalculator::wasCached() const
  */
 // ----------------------------------------------------------------------
 
-void ContourCalculator::data(const NFmiDataMatrix<float> &theData)
+void ContourCalculator::data(const NFmiDataMatrix<float>& theData)
 {
   itsPimple->itsData.reset(new DataMatrixAdapter(theData));
 }
@@ -271,10 +272,10 @@ void ContourCalculator::data(const NFmiDataMatrix<float> &theData)
  */
 // ----------------------------------------------------------------------
 
-Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
+Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData& theData,
                                              float theLoLimit,
                                              float theHiLimit,
-                                             const NFmiTime &theTime,
+                                             const NFmiTime& theTime,
                                              ContourInterpolation theInterpolation)
 {
   if (itsPimple->itsData.get() == 0)
@@ -326,9 +327,9 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
  */
 // ----------------------------------------------------------------------
 
-Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData &theData,
+Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData& theData,
                                              float theValue,
-                                             const NFmiTime &theTime,
+                                             const NFmiTime& theTime,
                                              ContourInterpolation theInterpolation)
 {
   if (itsPimple->itsData.get() == 0)

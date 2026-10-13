@@ -70,7 +70,7 @@ void despeckle(NFmiDataMatrix<float>& theValues,
         std::nth_element(medianlist.begin(), medianlist.begin() + pos, medianlist.end());
 
 #if 0
-			  if(FmiRound(medianlist[pos] + 0.1 > 0.01))
+			  if(FmiRound(medianlist[pos] + 0.1) > 0.01)
 				{
 				  std::cout << "Coordinates: " << i << " " << j << std::endl;
 				  std::cout << "Old value: " << oldvalues[i][j] << std::endl;

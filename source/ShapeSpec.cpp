@@ -24,7 +24,6 @@ ShapeSpec::ShapeSpec(const std::string& theShapeFile,
       itsStrokeRule(theStrokeRule),
       itsFillColor(theFill),
       itsStrokeColor(theStroke),
-      itsMarker(""),
       itsMarkerRule("Over"),
       itsMarkerAlpha(1.0)
 {

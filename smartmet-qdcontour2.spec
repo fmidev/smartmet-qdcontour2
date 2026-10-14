@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 26.9.24
+Version: 26.10.14
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -32,9 +32,9 @@ BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal312-devel
 BuildRequires: smartmet-library-macgyver-devel >= 26.6.26
-BuildRequires: smartmet-library-imagine2-devel >= 26.2.4
-BuildRequires: smartmet-library-imagine2 >= 26.2.4
-BuildRequires: smartmet-library-newbase-devel >= 26.6.26
+BuildRequires: smartmet-library-imagine2-devel >= 26.10.13
+BuildRequires: smartmet-library-imagine2 >= 26.10.13
+BuildRequires: smartmet-library-newbase-devel >= 26.10.13
 BuildRequires: smartmet-library-gis-devel >= 26.6.25
 BuildRequires: smartmet-library-trax-devel >= 26.6.26
 BuildRequires: zlib-devel
@@ -48,8 +48,8 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 26.2.4
-Requires: smartmet-library-newbase >= 26.6.26
+Requires: smartmet-library-imagine2 >= 26.10.13
+Requires: smartmet-library-newbase >= 26.10.13
 Requires: smartmet-library-trax >= 26.6.26
 Requires: xorg-x11-fonts-misc
 Requires: zlib
@@ -90,6 +90,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 14 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.14-1.fmi
+- Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
+- Requires 26.10.13 versions of newbase, imagine2 due to their ABI changes
+
 * Thu Sep 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.24-1.fmi
 - Fixed a boost include for numeric_cast
 

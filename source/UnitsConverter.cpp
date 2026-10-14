@@ -35,6 +35,8 @@ enum ConversionType
  */
 // ----------------------------------------------------------------------
 
+namespace
+{
 inline float celsius_to_fahrenheit(float theValue)
 {
   if (theValue == kFloatMissing)
@@ -198,6 +200,7 @@ void kilometers_to_flightlevel(NFmiDataMatrix<float>& theValues)
     for (NFmiDataMatrix<float>::size_type i = 0; i < theValues.NX(); i++)
       theValues[i][j] = kilometers_to_flightlevel(theValues[i][j]);
 }
+}  // namespace
 
 // ----------------------------------------------------------------------
 /*!

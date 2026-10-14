@@ -33,7 +33,7 @@ LazyQueryData::~LazyQueryData() {}
  */
 // ----------------------------------------------------------------------
 
-LazyQueryData::LazyQueryData() : itsInfo(), itsData() {}
+LazyQueryData::LazyQueryData() {}
 // ----------------------------------------------------------------------
 /*!
  * \brief Return the parameter name

@@ -50,7 +50,7 @@ class LazyCoordinates
 
  private:
   const NFmiArea &itsArea;
-  mutable bool itsInitialized;
+  mutable bool itsInitialized = false;
   mutable data_type itsData;
 
   void init() const;
@@ -76,7 +76,7 @@ inline LazyCoordinates::element_type LazyCoordinates::operator()(size_type i, si
 // ----------------------------------------------------------------------
 
 inline LazyCoordinates::element_type LazyCoordinates::operator()(
-    int i, int j, const element_type &theDefault) const
+    int i, int j, const element_type& /*theDefault*/) const
 {
   init();
   if (i >= 0 && j >= 0 && static_cast<size_type>(i) < itsData.width() &&

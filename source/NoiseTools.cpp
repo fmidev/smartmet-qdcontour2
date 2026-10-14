@@ -63,7 +63,7 @@ void despeckle(NFmiDataMatrix<float>& theValues,
             medianlist.push_back(value);
         }
 
-      if (medianlist.size() > 0)
+      if (!medianlist.empty())
       {
         int pos = static_cast<int>(
             round((static_cast<float>(medianlist.size()) - 1) * theWeight / 100.0));

@@ -35,84 +35,30 @@ using namespace std;
 // ----------------------------------------------------------------------
 
 Globals::Globals()
-    : verbose(false),
-      force(false),
-      cmdline_querydata(),
-      cmdline_files(),
+    :
       datapath(Optional<string>("qdcontour::querydata_path", ".")),
       mapspath(Optional<string>("qdcontour::maps_path", ".")),
       savepath("."),
-      prefix(),
-      suffix(),
       format("png")  // default format
 #if 0                // def IMAGINE_WITH_CAIRO
   , antialias(true)
 #endif
       ,
-      gamma(-1),
-      intent(),
-      alphalimit(-1),
-      pngquality(-1),
-      jpegquality(-1),
-      savealpha(true),
-      reducecolors(false),
-      wantpalette(false),
-      forcepalette(false),
       contourinterpolation("Linear"),
-      contourtriangles(1),
       smoother("None"),
-      smootherradius(1),
-      smootherfactor(1),
-      expanddata(false),
-      projection(),
       filter("none"),
       foregroundrule("Over"),
-      background(),
-      foreground(),
-      mask(),
-      combine(),
-      combinex(0),
-      combiney(0),
       combinerule("Over"),
-      combinefactor(1),
       erase("transparent"),
       fillrule("Atop"),
       strokerule("Atop"),
-      contourlinewidth(1),
-      arrowlinewidth(CAIRO_NORMAL_LINE_WIDTH),
       directionparam("WindDirection"),
       speedparam("WindSpeedMS"),
-      speedxcomponent(),
-      speedycomponent(),
-      arrowscale(1),
       arrowfillcolor("white"),
       arrowstrokecolor("black"),
       arrowfillrule("Over"),
       arrowstrokerule("Over"),
-      arrowfile(""),
-      windarrowscaleA(0),
-      windarrowscaleB(0),
-      windarrowscaleC(1),
-      windarrowdx(0),
-      windarrowdy(0),
-      windarrowsxyx0(0),
-      windarrowsxyy0(0),
-      windarrowsxydx(-1),
-      windarrowsxydy(-1),
-      arrowpoints(),
-      queryfilelist(),
-      queryfilenames(),
-      queryinfo(),
-      querydatalevel(-1),
-      timesteps(24),
-      timestep(0),
-      timeinterval(0),
-      timestepskip(0),
-      timesteprounding(1),
-      timestampflag(1),
       timestampzone("local"),
-      timestampimagex(0),
-      timestampimagey(0),
       timestampimageformat("hourdateyear")
 #ifdef IMAGINE_WITH_CAIRO
       ,
@@ -124,39 +70,10 @@ Globals::Globals()
       ,
       timestampimagecolor(Imagine::NFmiColorTools::Black),
       timestampimagebackground(Imagine::NFmiColorTools::MakeColor(185, 185, 185, 185)),
-      timestampimagexmargin(2),
-      timestampimageymargin(2),
-      contourlabelimagexmargin(20),
-      contourlabelimageymargin(20),
-      highpressureimage(),
       highpressurerule("Over"),
-      highpressurefactor(1),
-      highpressureminimum(980),
-      lowpressureimage(),
       lowpressurerule("Over"),
-      lowpressurefactor(1),
-      lowpressuremaximum(1020),
-      pressurelocator(),
-      labellocator(),
-      symbollocator(),
-      imagelocator(),
-      calculator(),
-      maskcalculator(),
-      maskqueryinfo(),
-      querystreams(),
-      shapespecs(),
-      specs(),
-      unitsconverter(),
       itsImageCache(),
-      itsImageCacheOn(true),
       itsArrowCache(),
-      graticulecolor(""),
-      graticulelon1(),
-      graticulelat1(),
-      graticulelon2(),
-      graticulelat2(),
-      graticuledx(),
-      graticuledy(),
       timestampformat(kYYYYMMDDHHMM)
 {
   symbollocator.minDistanceToDifferentParameter(8);
@@ -405,6 +322,8 @@ void Globals::drawCombine(Imagine::NFmiImage &theImage) const
 // Get specs for round arrows
 // ----------------------------------------------------------------------
 
+namespace
+{
 bool rangefits(float speed, float lolimit, float hilimit)
 {
   if (speed == kFloatMissing)
@@ -415,6 +334,7 @@ bool rangefits(float speed, float lolimit, float hilimit)
     return false;
   return true;
 }
+}  // namespace
 
 ArrowStyle Globals::getArrowFill(float speed) const
 {
@@ -465,7 +385,7 @@ RoundArrowSize Globals::getRoundArrowSize(float speed) const
     if (rangefits(speed, sz.lolimit, sz.hilimit))
       return sz;
   }
-  return RoundArrowSize();
+  return {};
 }
 
 // ======================================================================

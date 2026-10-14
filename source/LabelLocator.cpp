@@ -51,6 +51,7 @@
 
 #include "LabelLocator.h"
 
+
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -111,20 +112,7 @@ LabelLocator::~LabelLocator() {}
  */
 // ----------------------------------------------------------------------
 
-LabelLocator::LabelLocator()
-    : itHasBBox(false),
-      itsBBoxX1(0),
-      itsBBoxY1(0),
-      itsBBoxX2(0),
-      itsBBoxY2(0),
-      itsMinDistanceToSameValue(175),
-      itsMinDistanceToDifferentValue(30),
-      itsMinDistanceToDifferentParameter(30),
-      itsActiveParameter(0),
-      itsPreviousCoordinates(),
-      itsCurrentCoordinates()
-{
-}
+LabelLocator::LabelLocator() {}
 
 // ----------------------------------------------------------------------
 /*!
@@ -330,7 +318,7 @@ void LabelLocator::add(float theContour, int theX, int theY)
 
   ParamCoordinates::const_iterator it = itsPreviousCoordinates.find(itsActiveParameter);
 
-  float dist;
+  float dist = NAN;
   if (it == itsPreviousCoordinates.end())
     dist = distanceToBorder(static_cast<float>(theX), static_cast<float>(theY));
   else

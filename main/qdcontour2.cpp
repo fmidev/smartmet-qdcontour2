@@ -60,7 +60,7 @@ using namespace std;
 using namespace boost;
 using namespace Imagine;
 
-const float pi = 3.141592658979323f;
+const float pi = 3.141592658979323F;
 
 // ----------------------------------------------------------------------
 // Convert parameter description to a enum
@@ -316,13 +316,10 @@ bool set_level(LazyQueryData &theInfo, int theLevel)
     theInfo.FirstLevel();
     return true;
   }
-  else
-  {
-    for (theInfo.ResetLevel(); theInfo.NextLevel();)
-      if (theInfo.Level()->LevelValue() == static_cast<unsigned int>(theLevel))
-        return true;
-    return false;
-  }
+  for (theInfo.ResetLevel(); theInfo.NextLevel();)
+    if (theInfo.Level()->LevelValue() == static_cast<unsigned int>(theLevel))
+      return true;
+  return false;
 }
 
 // ----------------------------------------------------------------------
@@ -357,10 +354,6 @@ void report_queryinfo(const string &theParam, unsigned int theIndex)
  */
 // ----------------------------------------------------------------------
 
-void report_extrema(const string &theParam, float theMin, float theMax)
-{
-  cout << "Data range for " << theParam << " is " << theMin << "..." << theMax << endl;
-}
 }  // namespace
 
 // ----------------------------------------------------------------------
@@ -966,6 +959,12 @@ void do_uvorientation(istream &theInput)
 
 // ----------------------------------------------------------------------
 /*!
+ * \brief handle "uvorientation" command
+ */
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+/*!
  * \brief Handle "arrowscale" command
  */
 // ----------------------------------------------------------------------
@@ -1001,7 +1000,8 @@ void do_windarrowscale(istream &theInput)
 
 void do_arrowfill(istream &theInput)
 {
-  string token1, token2;
+  string token1;
+  string token2;
 
   theInput >> token1 >> token2;
   check_errors(theInput, "arrowfill");
@@ -1017,7 +1017,8 @@ void do_arrowfill(istream &theInput)
   }
   catch (...)
   {
-    string scolor, srule;
+    string scolor;
+    string srule;
     theInput >> scolor >> srule;
     check_errors(theInput, "arrowfill");
 
@@ -1039,7 +1040,8 @@ void do_arrowfill(istream &theInput)
 
 void do_arrowstroke(istream &theInput)
 {
-  string token1, token2;
+  string token1;
+  string token2;
 
   theInput >> token1 >> token2;
   check_errors(theInput, "arrowstroke");
@@ -1055,7 +1057,8 @@ void do_arrowstroke(istream &theInput)
   }
   catch (...)
   {
-    string scolor, srule;
+    string scolor;
+    string srule;
     theInput >> scolor >> srule;
     check_errors(theInput, "arrowstroke");
 
@@ -1130,7 +1133,10 @@ void do_graticule(istream &theInput)
 
 void do_roundarrowfill(istream &theInput)
 {
-  string slo, shi, scircle, striangle;
+  string slo;
+  string shi;
+  string scircle;
+  string striangle;
   theInput >> slo >> shi >> scircle >> striangle;
   check_errors(theInput, "roundarrowfill");
 
@@ -1152,7 +1158,10 @@ void do_roundarrowfill(istream &theInput)
 
 void do_roundarrowstroke(istream &theInput)
 {
-  string slo, shi, scircle, striangle;
+  string slo;
+  string shi;
+  string scircle;
+  string striangle;
   theInput >> slo >> shi >> scircle >> striangle;
   check_errors(theInput, "roundarrowstroke");
 
@@ -1176,7 +1185,8 @@ void do_roundarrowsize(istream &theInput)
 {
   RoundArrowSize sz;
 
-  string slo, shi;
+  string slo;
+  string shi;
   theInput >> slo >> shi >> sz.circleradius >> sz.triangleradius >> sz.trianglewidth >>
       sz.triangleangle;
 
@@ -1196,7 +1206,8 @@ void do_roundarrowsize(istream &theInput)
 
 void do_windarrow(istream &theInput)
 {
-  double lon = NAN, lat = NAN;
+  double lon = NAN;
+  double lat = NAN;
   theInput >> lon >> lat;
 
   check_errors(theInput, "windarrow");
@@ -1302,7 +1313,8 @@ void do_mask(istream &theInput)
 
 void do_overlay(istream &theInput)
 {
-  string paramname, imgname;
+  string paramname;
+  string imgname;
 
   theInput >> paramname >> imgname;
 
@@ -1618,7 +1630,8 @@ void do_datahilimit(istream &theInput)
 
 void do_datareplace(istream &theInput)
 {
-  float src = NAN, dst = NAN;
+  float src = NAN;
+  float dst = NAN;
   theInput >> src >> dst;
 
   check_errors(theInput, "datareplace");
@@ -1637,8 +1650,10 @@ void do_datareplace(istream &theInput)
 
 void do_despeckle(istream &theInput)
 {
-  string slo, shi;
-  int radius = 0, iterations = 0;
+  string slo;
+  string shi;
+  int radius = 0;
+  int iterations = 0;
   float weight = NAN;
 
   theInput >> slo >> shi >> radius >> weight >> iterations;
@@ -1796,7 +1811,8 @@ void do_param(istream &theInput)
 
 void do_shape(istream &theInput)
 {
-  string shapename, arg1;
+  string shapename;
+  string arg1;
 
   theInput >> shapename >> arg1;
 
@@ -1804,7 +1820,8 @@ void do_shape(istream &theInput)
 
   if (arg1 == "mark")
   {
-    string marker, markerrule;
+    string marker;
+    string markerrule;
     float markeralpha = NAN;
     theInput >> marker >> markerrule >> markeralpha;
 
@@ -1836,12 +1853,15 @@ void do_shape(istream &theInput)
 
 void do_contourfill(istream &theInput)
 {
-  string slo, shi, scolor;
+  string slo;
+  string shi;
+  string scolor;
   theInput >> slo >> shi >> scolor;
 
   check_errors(theInput, "contourfill");
 
-  float lo = NAN, hi = NAN;
+  float lo = NAN;
+  float hi = NAN;
   if (slo == "-")
     lo = kFloatMissing;
   else
@@ -1865,13 +1885,17 @@ void do_contourfill(istream &theInput)
 
 void do_contourpattern(istream &theInput)
 {
-  string slo, shi, spattern, srule;
+  string slo;
+  string shi;
+  string spattern;
+  string srule;
   float alpha = NAN;
   theInput >> slo >> shi >> spattern >> srule >> alpha;
 
   check_errors(theInput, "contourpattern");
 
-  float lo = NAN, hi = NAN;
+  float lo = NAN;
+  float hi = NAN;
   if (slo == "-")
     lo = kFloatMissing;
   else
@@ -1893,13 +1917,17 @@ void do_contourpattern(istream &theInput)
 
 void do_contoursymbol(istream &theInput)
 {
-  string slo, shi, spattern, srule;
+  string slo;
+  string shi;
+  string spattern;
+  string srule;
   float alpha = NAN;
   theInput >> slo >> shi >> spattern >> srule >> alpha;
 
   check_errors(theInput, "contoursymbol");
 
-  float lo = NAN, hi = NAN;
+  float lo = NAN;
+  float hi = NAN;
   if (slo == "-")
     lo = kFloatMissing;
   else
@@ -1923,7 +1951,8 @@ void do_contourfont(istream &theInput)
 {
   float value = NAN;
   int symbol = 0;
-  string scolor, font;
+  string scolor;
+  string font;
   theInput >> value >> symbol >> scolor >> font;
 
   check_errors(theInput, "contourfont");
@@ -1942,7 +1971,8 @@ void do_contourfont(istream &theInput)
 
 void do_contourline(istream &theInput)
 {
-  string svalue, scolor;
+  string svalue;
+  string scolor;
   theInput >> svalue >> scolor;
 
   check_errors(theInput, "contourline");
@@ -1983,8 +2013,11 @@ void do_contourlinewidth(istream &theInput)
 
 void do_contourfills(istream &theInput)
 {
-  float lo = NAN, hi = NAN, step = NAN;
-  string scolor1, scolor2;
+  float lo = NAN;
+  float hi = NAN;
+  float step = NAN;
+  string scolor1;
+  string scolor2;
   theInput >> lo >> hi >> step >> scolor1 >> scolor2;
 
   check_errors(theInput, "contourfills");
@@ -2000,7 +2033,7 @@ void do_contourfills(istream &theInput)
     float tmphi = lo + (i + 1) * step;
     int color = color1;  // in case steps=1
     if (steps != 1)
-      color = NFmiColorTools::Interpolate(color1, color2, i / (steps - 1.0f));
+      color = NFmiColorTools::Interpolate(color1, color2, i / (steps - 1.0F));
     if (!globals.specs.empty())
       globals.specs.back().add(ContourRange(tmplo, tmphi, color, globals.fillrule));
   }
@@ -2014,8 +2047,11 @@ void do_contourfills(istream &theInput)
 
 void do_contourlines(istream &theInput)
 {
-  float lo = NAN, hi = NAN, step = NAN;
-  string scolor1, scolor2;
+  float lo = NAN;
+  float hi = NAN;
+  float step = NAN;
+  string scolor1;
+  string scolor2;
   theInput >> lo >> hi >> step >> scolor1 >> scolor2;
 
   check_errors(theInput, "contourlines");
@@ -2064,7 +2100,9 @@ void do_contourlabel(istream &theInput)
 
 void do_contourlabels(istream &theInput)
 {
-  float lo = NAN, hi = NAN, step = NAN;
+  float lo = NAN;
+  float hi = NAN;
+  float step = NAN;
   theInput >> lo >> hi >> step;
 
   check_errors(theInput, "contourlabels");
@@ -2089,7 +2127,8 @@ void do_contourlabels(istream &theInput)
 
 void do_contourlabeltext(istream &theInput)
 {
-  string value, text;
+  string value;
+  string text;
   theInput >> value >> text;
   check_errors(theInput, "contourlabeltext");
   if (globals.specs.empty())
@@ -2170,7 +2209,8 @@ void do_contourlabelbackground(istream &theInput)
 
 void do_contourlabelmargin(istream &theInput)
 {
-  int dx = 0, dy = 0;
+  int dx = 0;
+  int dy = 0;
 
   theInput >> dx >> dy;
 
@@ -2403,7 +2443,8 @@ void do_pressuremindistdifferent(istream &theInput)
 
 void do_labelmarker(istream &theInput)
 {
-  string filename, rule;
+  string filename;
+  string rule;
   float alpha = NAN;
 
   theInput >> filename >> rule >> alpha;
@@ -2535,7 +2576,8 @@ void do_labelmissing(istream &theInput)
 
 void do_labeloffset(istream &theInput)
 {
-  float dx = NAN, dy = NAN;
+  float dx = NAN;
+  float dy = NAN;
   theInput >> dx >> dy;
 
   check_errors(theInput, "labeloffset");
@@ -2555,8 +2597,10 @@ void do_labeloffset(istream &theInput)
 
 void do_labelcaption(istream &theInput)
 {
-  string name, align;
-  float dx = NAN, dy = NAN;
+  string name;
+  string align;
+  float dx = NAN;
+  float dy = NAN;
   theInput >> name >> dx >> dy >> align;
 
   check_errors(theInput, "labelcaption");
@@ -2578,7 +2622,8 @@ void do_labelcaption(istream &theInput)
 
 void do_label(istream &theInput)
 {
-  float lon = NAN, lat = NAN;
+  float lon = NAN;
+  float lat = NAN;
   theInput >> lon >> lat;
 
   check_errors(theInput, "label");
@@ -2595,8 +2640,10 @@ void do_label(istream &theInput)
 
 void do_labelxy(istream &theInput)
 {
-  float lon = NAN, lat = NAN;
-  int dx = 0, dy = 0;
+  float lon = NAN;
+  float lat = NAN;
+  int dx = 0;
+  int dy = 0;
   theInput >> lon >> lat >> dx >> dy;
 
   check_errors(theInput, "labelxy");
@@ -2613,7 +2660,8 @@ void do_labelxy(istream &theInput)
 
 void do_labels(istream &theInput)
 {
-  float dx = NAN, dy = NAN;
+  float dx = NAN;
+  float dy = NAN;
   theInput >> dx >> dy;
 
   check_errors(theInput, "labels");
@@ -2636,7 +2684,10 @@ void do_labels(istream &theInput)
 
 void do_labelsxy(istream &theInput)
 {
-  float x0 = NAN, y0 = NAN, dx = NAN, dy = NAN;
+  float x0 = NAN;
+  float y0 = NAN;
+  float dx = NAN;
+  float dy = NAN;
   theInput >> x0 >> y0 >> dx >> dy;
 
   check_errors(theInput, "labelsxy");
@@ -2680,7 +2731,8 @@ void do_labelfile(istream &theInput)
 #endif
     else if (datacommand == "label")
     {
-      float lon = NAN, lat = NAN;
+      float lon = NAN;
+      float lat = NAN;
       datafile >> lon >> lat;
       if (!globals.specs.empty())
         globals.specs.back().add(NFmiPoint(lon, lat));
@@ -2699,7 +2751,8 @@ void do_labelfile(istream &theInput)
 
 void do_units(istream &theInput)
 {
-  string paramname, conversion;
+  string paramname;
+  string conversion;
 
   theInput >> paramname >> conversion;
 
@@ -2857,7 +2910,8 @@ void do_draw_imagemap(istream &theInput)
 {
   // The relevant field name and filenames
 
-  string fieldname, filename;
+  string fieldname;
+  string filename;
   theInput >> fieldname >> filename;
 
   check_errors(theInput, "draw imagemap");
@@ -2938,8 +2992,7 @@ int paramid(const string &theParam)
 {
   if (MetaFunctions::isMeta(theParam))
     return MetaFunctions::id(theParam);
-  else
-    return toparam(theParam);
+  return toparam(theParam);
 }
 
 // ----------------------------------------------------------------------
@@ -2958,29 +3011,26 @@ unsigned int choose_queryinfo(const string &theName, int theLevel)
     globals.queryinfo = globals.querystreams[0];
     return 0;
   }
-  else
+  // Find the proper queryinfo to be used
+
+  FmiParameterName param = toparam(theName);
+
+  for (unsigned int qi = 0; qi < globals.querystreams.size(); qi++)
   {
-    // Find the proper queryinfo to be used
-
-    FmiParameterName param = toparam(theName);
-
-    for (unsigned int qi = 0; qi < globals.querystreams.size(); qi++)
+    globals.queryinfo = globals.querystreams[qi];
+    globals.queryinfo->Param(param);
+    if (globals.queryinfo->IsParamUsable())
     {
-      globals.queryinfo = globals.querystreams[qi];
-      globals.queryinfo->Param(param);
-      if (globals.queryinfo->IsParamUsable())
-      {
-        if (set_level(*globals.queryinfo, theLevel))
-          return qi;
-      }
+      if (set_level(*globals.queryinfo, theLevel))
+        return qi;
     }
-    if (theLevel < 0)
-      throw runtime_error("Parameter '" + theName + "' is not available in the query files");
-    else
-      throw runtime_error("Parameter '" + theName + "' on level " +
-                          NFmiStringTools::Convert(theLevel) +
-                          " is not available in the query files");
   }
+  if (theLevel < 0)
+    throw runtime_error("Parameter '" + theName + "' is not available in the query files");
+  else
+    throw runtime_error("Parameter '" + theName + "' on level " +
+                        NFmiStringTools::Convert(theLevel) +
+                        " is not available in the query files");
 }
 
 // ----------------------------------------------------------------------
@@ -3365,7 +3415,8 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
     {
       // The point in question
 
-      double x = NAN, y = NAN;
+      double x = NAN;
+      double y = NAN;
       if (iter->second.X() == kFloatMissing)
       {
         // NFmiPoint xy = MeridianTools::Relocate(iter->first,theArea);
@@ -3553,24 +3604,6 @@ void draw_label_texts(ImagineXr_or_NFmiImage &img,
  * \brief Calculate direction of north on paper coordinates
  */
 // ----------------------------------------------------------------------
-
-double paper_north(const NFmiArea &theArea, const NFmiPoint &theLatLon)
-{
-  // Safety against polar regions just in case
-
-  if (theLatLon.Y() <= -89.9 || theLatLon.Y() >= 89.9)
-    return 0;
-
-  const NFmiPoint origo = theArea.ToXY(theLatLon);
-
-  const float pi = 3.141592658979323f;
-  const double latstep = 0.01;  // degrees to north
-
-  const double lat = theLatLon.Y() + latstep;
-  const NFmiPoint north = theArea.ToXY(NFmiPoint(theLatLon.X(), lat));
-  const float alpha = static_cast<float>(atan2(origo.X() - north.X(), origo.Y() - north.Y()));
-  return alpha * 180 / pi;
-}
 
 // ----------------------------------------------------------------------
 /*!
@@ -3822,7 +3855,8 @@ void draw_wind_arrows_points(ImagineXr_or_NFmiImage &img,
     if (IsMasked(xy0, globals.mask))
       continue;
 
-    float dir = NAN, speed = NAN;
+    float dir = NAN;
+    float speed = NAN;
 
     get_speed_direction(
         transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
@@ -3921,7 +3955,8 @@ void draw_wind_arrows_grid(ImagineXr_or_NFmiImage &img,
   if (globals.windarrowdx <= 0 || globals.windarrowdy <= 0)
     return;
 
-  NFmiDataMatrix<float> speedvalues, dirvalues;
+  NFmiDataMatrix<float> speedvalues;
+  NFmiDataMatrix<float> dirvalues;
 
   Fmi::CoordinateTransformation wgs84transformation("WGS84", theArea.SpatialReference());
 
@@ -4113,7 +4148,8 @@ void draw_wind_arrows_pixelgrid(ImagineXr_or_NFmiImage &img,
 
       // Calculate the speed & direction values
 
-      float dir = NAN, speed = NAN;
+      float dir = NAN;
+      float speed = NAN;
 
       get_speed_direction(
           transformation, latlon, speed_src, speed_dst, direction_src, direction_dst, speed, dir);
@@ -4889,7 +4925,7 @@ int extrematype(
   if (change < mingradient)
     return 0;
 
-  else if (smaller == (DX * 2 + 1) * (DY * 2 + 1) - 1)
+  if (smaller == (DX * 2 + 1) * (DY * 2 + 1) - 1)
     return 2;
   else if (bigger == (DX * 2 + 1) * (DY * 2 + 1) - 1)
     return -2;
@@ -5065,7 +5101,8 @@ void do_draw_contours(istream& /*theInput*/)
   // Also, this means the contours are independent of
   // the image size.
 
-  NFmiTime time1, time2;
+  NFmiTime time1;
+  NFmiTime time2;
 
   NFmiDataMatrix<float> vals;
   NFmiDataMatrix<float> maskvalues;
@@ -5105,7 +5142,7 @@ void do_draw_contours(istream& /*theInput*/)
   // Skip to first time
 
   NFmiMetTime tmptime(time1,
-                      globals.timesteprounding ? (globals.timestep > 0 ? globals.timestep : 1) : 1);
+                      (globals.timesteprounding && globals.timestep > 0) ? globals.timestep : 1);
 
   tmptime.ChangeByMinutes(globals.timestepskip);
   if (globals.timesteprounding)
@@ -5547,6 +5584,8 @@ void process_cmd(const string &text)
       do_speedparam(in);
     else if (cmd == "speedcomponents")
       do_speedcomponents(in);
+    else if (cmd == "uvorientation")
+      do_uvorientation(in);
     else if (cmd == "arrowscale")
       do_arrowscale(in);
     else if (cmd == "windarrowscale")

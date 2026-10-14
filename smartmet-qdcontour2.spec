@@ -93,6 +93,8 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Oct 14 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.14-1.fmi
 - Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
 - Requires 26.10.13 versions of newbase, imagine2 due to their ABI changes
+- Fixed clang-tidy style findings (loops, nested conditionals, dead code)
+- The documented uvorientation command is now recognized
 
 * Thu Sep 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.24-1.fmi
 - Fixed a boost include for numeric_cast

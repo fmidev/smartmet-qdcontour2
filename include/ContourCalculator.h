@@ -54,7 +54,7 @@ class ContourCalculator
   void data(const NFmiDataMatrix<float> &theData);
   void clearCache();
   void cache(bool /*theFlag*/);
-  bool wasCached(void) const;
+  bool wasCached() const;
 
  private:
   ContourCalculator(const ContourCalculator &theCalc);

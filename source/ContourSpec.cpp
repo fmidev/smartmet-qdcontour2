@@ -90,7 +90,7 @@ ContourSpec::ContourSpec(const std::string& theParam,
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourRange>& ContourSpec::contourFills(void) const
+const std::list<ContourRange>& ContourSpec::contourFills() const
 {
   return itsContourFills;
 }
@@ -103,7 +103,7 @@ const std::list<ContourRange>& ContourSpec::contourFills(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourPattern>& ContourSpec::contourPatterns(void) const
+const std::list<ContourPattern>& ContourSpec::contourPatterns() const
 {
   return itsContourPatterns;
 }
@@ -116,7 +116,7 @@ const std::list<ContourPattern>& ContourSpec::contourPatterns(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourValue>& ContourSpec::contourValues(void) const
+const std::list<ContourValue>& ContourSpec::contourValues() const
 {
   return itsContourValues;
 }
@@ -129,7 +129,7 @@ const std::list<ContourValue>& ContourSpec::contourValues(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourSymbol>& ContourSpec::contourSymbols(void) const
+const std::list<ContourSymbol>& ContourSpec::contourSymbols() const
 {
   return itsContourSymbols;
 }
@@ -142,7 +142,7 @@ const std::list<ContourSymbol>& ContourSpec::contourSymbols(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourFont>& ContourSpec::contourFonts(void) const
+const std::list<ContourFont>& ContourSpec::contourFonts() const
 {
   return itsContourFonts;
 }
@@ -179,7 +179,7 @@ const std::map<float, std::string>& ContourSpec::contourLabelTexts() const
  */
 // ----------------------------------------------------------------------
 
-const std::list<ContourLabel>& ContourSpec::contourLabels(void) const
+const std::list<ContourLabel>& ContourSpec::contourLabels() const
 {
   return itsContourLabels;
 }
@@ -192,7 +192,7 @@ const std::list<ContourLabel>& ContourSpec::contourLabels(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::param(void) const
+const std::string& ContourSpec::param() const
 {
   return itsParam;
 }
@@ -205,7 +205,7 @@ const std::string& ContourSpec::param(void) const
  */
 // ----------------------------------------------------------------------
 
-int ContourSpec::level(void) const
+int ContourSpec::level() const
 {
   return itsLevel;
 }
@@ -218,7 +218,7 @@ int ContourSpec::level(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::contourInterpolation(void) const
+const std::string& ContourSpec::contourInterpolation() const
 {
   return itsContourInterpolation;
 }
@@ -231,7 +231,7 @@ const std::string& ContourSpec::contourInterpolation(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::smoother(void) const
+const std::string& ContourSpec::smoother() const
 {
   return itsSmoother;
 }
@@ -244,7 +244,7 @@ const std::string& ContourSpec::smoother(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::smootherRadius(void) const
+float ContourSpec::smootherRadius() const
 {
   return itsSmootherRadius;
 }
@@ -257,7 +257,7 @@ float ContourSpec::smootherRadius(void) const
  */
 // ----------------------------------------------------------------------
 
-int ContourSpec::smootherFactor(void) const
+int ContourSpec::smootherFactor() const
 {
   return itsSmootherFactor;
 }
@@ -270,7 +270,7 @@ int ContourSpec::smootherFactor(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::exactHiLimit(void) const
+float ContourSpec::exactHiLimit() const
 {
   return itsExactHiLimit;
 }
@@ -283,7 +283,7 @@ float ContourSpec::exactHiLimit(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::dataHiLimit(void) const
+float ContourSpec::dataHiLimit() const
 {
   return itsDataHiLimit;
 }
@@ -296,7 +296,7 @@ float ContourSpec::dataHiLimit(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::dataLoLimit(void) const
+float ContourSpec::dataLoLimit() const
 {
   return itsDataLoLimit;
 }
@@ -491,7 +491,7 @@ void ContourSpec::add(const ContourLabel& theLabel)
  */
 // ----------------------------------------------------------------------
 
-bool ContourSpec::replace(void) const
+bool ContourSpec::replace() const
 {
   return itHasReplace;
 }
@@ -504,7 +504,7 @@ bool ContourSpec::replace(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::replaceSourceValue(void) const
+float ContourSpec::replaceSourceValue() const
 {
   return itsReplaceSourceValue;
 }
@@ -517,7 +517,7 @@ float ContourSpec::replaceSourceValue(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::replaceTargetValue(void) const
+float ContourSpec::replaceTargetValue() const
 {
   return itsReplaceTargetValue;
 }
@@ -546,7 +546,7 @@ void ContourSpec::replace(float theSrcValue, float theDstValue)
  */
 // ----------------------------------------------------------------------
 
-const std::list<std::pair<NFmiPoint, NFmiPoint> >& ContourSpec::labelPoints(void) const
+const std::list<std::pair<NFmiPoint, NFmiPoint> >& ContourSpec::labelPoints() const
 {
   return itsLabelPoints;
 }
@@ -559,7 +559,7 @@ const std::list<std::pair<NFmiPoint, NFmiPoint> >& ContourSpec::labelPoints(void
  */
 // ----------------------------------------------------------------------
 
-const std::list<std::pair<NFmiPoint, float> >& ContourSpec::pixelLabels(void) const
+const std::list<std::pair<NFmiPoint, float> >& ContourSpec::pixelLabels() const
 {
   return itsPixelLabels;
 }
@@ -575,7 +575,7 @@ const std::list<std::pair<NFmiPoint, float> >& ContourSpec::pixelLabels(void) co
 
 void ContourSpec::add(const NFmiPoint& thePoint, const NFmiPoint theXY)
 {
-  itsLabelPoints.push_back(std::make_pair(thePoint, theXY));
+  itsLabelPoints.emplace_back(thePoint, theXY);
 }
 
 // ----------------------------------------------------------------------
@@ -589,7 +589,7 @@ void ContourSpec::add(const NFmiPoint& thePoint, const NFmiPoint theXY)
 
 void ContourSpec::addPixelLabel(const NFmiPoint& thePoint, float theValue)
 {
-  itsPixelLabels.push_back(std::make_pair(thePoint, theValue));
+  itsPixelLabels.emplace_back(thePoint, theValue);
 }
 
 // ----------------------------------------------------------------------
@@ -600,7 +600,7 @@ void ContourSpec::addPixelLabel(const NFmiPoint& thePoint, float theValue)
  */
 // ----------------------------------------------------------------------
 
-const std::vector<float>& ContourSpec::labelValues(void) const
+const std::vector<float>& ContourSpec::labelValues() const
 {
   return itsLabelValues;
 }
@@ -625,7 +625,7 @@ void ContourSpec::addLabelValue(float theValue)
  */
 // ----------------------------------------------------------------------
 
-void ContourSpec::clearLabelValues(void)
+void ContourSpec::clearLabelValues()
 {
   itsLabelValues.clear();
 }
@@ -637,7 +637,7 @@ void ContourSpec::clearLabelValues(void)
  */
 // ----------------------------------------------------------------------
 
-void ContourSpec::clearPixelLabels(void)
+void ContourSpec::clearPixelLabels()
 {
   itsPixelLabels.clear();
 }
@@ -649,7 +649,7 @@ void ContourSpec::clearPixelLabels(void)
  */
 // ----------------------------------------------------------------------
 
-void ContourSpec::clearLabels(void)
+void ContourSpec::clearLabels()
 {
   itsLabelPoints.clear();
   itsLabelValues.clear();
@@ -670,7 +670,7 @@ void ContourSpec::clearLabels(void)
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelMarker(void) const
+const std::string& ContourSpec::labelMarker() const
 {
   return itsLabelMarker;
 }
@@ -683,7 +683,7 @@ const std::string& ContourSpec::labelMarker(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelMarkerRule(void) const
+const std::string& ContourSpec::labelMarkerRule() const
 {
   return itsLabelMarkerRule;
 }
@@ -696,7 +696,7 @@ const std::string& ContourSpec::labelMarkerRule(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelMarkerAlphaFactor(void) const
+float ContourSpec::labelMarkerAlphaFactor() const
 {
   return itsLabelMarkerAlphaFactor;
 }
@@ -709,7 +709,7 @@ float ContourSpec::labelMarkerAlphaFactor(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelFont(void) const
+const std::string& ContourSpec::labelFont() const
 {
   return itsLabelFont;
 }
@@ -722,7 +722,7 @@ const std::string& ContourSpec::labelFont(void) const
  */
 // ----------------------------------------------------------------------
 
-int ContourSpec::labelColor(void) const
+int ContourSpec::labelColor() const
 {
   return itsLabelColor;
 }
@@ -735,7 +735,7 @@ int ContourSpec::labelColor(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelRule(void) const
+const std::string& ContourSpec::labelRule() const
 {
   return itsLabelRule;
 }
@@ -748,7 +748,7 @@ const std::string& ContourSpec::labelRule(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelAlignment(void) const
+const std::string& ContourSpec::labelAlignment() const
 {
   return itsLabelAlignment;
 }
@@ -761,7 +761,7 @@ const std::string& ContourSpec::labelAlignment(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelFormat(void) const
+const std::string& ContourSpec::labelFormat() const
 {
   return itsLabelFormat;
 }
@@ -774,7 +774,7 @@ const std::string& ContourSpec::labelFormat(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ContourSpec::labelMissing(void) const
+const std::string& ContourSpec::labelMissing() const
 {
   return itsLabelMissing;
 }
@@ -787,7 +787,7 @@ const std::string& ContourSpec::labelMissing(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelOffsetX(void) const
+float ContourSpec::labelOffsetX() const
 {
   return itsLabelOffsetX;
 }
@@ -800,7 +800,7 @@ float ContourSpec::labelOffsetX(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelOffsetY(void) const
+float ContourSpec::labelOffsetY() const
 {
   return itsLabelOffsetY;
 }
@@ -813,7 +813,7 @@ float ContourSpec::labelOffsetY(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelDX(void) const
+float ContourSpec::labelDX() const
 {
   return itsLabelDX;
 }
@@ -826,7 +826,7 @@ float ContourSpec::labelDX(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelDY(void) const
+float ContourSpec::labelDY() const
 {
   return itsLabelDY;
 }
@@ -839,7 +839,7 @@ float ContourSpec::labelDY(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelXyX0(void) const
+float ContourSpec::labelXyX0() const
 {
   return itsLabelXyX0;
 }
@@ -852,7 +852,7 @@ float ContourSpec::labelXyX0(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelXyY0(void) const
+float ContourSpec::labelXyY0() const
 {
   return itsLabelXyY0;
 }
@@ -865,7 +865,7 @@ float ContourSpec::labelXyY0(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelXyDX(void) const
+float ContourSpec::labelXyDX() const
 {
   return itsLabelXyDX;
 }
@@ -878,7 +878,7 @@ float ContourSpec::labelXyDX(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelXyDY(void) const
+float ContourSpec::labelXyDY() const
 {
   return itsLabelXyDY;
 }
@@ -891,7 +891,7 @@ float ContourSpec::labelXyDY(void) const
  */
 // ----------------------------------------------------------------------
 
-std::string ContourSpec::labelCaption(void) const
+std::string ContourSpec::labelCaption() const
 {
   return itsLabelCaption;
 }
@@ -904,7 +904,7 @@ std::string ContourSpec::labelCaption(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelCaptionDX(void) const
+float ContourSpec::labelCaptionDX() const
 {
   return itsLabelCaptionDX;
 }
@@ -917,7 +917,7 @@ float ContourSpec::labelCaptionDX(void) const
  */
 // ----------------------------------------------------------------------
 
-float ContourSpec::labelCaptionDY(void) const
+float ContourSpec::labelCaptionDY() const
 {
   return itsLabelCaptionDY;
 }
@@ -930,7 +930,7 @@ float ContourSpec::labelCaptionDY(void) const
  */
 // ----------------------------------------------------------------------
 
-std::string ContourSpec::labelCaptionAlignment(void) const
+std::string ContourSpec::labelCaptionAlignment() const
 {
   return itsLabelCaptionAlignment;
 }

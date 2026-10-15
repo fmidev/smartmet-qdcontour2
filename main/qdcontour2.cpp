@@ -86,7 +86,7 @@ FmiParameterName toparam(const string &name)
 // Usage
 // ----------------------------------------------------------------------
 
-void Usage(void)
+void Usage()
 {
   cout << "Usage: qdcontour [options] [conffiles]" << endl
        << endl
@@ -187,7 +187,7 @@ void parse_command_line(int argc, const char *argv[])
     throw runtime_error("Atleast one command line parameter is required");
 
   for (int i = 1; i <= cmdline.NumberofParameters(); i++)
-    globals.cmdline_files.push_back(cmdline.Parameter(i));
+    globals.cmdline_files.emplace_back(cmdline.Parameter(i));
 }
 }  // namespace
 
@@ -202,7 +202,7 @@ void parse_command_line(int argc, const char *argv[])
 
 namespace
 {
-const string read_script(const string &theName)
+string read_script(const string &theName)
 {
   const bool strip_pound = false;
   NFmiPreProcessor processor(strip_pound);
@@ -249,7 +249,7 @@ const string read_script(const string &theName)
 
 namespace
 {
-const string preprocess_script(const string &theScript)
+string preprocess_script(const string &theScript)
 {
   string ret;
 
@@ -368,8 +368,8 @@ namespace
 {
 void write_image(const ImagineXr &xr)
 {
-  const string filename = xr.Filename();
-  const string format = xr.Format();
+  const string& filename = xr.Filename();
+  const string& format = xr.Format();
 
   if (globals.verbose)
     cout << "Writing '" << filename << "'" << endl;
@@ -1213,7 +1213,7 @@ void do_windarrow(istream &theInput)
 
   check_errors(theInput, "windarrow");
 
-  globals.arrowpoints.push_back(NFmiPoint(lon, lat));
+  globals.arrowpoints.emplace_back(lon, lat);
 }
 
 // ----------------------------------------------------------------------
@@ -1833,14 +1833,13 @@ void do_shape(istream &theInput)
   }
   else
   {
-    string fillcolor = arg1;
+    const string& fillcolor = arg1;
     string strokecolor;
     theInput >> strokecolor;
     NFmiColorTools::Color fill = ColorTools::checkcolor(fillcolor);
     NFmiColorTools::Color stroke = ColorTools::checkcolor(strokecolor);
 
-    globals.shapespecs.push_back(
-        ShapeSpec(shapename, fill, stroke, globals.fillrule, globals.strokerule));
+    globals.shapespecs.emplace_back(shapename, fill, stroke, globals.fillrule, globals.strokerule);
   }
 
   check_errors(theInput, "shape");

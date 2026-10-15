@@ -284,7 +284,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData& theData,
                                              const NFmiTime& theTime,
                                              ContourInterpolation theInterpolation)
 {
-  if (itsPimple->itsData.get() == 0)
+  if (itsPimple->itsData == nullptr)
     throw std::runtime_error("ContourCalculator:: No data set before calling contour");
 
   if (itsPimple->isCacheOn &&
@@ -338,7 +338,7 @@ Imagine::NFmiPath ContourCalculator::contour(const LazyQueryData& theData,
                                              const NFmiTime& theTime,
                                              ContourInterpolation theInterpolation)
 {
-  if (itsPimple->itsData.get() == 0)
+  if (itsPimple->itsData == nullptr)
     throw std::runtime_error("ContourCalculator:: No data set before calling contour");
 
   if (itsPimple->isCacheOn &&

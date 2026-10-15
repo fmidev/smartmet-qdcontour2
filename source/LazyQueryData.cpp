@@ -228,7 +228,7 @@ bool LazyQueryData::IsParamUsable() const
 
 std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::Locations() const
 {
-  if (itsLocations.get() == 0)
+  if (itsLocations == nullptr)
   {
     itsLocations.reset(new Fmi::CoordinateMatrix(itsInfo->CoordinateMatrix()));
     Fmi::CoordinateTransformation transformation(itsInfo->SpatialReference(), "WGS84");
@@ -250,7 +250,7 @@ std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::LocationsWorldXY(
   ostringstream os;
   os << theArea;
 
-  if (itsLocationsWorldXY.get() == 0 || os.str() != itsLocationsArea)
+  if (itsLocationsWorldXY == nullptr || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
     itsLocationsWorldXY.reset(new Fmi::CoordinateMatrix(itsInfo->LocationsWorldXY(theArea)));
@@ -269,7 +269,7 @@ std::shared_ptr<Fmi::CoordinateMatrix> LazyQueryData::LocationsXY(const NFmiArea
   ostringstream os;
   os << theArea;
 
-  if (itsLocationsXY.get() == 0 || os.str() != itsLocationsArea)
+  if (itsLocationsXY == nullptr || os.str() != itsLocationsArea)
   {
     itsLocationsArea = os.str();
     itsLocationsXY.reset(new Fmi::CoordinateMatrix(itsInfo->LocationsXY(theArea)));
@@ -313,7 +313,7 @@ NFmiPoint LazyQueryData::LatLonToGrid(const NFmiPoint &theLatLonPoint)
  */
 // ----------------------------------------------------------------------
 
-const NFmiGrid *LazyQueryData::Grid(void) const
+const NFmiGrid* LazyQueryData::Grid() const
 {
   return itsInfo->Grid();
 }
@@ -323,7 +323,7 @@ const NFmiGrid *LazyQueryData::Grid(void) const
  */
 // ----------------------------------------------------------------------
 
-const NFmiArea *LazyQueryData::Area(void) const
+const NFmiArea* LazyQueryData::Area() const
 {
   return itsInfo->Area();
 }

@@ -37,7 +37,7 @@ ShapeSpec::ShapeSpec(const std::string& theShapeFile,
  */
 // ----------------------------------------------------------------------
 
-const std::string& ShapeSpec::filename(void) const
+const std::string& ShapeSpec::filename() const
 {
   return itsShapeFileName;
 }
@@ -50,7 +50,7 @@ const std::string& ShapeSpec::filename(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ShapeSpec::fillrule(void) const
+const std::string& ShapeSpec::fillrule() const
 {
   return itsFillRule;
 }
@@ -63,7 +63,7 @@ const std::string& ShapeSpec::fillrule(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ShapeSpec::strokerule(void) const
+const std::string& ShapeSpec::strokerule() const
 {
   return itsStrokeRule;
 }
@@ -76,7 +76,7 @@ const std::string& ShapeSpec::strokerule(void) const
  */
 // ----------------------------------------------------------------------
 
-Imagine::NFmiColorTools::Color ShapeSpec::fillcolor(void) const
+Imagine::NFmiColorTools::Color ShapeSpec::fillcolor() const
 {
   return itsFillColor;
 }
@@ -89,7 +89,7 @@ Imagine::NFmiColorTools::Color ShapeSpec::fillcolor(void) const
  */
 // ----------------------------------------------------------------------
 
-Imagine::NFmiColorTools::Color ShapeSpec::strokecolor(void) const
+Imagine::NFmiColorTools::Color ShapeSpec::strokecolor() const
 {
   return itsStrokeColor;
 }
@@ -171,7 +171,7 @@ void ShapeSpec::marker(const std::string& theMarker, const std::string& theRule,
  */
 // ----------------------------------------------------------------------
 
-const std::string& ShapeSpec::marker(void) const
+const std::string& ShapeSpec::marker() const
 {
   return itsMarker;
 }
@@ -184,7 +184,7 @@ const std::string& ShapeSpec::marker(void) const
  */
 // ----------------------------------------------------------------------
 
-const std::string& ShapeSpec::markerrule(void) const
+const std::string& ShapeSpec::markerrule() const
 {
   return itsMarkerRule;
 }
@@ -197,7 +197,7 @@ const std::string& ShapeSpec::markerrule(void) const
  */
 // ----------------------------------------------------------------------
 
-float ShapeSpec::markeralpha(void) const
+float ShapeSpec::markeralpha() const
 {
   return itsMarkerAlpha;
 }

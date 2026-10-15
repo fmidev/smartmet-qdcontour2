@@ -95,6 +95,7 @@ rm -rf $RPM_BUILD_ROOT
 - Requires 26.10.13 versions of newbase, imagine2 due to their ABI changes
 - Fixed clang-tidy style findings (loops, nested conditionals, dead code)
 - The documented uvorientation command is now recognized
+- Fixed clang-tidy correctness findings (member initialization, rule of five, printf formats, dead stores)
 
 * Thu Sep 24 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.9.24-1.fmi
 - Fixed a boost include for numeric_cast

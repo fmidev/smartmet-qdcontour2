@@ -82,6 +82,8 @@ struct Globals
 {
   ~Globals();
   Globals();
+  Globals(const Globals&) = default;
+  Globals& operator=(const Globals&) = default;
 
   void setImageModes(Imagine::NFmiImage& /*theImage*/) const;
   std::shared_ptr<NFmiArea> createArea() const;

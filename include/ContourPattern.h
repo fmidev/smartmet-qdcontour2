@@ -30,6 +30,8 @@ class ContourPattern
                  const std::string& thePattern,
                  const std::string& theRule,
                  float theFactor = 1.0);
+  ContourPattern(const ContourPattern&) = default;
+  ContourPattern& operator=(const ContourPattern&) = default;
 
   float lolimit(void) const;
   float hilimit(void) const;

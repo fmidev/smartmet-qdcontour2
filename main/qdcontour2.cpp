@@ -3027,9 +3027,8 @@ unsigned int choose_queryinfo(const string &theName, int theLevel)
   }
   if (theLevel < 0)
     throw runtime_error("Parameter '" + theName + "' is not available in the query files");
-      throw runtime_error("Parameter '" + theName + "' on level " +
-                        NFmiStringTools::Convert(theLevel) +
-                        " is not available in the query files");
+  throw runtime_error("Parameter '" + theName + "' on level " +
+                      NFmiStringTools::Convert(theLevel) + " is not available in the query files");
 }
 
 // ----------------------------------------------------------------------

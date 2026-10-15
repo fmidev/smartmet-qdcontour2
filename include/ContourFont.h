@@ -35,7 +35,7 @@ class ContourFont
   const std::string& font() const;
 
  private:
-  ContourFont();
+  ContourFont() = delete;
 
   float itsValue;
   int itsColor;

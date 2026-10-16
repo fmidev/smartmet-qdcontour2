@@ -2853,8 +2853,8 @@ void do_draw_shapes(istream &theInput)
   if (globals.verbose)
     report_area(*area);
 
-  int imgwidth = static_cast<int>(area->Width() + 0.5);
-  int imgheight = static_cast<int>(area->Height() + 0.5);
+  int imgwidth = static_cast<int>(std::lround(area->Width()));
+  int imgheight = static_cast<int>(std::lround(area->Height()));
 
   // Initialize the background
 #ifdef IMAGINE_WITH_CAIRO
@@ -5286,8 +5286,8 @@ void do_draw_contours(istream& /*theInput*/)
 
     // Initialize the background
 
-    int imgwidth = static_cast<int>(area->Width() + 0.5);
-    int imgheight = static_cast<int>(area->Height() + 0.5);
+    int imgwidth = static_cast<int>(std::lround(area->Width()));
+    int imgheight = static_cast<int>(std::lround(area->Height()));
 
     NFmiColorTools::Color erasecolor = ColorTools::checkcolor(globals.erase);
 

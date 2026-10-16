@@ -26,7 +26,6 @@
 
 #include "NFmiImage.h"
 #include "NFmiPath.h"
-#include <memory>
 #include <newbase/NFmiArea.h>
 #include <newbase/NFmiPoint.h>
 #include <list>

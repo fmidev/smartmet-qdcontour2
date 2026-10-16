@@ -2,7 +2,7 @@
 %define RPMNAME smartmet-%{BINNAME}
 Summary: %{BINNAME}
 Name: %{RPMNAME}
-Version: 26.10.15
+Version: 26.10.16
 Release: 1%{?dist}.fmi
 License: FMI
 Group: Development/Tools
@@ -31,12 +31,12 @@ BuildRequires: glibc-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: gdal312-devel
-BuildRequires: smartmet-library-macgyver-devel >= 26.10.15
-BuildRequires: smartmet-library-imagine2-devel >= 26.10.15
-BuildRequires: smartmet-library-imagine2 >= 26.10.15
-BuildRequires: smartmet-library-newbase-devel >= 26.10.15
-BuildRequires: smartmet-library-gis-devel >= 26.10.15
-BuildRequires: smartmet-library-trax-devel >= 26.10.15
+BuildRequires: smartmet-library-macgyver-devel >= 26.10.16
+BuildRequires: smartmet-library-imagine2-devel >= 26.10.16
+BuildRequires: smartmet-library-imagine2 >= 26.10.16
+BuildRequires: smartmet-library-newbase-devel >= 26.10.16
+BuildRequires: smartmet-library-gis-devel >= 26.10.16
+BuildRequires: smartmet-library-trax-devel >= 26.10.16
 BuildRequires: zlib-devel
 BuildRequires: cairomm-devel
 BuildRequires: gcc-c++
@@ -48,15 +48,15 @@ Requires: cairomm
 Requires: freetype
 Requires: libjpeg
 Requires: libpng
-Requires: smartmet-library-imagine2 >= 26.10.15
-Requires: smartmet-library-newbase >= 26.10.15
-Requires: smartmet-library-trax >= 26.10.15
+Requires: smartmet-library-imagine2 >= 26.10.16
+Requires: smartmet-library-newbase >= 26.10.16
+Requires: smartmet-library-trax >= 26.10.16
 Requires: xorg-x11-fonts-misc
 Requires: zlib
 Provides: qdcontour2
 #TestRequires: gcc-c++
-#TestRequires: smartmet-library-macgyver-devel >= 26.10.15
-#TestRequires: smartmet-library-trax >= 26.10.15
+#TestRequires: smartmet-library-macgyver-devel >= 26.10.16
+#TestRequires: smartmet-library-trax >= 26.10.16
 #TestRequires: smartmet-fonts
 #TestRequires: smartmet-utils-devel >= 26.6.24
 #TestRequires: smartmet-library-newbase-devel
@@ -90,6 +90,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 16 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.16-1.fmi
+- Image sizes are rounded with std::lround
+- Fixed compiler warnings and clang-tidy findings (unused code, unreachable code, empty statements, member initialization, parameter passing, noexcept), no functional changes
+
 * Thu Oct 15 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.10.15-1.fmi
 - Fixed mechanical clang-tidy findings (internal linkage, unused parameters, initialization, redundant code), no functional changes
 - Requires 26.10.15 versions of newbase, imagine2 due to their ABI changes
